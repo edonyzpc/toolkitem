@@ -125,7 +125,7 @@ if __name__ == '__main__':
     class filefilter(fileline):
         def ffilter(self):
             import re
-            p = re.compile(r'.*(\.(py|h|cpp|cxx|c))$')
+            p = re.compile(r'.*(\.(py|h|cpp|cxx|c|hpp))$')
             #tmp = [item for item in self.files.values() if p.match(item) is None]
             #for key in self.files.keys():#remove the blank value
             #    if not self.files[key]:
