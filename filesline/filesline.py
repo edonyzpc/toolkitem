@@ -116,6 +116,15 @@ class fileline:
                 lofdir += 1
         return lofdir
 
+    def popexceptdir(self,exceptdir):
+        import re
+        pattern = exceptdir+'/.*'
+        p = re.compile(str(pattern))
+        for d in self.alldir:
+            if not p.match(d) is None:
+                print 'poping',
+                self.alldir.remove(d)
+
 if __name__ == '__main__':
     dir = raw_input('Enter the direction you want to count: ')
     #dt = []
@@ -138,6 +147,8 @@ if __name__ == '__main__':
 
     tmp = filefilter(dir)
     tmp.adddirs()
+    exceptdir = raw_input("Enter the direction you want ignore: ")
+    tmp.popexceptdir(exceptdir)
     tmp.filelist()
     tmp.filter()
     key = tmp.files.keys()
