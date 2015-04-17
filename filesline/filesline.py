@@ -71,24 +71,83 @@ import os
 class fileline:
     def __init__(self,dir):
         self.dir = dir
+        os.chdir(dir)
+        self.files = {}
+
+    @staticmethod
+    def dirlist(dir,rec):
+        '''
+        record all the directions of included in the given direction and its sub-direction
+        '''
+        tmpls = os.listdir(dir)
+        os.chdir(dir)
+        dirls = [item for item in tmpls if os.path.isdir(item)]
+        rec.extend([dir+'/'+item for item in dirls])
+        if dirls:
+            for item in dirls:
+                #print(dir+'/'+item)
+                fileline.dirlist(dir+'/'+item,rec)
+                #print dirls
+        else:
+            #dirls.append(dir)
+            return dirls
+
+    def adddirs(self):
+        rec = []
+        fileline.dirlist(self.dir,rec)
+        self.alldir = rec
+        self.alldir.append(self.dir)
 
     def filelist(self):
-        tmpls = os.listdir(self.dir)
-        self.file = [item for item in tmpls if ~os.path.isdir(item)]
+        for dir in self.alldir:
+            os.chdir(dir)
+            tmpls = os.listdir(dir)
+            self.files[dir] = [item for item in tmpls if os.path.isfile(item)]
+
+    def filter(self):
+        self.ffilter()
 
     @staticmethod
     def lofdir(file):
         lofdir = 0
         for item in file:
-            f = open(dir+item)
+            f = open(item)
             for line in f.readlines():
                 lofdir += 1
         return lofdir
 
 if __name__ == '__main__':
     dir = raw_input('Enter the direction you want to count: ')
-    tmp = fileline(dir)
+    #dt = []
+    #tmp = fileline.dirlist(dir,dt)
+    #print dt
+    #rule of filtering the files
+    class filefilter(fileline):
+        def ffilter(self):
+            import re
+            p = re.compile(r'.*(\.(py|h|cpp|cxx|c))$')
+            #tmp = [item for item in self.files.values() if p.match(item) is None]
+            #for key in self.files.keys():#remove the blank value
+            #    if not self.files[key]:
+            #        self.files.pop(key)
+            for key in self.files.keys():
+                for item in self.files[key]:
+                    if p.match(item) is None:
+                        cou = self.files[key].index(item)
+                        self.files[key][cou] = None
+
+    tmp = filefilter(dir)
+    tmp.adddirs()
     tmp.filelist()
-    lines = fileline.lofdir(tmp.file)
+    tmp.filter()
+    key = tmp.files.keys()
+    files = []
+    for i in key:
+        for item in tmp.files[i]:
+            if not item == None:
+                files.append(i+'/'+item)
+    #for f in files:
+    #    print f
+    lines = fileline.lofdir(files)
     print('total lines are %d'%lines)
                 
