@@ -114,6 +114,7 @@ class fileline:
             f = open(item)
             for line in f.readlines():
                 lofdir += 1
+            f.close()
         return lofdir
 
     def popexceptdir(self,exceptdir):
