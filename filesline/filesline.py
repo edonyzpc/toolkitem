@@ -131,7 +131,7 @@ if __name__ == '__main__':
     #dt = []
     #tmp = fileline.dirlist(dir,dt)
     #print dt
-    #rule of filtering the files
+    #delegation rule of filtering the files
     class filefilter(fileline):
         def ffilter(self):
             import re
