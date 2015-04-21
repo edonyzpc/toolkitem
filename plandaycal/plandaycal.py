@@ -85,8 +85,8 @@ class daycal:
     @staticmethod
     def monthls(year):
         if(cal.isleap(year)):
-            return {1:31,2:29,3:31,4:30,5:31,6:30,7:31,8:31,9:30,10:31,11:30,12:31}
+            return {"Jan":31,"Feb":29,"Mar":31,"Apr":30,"May":31,"June":30,"July":31,"Aug":31,"Sep":30,"Oct":31,"Nov":30,"Dec":31}
         else:
-            return {1:31,2:28,3:31,4:30,5:31,6:30,7:31,8:31,9:30,10:31,11:30,12:31}
+            return {"Jan":31,"Feb":28,"Mar":31,"Apr":30,"May":31,"June":30,"July":31,"Aug":31,"Sep":30,"Oct":31,"Nov":30,"Dec":31}
 
     def calend(self,pls):
