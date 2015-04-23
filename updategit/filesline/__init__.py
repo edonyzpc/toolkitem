@@ -57,5 +57,5 @@ class pcolor:
         self.ENDC = ''
         self.WARNING = ''
  
-__all__=['filesline']
+__all__=['filesline','pcolor','fileline']
 
