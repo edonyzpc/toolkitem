@@ -66,6 +66,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D as Ax3
 from scipy import stats as st
 from matplotlib import cm
+import os
  
 def gitrepos(path='~/code/github'):
     '''
@@ -84,7 +85,6 @@ def gitrepos(path='~/code/github'):
     return set(gitdir)
 
 def updategit(gitdir):
-    import os
     for dir in gitdir:
         os.chdir(dir)
         status = os.popen('git pull')
@@ -116,9 +116,28 @@ def __outstatus(f):
         else:
             print line
 
+def __updatebrew():
+    print pcolor.WARNING + 'BREW UPDATE' + pcolor.ENDC
+    brewstatus = os.popen('brew update')
+    for line in brewstatus:
+        if line == '':
+            break
+        elif 'error' in line.split() or 'waring' in line.split() or 'fatal' in line.split():
+            print pcolor.WARNING + line + pcolor.ENDC
+        else:
+            print line
+    print pcolor.TIPS + 'END BREW UPDATE' + pcolor.ENDC
+
 def main():
-    tardir = raw_input('git repositroies path: ')
-    dir = gitrepos(tardir)
+    import platform as pf
+    if pf.system() == 'Darwin':
+        path = '/Users/edony/coding/'
+        __updatebrew()
+    elif pf.system() == 'Linux':
+        path = '/home/edony/code/github/'
+    print('git repositroies path: %s'%path)
+    dir = gitrepos(path)
+    print('update %d repositroies'%len(dir))
     updategit(dir)
 
 if __name__ == '__main__':
