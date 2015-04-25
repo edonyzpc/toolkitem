@@ -122,7 +122,7 @@ def __updatebrew():
     for line in brewstatus:
         if line == '':
             break
-        elif 'error' in line.split() or 'waring' in line.split() or 'fatal' in line.split():
+        elif 'error:' in line.split() or 'waring:' in line.split() or 'fatal:' in line.split():
             print pcolor.WARNING + line + pcolor.ENDC
         else:
             print line
