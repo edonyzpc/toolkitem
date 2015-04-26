@@ -128,6 +128,26 @@ def __updatebrew():
             print line
     print pcolor.TIPS + 'END BREW UPDATE' + pcolor.ENDC
 
+def __updateyum():
+    import subprocess as sp
+    print pcolor.WARNING + 'YUM UPDATE' + pcolor.ENDC
+    pwf = open('./pwd.pyo')
+    password = str(pwf.readline())
+    pwf.close()
+    echo = ['echo']
+    echo.append(password)
+    cmd = 'sudo -S yum update'
+    pipein = sp.Popen(echo, stdout=sp.PIPE)
+    pipeout = sp.Popen(cmd.split(),stdin=pipein.stdout,stdout=sp.PIPE)
+    for line in pipeout.stdout.readlines():
+        if line == '':
+            break
+        elif 'error:' in line.split() or 'waring:' in line.split() or 'fatal:' in line.split():
+            print pcolor.WARNING + line + pcolor.ENDC
+        else:
+            print line
+    print pcolor.TIPS + 'END YUM UPDATE' + pcolor.ENDC
+
 def main():
     import platform as pf
     if pf.system() == 'Darwin':
@@ -135,6 +155,7 @@ def main():
         __updatebrew()
     elif pf.system() == 'Linux':
         path = '/home/edony/code/github/'
+        __updateyum()
     print('git repositroies path: %s'%path)
     dir = gitrepos(path)
     print('update %d repositroies'%len(dir))
