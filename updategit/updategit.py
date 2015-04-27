@@ -131,12 +131,12 @@ def __updatebrew():
 def __updateyum():
     import subprocess as sp
     print pcolor.WARNING + 'YUM UPDATE' + pcolor.ENDC
-    pwf = open('./pwd.pyo')
+    pwf = open('/home/edony/code/github/toolkitem/updategit/pwd.pyo')
     password = str(pwf.readline())
     pwf.close()
     echo = ['echo']
     echo.append(password)
-    cmd = 'sudo -S yum update'
+    cmd = 'sudo -S yum -y update'
     pipein = sp.Popen(echo, stdout=sp.PIPE)
     pipeout = sp.Popen(cmd.split(),stdin=pipein.stdout,stdout=sp.PIPE)
     for line in pipeout.stdout.readlines():
@@ -150,6 +150,7 @@ def __updateyum():
 
 def main():
     import platform as pf
+    print("system info: "+pf.system)
     if pf.system() == 'Darwin':
         path = '/Users/edony/coding/'
         __updatebrew()
@@ -162,4 +163,11 @@ def main():
     updategit(dir)
 
 if __name__ == '__main__':
-    main()
+    import sys
+    if len(sys.argv)>2:
+        if sys.argv[1] == '-l':
+            __updateyum()
+        if sys.argv[1] == '-m':
+            __updatebrew()
+    else:
+        main()
