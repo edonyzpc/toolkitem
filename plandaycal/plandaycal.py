@@ -76,6 +76,7 @@ class daycal:
     Output: year_end, month_end, day_end for each plan
     '''
     loct = ti.localtime()
+    MONTH = {1:'Jan',2:'Feb',3:'Mar',4:'Apr',5:'May',6:'June',7:'July',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'}
     def __init__(self,year=loct[0],month=loct[1],day=loct[2]):
         self.year_start = year
         self.month_start = month
@@ -84,9 +85,26 @@ class daycal:
 
     @staticmethod
     def monthls(year):
+        '''
+        get the month list of the year
+        '''
         if(cal.isleap(year)):
             return {"Jan":31,"Feb":29,"Mar":31,"Apr":30,"May":31,"June":30,"July":31,"Aug":31,"Sep":30,"Oct":31,"Nov":30,"Dec":31}
         else:
             return {"Jan":31,"Feb":28,"Mar":31,"Apr":30,"May":31,"June":30,"July":31,"Aug":31,"Sep":30,"Oct":31,"Nov":30,"Dec":31}
 
     def calend(self,pls):
+        '''
+        get the deadline day of the plan list
+        '''
+        for day in pls:
+            preday = day / 30
+            DAY = 0
+            for i in range(1,preday):
+                DAY += self.enummonth[MONTH[self.month + i]]
+            if day < DAY:
+                self.day_end = self.day + day
+                self.month_end = self.month_start
+                self.year_end = self.year_start
+
+           
