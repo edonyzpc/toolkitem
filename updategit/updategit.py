@@ -150,7 +150,7 @@ def __updateyum():
 
 def main():
     import platform as pf
-    print("system info: "+pf.system)
+    print("system info: "+pf.system())
     if pf.system() == 'Darwin':
         path = '/Users/edony/coding/'
         __updatebrew()
