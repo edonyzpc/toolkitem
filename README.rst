@@ -1,8 +1,8 @@
 # toolkitem
 personal toolkits for daily code
 
->> count number of lines in direction files
+ >> count number of lines in direction files
 
->> c/c++ interface calling python scripts
+ >> c/c++ interface calling python scripts
 
->> plan arangement in calendar
+ >> plan arangement in calendar
