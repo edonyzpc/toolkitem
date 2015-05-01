@@ -111,7 +111,7 @@ def __outstatus(f):
     for line in f.readlines():
         if line == '':
             break
-        elif 'error:' in line.split()or 'waring:' in line.split():
+        elif 'error:' in line.split() or 'waring:' in line.split() or 'fatal:' in line.split():
             print pcolor.WARNING + line + pcolor.ENDC
         else:
             print line
@@ -164,10 +164,21 @@ def main():
 
 if __name__ == '__main__':
     import sys
-    if len(sys.argv)>2:
+    if len(sys.argv)>1:
         if sys.argv[1] == '-l':
             __updateyum()
         if sys.argv[1] == '-m':
             __updatebrew()
+        if sys.argv[1] == '-g':
+            import platform as pf
+            print("system info: "+pf.system())
+            if pf.system() == 'Darwin':
+                path = '/Users/edony/coding/'
+            elif pf.system() == 'Linux':
+                path = '/home/edony/code/github/'
+            print('git repositroies path: %s'%path)
+            dir = gitrepos(path)
+            print('update %d repositroies'%len(dir))
+            updategit(dir)
     else:
         main()
