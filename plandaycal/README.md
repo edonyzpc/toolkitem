@@ -5,7 +5,7 @@ When you arange your plan, you want a quick calculator help you.<br>
 
 ------
 
-INPUT<br>
+#### INPUT<br>
 * plan list
 
 * day_start
@@ -14,5 +14,11 @@ INPUT<br>
 
 * year_start
 
-OUTPUT<br>
-* plan end list(day_end;month_end;year_end)
+#### OUTPUT<br>
+* plan end list (***year_end***;***month_end***;***day_end***)
+
+
+#### ATTRIBUTES<br>
+```py
+  ['monthls','calend','displayplan']
+```
