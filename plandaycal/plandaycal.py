@@ -76,12 +76,15 @@ class daycal:
     Output: year_end, month_end, day_end for each plan
     '''
     loct = ti.localtime()
-    MONTH = {1:'Jan',2:'Feb',3:'Mar',4:'Apr',5:'May',6:'June',7:'July',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'}
-    def __init__(self,year=loct[0],month=loct[1],day=loct[2]):
-        self.year_start = year
-        self.month_start = month
-        self.day = day
-        self.enummonth = daycal.monthls(self.year_start)
+    monthmap = {1:'Jan',2:'Feb',3:'Mar',4:'Apr',5:'May',6:'June',7:'July',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'}
+    def __init__(self,pls,year=loct[0],month=loct[1],day=loct[2]):
+        self.year_start = int(year)
+        self.month_start = int(month)
+        self.day_start = int(day)
+        self.month = daycal.monthls(self.year_start)
+        self.pls = []
+        for item in pls:
+            self.pls.append(int(item))
 
     @staticmethod
     def monthls(year):
@@ -93,18 +96,66 @@ class daycal:
         else:
             return {"Jan":31,"Feb":28,"Mar":31,"Apr":30,"May":31,"June":30,"July":31,"Aug":31,"Sep":30,"Oct":31,"Nov":30,"Dec":31}
 
-    def calend(self,pls):
+    def calend(self):
         '''
         get the deadline day of the plan list
         '''
-        for day in pls:
-            preday = day / 30
-            DAY = 0
-            for i in range(1,preday):
-                DAY += self.enummonth[MONTH[self.month + i]]
-            if day < DAY:
-                self.day_end = self.day + day
-                self.month_end = self.month_start
-                self.year_end = self.year_start
+        self.planend = []
+        month = self.month_start
+        day = self.day_start
+        for plan in self.pls:
+            while plan > 0:
+                plan -= self.month[daycal.monthmap[month%12]]
+                if plan > 0:
+                    month += 1
+                else:
+                    month_end = month
+                    tday = plan + self.month[daycal.monthmap[month%12]]
+                    day_end = day + tday
+                    if day_end > self.month[daycal.monthmap[month%12]]:
+                        month_end += 1
+                        day_end = day_end - self.month[daycal.monthmap[month%12]]
+                        month += 1
+                    day = day_end
+            if month/12 > 0:
+                year_end = self.year_start + 1
+            else:
+                year_end = self.year_start
+            self.planend.append((year_end,month_end,day_end))
 
-           
+    def __sumpls(self):
+        return np.sum(np.array(self.pls))
+
+    def __crossYear(self):
+        '''
+        check the plan list will go cross the year(feature year)
+        '''
+        all = self.__sumpls()
+        start = self.month_start
+        while True:
+            all -= self.month[pycal.monthmap[start]]
+            start += 1
+            if all < 0:break
+        return start/12
+
+    def __displayplan(self):
+        print('your plan arrangement:\n')
+        length = len(self.planend)
+        start = [(self.year_start,self.month_start,self.day_start)]
+        for i in range(length-1):
+            start.append((self.planend[i][0],self.planend[i][1],self.planend[i][2]+1))
+        print start
+        print self.planend
+
+    def main(self):
+        self.calend()
+        self.__displayplan()
+
+if __name__ == '__main__':
+    plan = [10,42,7]
+    tmp = daycal(plan)
+    tmp.main()
+    import sys
+    p = sys.argv[1].split(',')
+    tmp1 = daycal(p,sys.argv[2],sys.argv[3],sys.argv[4])
+    tmp1.main()
