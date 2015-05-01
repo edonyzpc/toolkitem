@@ -1,4 +1,4 @@
-#Toolkit for day calculate
+# Toolkit for day calculate
 -------
 
 When you arange your plan, you want a quick calculator help you.<br>
@@ -15,4 +15,4 @@ INPUT<br>
 * year_start
 
 OUTPUT<br>
-* plan end list(day_end month_end year_end)
+* plan end list(day_end;month_end;year_end)
