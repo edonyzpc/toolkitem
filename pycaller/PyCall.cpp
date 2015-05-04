@@ -169,10 +169,24 @@ void PyCall::PyRunner()
         }
         cout<<tmp<<endl;
         string cmd = "subprocess.call(" + tmp + ")";
+        PyRun_SimpleString(cmd.c_str());
+        /*
+         *Py_Initialize() do not have the sys.argv
+         */
+        //string tmp1 = "sys.argv = ["+this->filename+",";
+        //for(size_t i=0;i<this->strargv.size();i++)
+        //{
+        //    if(1==strargv.size()-i)
+        //        tmp1 += strargv[i] + "]";
+        //    else
+        //        tmp1 += strargv[i] + ",";
+        //}
+        //cout<<tmp1<<endl;
+        //PyRun_SimpleString(tmp1.c_str());
         //string file = "execfile(";
         //file = file + this->filename + ")";
         //cout<<file.c_str()<<endl;
-        PyRun_SimpleString(cmd.c_str());
+        //PyRun_SimpleString(file.c_str());
     }
     Py_Finalize();
 }

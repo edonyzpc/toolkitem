@@ -68,7 +68,7 @@ int main()
 		printf("ERROR: Python Initialize failed.\n");
 		return -1;
 	}
-    string fn = "'./pyproperty.py'";
+    string fn = "'pyproperty.py'";
     cout<<fn<<endl;
     vector<string> ast;
     ast.push_back("'eee'");
