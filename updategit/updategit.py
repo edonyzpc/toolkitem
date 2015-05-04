@@ -176,7 +176,12 @@ if __name__ == '__main__':
                 path = '/Users/edony/coding/'
             elif pf.system() == 'Linux':
                 path = '/home/edony/code/github/'
-            print('git repositroies path: %s'%path)
+            flag = raw_input('use default path: %s?'%path)
+            if flag == 'y' or flag == 'Y':
+                print('git repositroies path: %s'%path)
+            else:
+                path = sys.argv[2]
+                print('git repositroies path: %s'%path)
             dir = gitrepos(path)
             print('update %d repositroies'%len(dir))
             updategit(dir)
