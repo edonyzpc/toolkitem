@@ -57,16 +57,16 @@ class pcolor:
         self.ENDC = ''
         self.WARNING = ''
  
-import numpy as np
-import scipy as sp
-import math as m
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D as Ax3
-from scipy import stats as st
-from matplotlib import cm
+#import numpy as np
+#import scipy as sp
+#import math as m
+#import matplotlib as mpl
+#import matplotlib.pyplot as plt
+#from mpl_toolkits.mplot3d import Axes3D as Ax3
+#from scipy import stats as st
+#from matplotlib import cm
  
-class protest:
+class protest(object):
     def __init__(self,name,age):
         self._name = name
         self.age = age
@@ -77,6 +77,7 @@ class protest:
 
     @name.setter
     def name(self,n):
+        print('change...')
         if '@' not in n:
             raise ValueError('Invalid Value.')
         self._name = n
@@ -101,7 +102,36 @@ def main(n,a):
     print(tmp.name)
     print(tmp._name)
 
+class Person(object):
+    def __init__(self, name):
+        self._name = name
+        self.age = 10
+    @property
+    def name(self): # name = property(name)
+        '''name property docs'''
+        print('fetch...')
+        return self._name
+    @name.setter
+    def name(self, value): # name = name.setter(name)
+        print('change...')
+        if self.age > 40:
+            raise ValueError("not enough")
+        else:
+            self._name = value
+    @name.deleter
+    def name(self): # name = name.deleter(name)
+        print('remove...')
+        del self._name
 if __name__ == '__main__':
+    bob = Person('Bob Smith') # bob has a managed attribute
+    print(bob.name) # Runs name getter (name 1)
+    bob.name = 'Robert Smith' # Runs name setter (name 2)
+    print(bob.name)
+    del bob.name # Runs name deleter (name 3)
+    print('-'*20)
+    sue = Person('Sue Jones') # sue inherits property too
+    print(sue.name)
+    print(Person.name.__doc__) # Or help(Person.name)
     tmp = protest('edony',34)
     print(tmp.age)
     print(tmp._name)
