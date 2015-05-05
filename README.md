@@ -11,3 +11,5 @@
 > * update system for preparation and update the git repositroies
 
 > * mark up the files different lines(if they have)
+
+> * convert the ```*.rst```, ```*.md``` and ```*.txt``` files into pdf
