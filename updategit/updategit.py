@@ -1,31 +1,31 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
- #        .---.         .-----------  
- #       /     \  __  /    ------    
- #      / /     \(  )/    -----   (`-')  _ _(`-')              <-. (`-')_            
- #     //////    '\/ `   ---      ( OO).-/( (OO ).->     .->      \( OO) )     .->   
+ #        .---.         .-----------
+ #       /     \  __  /    ------
+ #      / /     \(  )/    -----   (`-')  _ _(`-')              <-. (`-')
+ #     //////    '\/ `   ---      ( OO).-/( (OO ).->     .->      \( OO) )     .->
  #    //// / //  :   : ---      (,------. \    .'_ (`-')----. ,--./ ,--/  ,--.'  ,-.
  #   // /   /  / `\/ '--         |  .---' '`'-..__)( OO).-. ' |   \ |  | (`-')'.'  /
- #  //          //..\\          (|  '--.  |  |  ' |( _) | | | |  . '|  |)(OO \    / 
- # ============UU====UU====      |  .--'  |  |  / : \|  |)| | |  |\    |  |  /   /) 
- #             '//||\\`          |  `---. |  '-'  /  '  '-' ' |  | \   |  `-/   /`  
- #               ''``            `------' `------'    `-----' `--'  `--'    `--'    
+ #  //          //..\\          (|  '--.  |  |  ' |( _) | | | |  . '|  |)(OO \    /
+ # ============UU====UU====      |  .--'  |  |  / : \|  |)| | |  |\    |  |  /   /)
+ #             '//||\\`          |  `---. |  '-'  /  '  '-' ' |  | \   |  `-/   /`
+ #               ''``            `------' `------'    `-----' `--'  `--'    `--'
  # ######################################################################################
- # 
- # Author: edony - edonyzpc@gmail.com                 
- # 
- # twitter : @edonyzpc                                
- # 
+ #
+ # Author: edony - edonyzpc@gmail.com
+ #
+ # twitter : @edonyzpc
+ #
  # Last modified: 2015-04-23 09:29
- # 
+ #
  # Filename: updategit.py
- # 
- # Description: All Rights Are Reserved                 
+ #
+ # Description: All Rights Are Reserved
 class pcolor:
     ''' This class is for colored print in the python interpreter!
     "F2" call Addpy() function to add this class which is defined
     in the .vimrc for vim Editor.
-    
+
     STYLE: \033['display model';'foreground';'background'm
     DETAILS:
     FOREGROUND        BACKGOUND       COLOR
@@ -46,7 +46,7 @@ class pcolor:
     5                flicker
     7                reverse
     8                non-visiable
-    
+
     e.g：
     \033[1;31;40m   <!--1-highlight;31-foreground red;40-background black-->
     \033[0m         <!--set all into default-->
@@ -57,25 +57,27 @@ class pcolor:
     def disable(self):
         self.ENDC = ''
         self.WARNING = ''
- 
-import numpy as np
-import scipy as sp
-import math as m
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D as Ax3
-from scipy import stats as st
-from matplotlib import cm
+
+#import numpy as np
+#import scipy as sp
+#import math as m
+#import matplotlib as mpl
+#import matplotlib.pyplot as plt
+#from mpl_toolkits.mplot3d import Axes3D as Ax3
+#from scipy import stats as st
+#from matplotlib import cm
 import os
- 
+import platform as pf
+import sys
+
 def gitrepos(path='~/code/github'):
     '''
-    find the git repositroies in the direction 
+    find the git repositroies in the direction
     '''
     from filesline.filesline import fileline as fl
     rec = []
     gitdir = []
-    fl.dirlist(path,rec)
+    fl.dirlist(path, rec)
     for direction in rec:
         tmp = direction.split('/')
         __delblank(tmp)
@@ -85,10 +87,10 @@ def gitrepos(path='~/code/github'):
     return set(gitdir)
 
 def updategit(gitdir):
-    for dir in gitdir:
-        os.chdir(dir)
+    for d in gitdir:
+        os.chdir(d)
         status = os.popen('git pull')
-        print pcolor.WARNING + dir + pcolor.ENDC
+        print pcolor.WARNING + d + pcolor.ENDC
         __outstatus(status)
     print pcolor.TIPS + 'update git repositroies finished' + pcolor.ENDC
 
@@ -104,7 +106,7 @@ def __gitroot(gitpath):
 
 def __delblank(ls):
     for item in ls:
-        if item=='':
+        if item == '':
             ls.remove(item)
 
 def __outstatus(f):
@@ -138,7 +140,7 @@ def __updateyum():
     echo.append(password)
     cmd = 'sudo -S yum -y update'
     pipein = sp.Popen(echo, stdout=sp.PIPE)
-    pipeout = sp.Popen(cmd.split(),stdin=pipein.stdout,stdout=sp.PIPE)
+    pipeout = sp.Popen(cmd.split(), stdin=pipein.stdout, stdout=sp.PIPE)
     for line in pipeout.stdout.readlines():
         if line == '':
             break
@@ -149,41 +151,38 @@ def __updateyum():
     print pcolor.TIPS + 'END YUM UPDATE' + pcolor.ENDC
 
 def main():
-    import platform as pf
-    print("system info: "+pf.system())
+    print "system info: "+pf.system()
     if pf.system() == 'Darwin':
         path = '/Users/edony/coding/'
         __updatebrew()
     elif pf.system() == 'Linux':
         path = '/home/edony/code/github/'
         __updateyum()
-    print('git repositroies path: %s'%path)
+    print 'git repositroies path: %s'%path
     dir = gitrepos(path)
-    print('update %d repositroies'%len(dir))
+    print 'update %d repositroies'%len(dir)
     updategit(dir)
 
 if __name__ == '__main__':
-    import sys
-    if len(sys.argv)>1:
+    if len(sys.argv) > 1:
         if sys.argv[1] == '-l':
             __updateyum()
         if sys.argv[1] == '-m':
             __updatebrew()
         if sys.argv[1] == '-g':
-            import platform as pf
-            print("system info: "+pf.system())
+            print "system info: "+pf.system()
             if pf.system() == 'Darwin':
-                path = '/Users/edony/coding/'
+                path2update = '/Users/edony/coding/'
             elif pf.system() == 'Linux':
-                path = '/home/edony/code/github/'
-            flag = raw_input('use default path: %s?'%path)
-            if flag == 'y' or flag == 'Y':
-                print('git repositroies path: %s'%path)
+                path2update = '/home/edony/code/github/'
+            flag2change = raw_input('use default path: %s?'%path2update)
+            if flag2change == 'y' or flag2change == 'Y':
+                print 'git repositroies path: %s'%path2update
             else:
-                path = sys.argv[2]
-                print('git repositroies path: %s'%path)
-            dir = gitrepos(path)
-            print('update %d repositroies'%len(dir))
-            updategit(dir)
+                path2update = sys.argv[2]
+                print 'git repositroies path: %s'%path2update
+            directions = gitrepos(path2update)
+            print 'update %d repositroies'%len(directions)
+            updategit(directions)
     else:
         main()
