@@ -204,11 +204,11 @@ class UpdateSys(object):
         """
         print self.pcolor.warningcolor + 'yum update' + self.pcolor.endcolor
         pwf = open(self.pwd)
-        password = str(pwf.readline().rstrip())
+        password = pwf.readline().rstrip()
         pwf.close()
         echo = ['echo']
         echo.append(password)
-        cmd = 'sudo -s yum -y update'
+        cmd = 'sudo -S yum -y update'
         pipein = sp.Popen(echo, stdout=sp.PIPE)
         pipeout = sp.Popen(cmd.split(), stdin=pipein.stdout, stdout=sp.PIPE)
         for line in pipeout.stdout.readlines():
