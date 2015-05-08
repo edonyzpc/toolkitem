@@ -58,17 +58,19 @@ class pcolor:
         self.ENDC = ''
         self.WARNING = ''
  
-import numpy as np
-import scipy as sp
-import math as m
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D as Ax3
-from scipy import stats as st
-from matplotlib import cm
- 
+#import numpy as np
+#import scipy as sp
+#import math as m
+#import matplotlib as mpl
+#import matplotlib.pyplot as plt
+#from mpl_toolkits.mplot3d import Axes3D as Ax3
+#from scipy import stats as st
+#from matplotlib import cm
 import os
-class fileline:
+import re
+
+
+class FileLine:
     def __init__(self,dir):
         self.dir = dir
         os.chdir(dir)
@@ -126,31 +128,31 @@ class fileline:
                 print 'poping',
                 self.alldir.remove(d)
 
+class FileFilter(FileLine):
+    def ffilter(self):
+        p = re.compile(r'.*(\.(py|h|cpp|cxx|c|hpp))$')
+        #tmp = [item for item in self.files.values() if p.match(item) is None]
+        #for key in self.files.keys():#remove the blank value
+        #    if not self.files[key]:
+        #        self.files.pop(key)
+        for key in self.files.keys():
+            for item in self.files[key]:
+                if p.match(item) is None:
+                    cou = self.files[key].index(item)
+                    self.files[key][cou] = None
+
 if __name__ == '__main__':
     dir = raw_input('Enter the direction you want to count: ')
     #dt = []
     #tmp = fileline.dirlist(dir,dt)
     #print dt
     #delegation rule of filtering the files
-    class filefilter(fileline):
-        def ffilter(self):
-            import re
-            p = re.compile(r'.*(\.(py|h|cpp|cxx|c|hpp))$')
-            #tmp = [item for item in self.files.values() if p.match(item) is None]
-            #for key in self.files.keys():#remove the blank value
-            #    if not self.files[key]:
-            #        self.files.pop(key)
-            for key in self.files.keys():
-                for item in self.files[key]:
-                    if p.match(item) is None:
-                        cou = self.files[key].index(item)
-                        self.files[key][cou] = None
 
-    tmp = filefilter(dir)
+    tmp = FileFilter(dir)
     tmp.adddirs()
     exceptdir = raw_input("Enter the direction you want ignore: ")
     tmp.popexceptdir(exceptdir)
-    tmp.filelist()
+    tmp.FileList()
     tmp.filter()
     key = tmp.files.keys()
     files = []

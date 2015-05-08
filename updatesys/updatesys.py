@@ -87,11 +87,11 @@ class PyColor(object):
 #from scipy import stats as st
 #from matplotlib import cm
 
+import sys
 import os
 import platform as pf
-import sys
 import subprocess as sp
-from filesline.filesline import fileline as fl
+from packages.filesline.filesline import FileLine as fl
 
 class UpdateSys(object):
     """
@@ -186,10 +186,16 @@ class UpdateSys(object):
 
     @property
     def pwd(self):
+        """
+        Protected Password
+        """
         return self._password_linux
 
     @pwd.setter
     def pwd(self, password_path):
+        """
+        Change the Protected Password
+        """
         self._password_linux = password_path
 
     def __updateyum(self):
@@ -198,7 +204,7 @@ class UpdateSys(object):
         """
         print self.pcolor.warningcolor + 'yum update' + self.pcolor.endcolor
         pwf = open(self.pwd)
-        password = str(pwf.readline())
+        password = str(pwf.readline().rstrip())
         pwf.close()
         echo = ['echo']
         echo.append(password)
