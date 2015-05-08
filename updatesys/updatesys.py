@@ -108,6 +108,7 @@ class UpdateSys(object):
         """
         self.gitdir = []
         self.pcolor = PyColor()
+        self._password_linux = '/home/edony/code/github/toolkitem/updatesys/pwd.pyo'
         if path:
             self.path = path
         if pf.system() == 'Darwin':
@@ -183,12 +184,20 @@ class UpdateSys(object):
                 print line
         print self.pcolor.tipcolor + 'end brew update' + self.pcolor.endcolor
 
+    @property
+    def pwd(self):
+        return self._password_linux
+
+    @pwd.setter
+    def pwd(self, password_path):
+        self._password_linux = password_path
+
     def __updateyum(self):
         """
         Manage Linux builtin tools.
         """
         print self.pcolor.warningcolor + 'yum update' + self.pcolor.endcolor
-        pwf = open('/home/edony/code/github/toolkitem/updategit/pwd.pyo')
+        pwf = open(self.pwd)
         password = str(pwf.readline())
         pwf.close()
         echo = ['echo']
