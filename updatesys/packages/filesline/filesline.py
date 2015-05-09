@@ -88,7 +88,7 @@ class FileLine:
         if dirls:
             for item in dirls:
                 #print(dir+'/'+item)
-                fileline.dirlist(dir+'/'+item,rec)
+                FileLine.dirlist(dir+'/'+item,rec)
                 #print dirls
         else:
             #dirls.append(dir)
