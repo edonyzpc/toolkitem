@@ -77,7 +77,13 @@ class PyColor(object):
         self.endcolor = ''
 
 class FileBuf(object):
+    """
+    FILEBUF: class to write the each different lines into buffer file named `tmp`.
+    """
     def __init__(self, file1, file2):
+        """
+        Initialize the instance attributes: [file1, file2, file1_line_num, file2_line_num]
+        """
         self.file1 = file1
         self.file2 = file2
         self.file1_line_num = len(open(self.file1).readlines())
@@ -85,6 +91,9 @@ class FileBuf(object):
         self.buffer = []
 
     def mark_diff(self):
+        """
+        Mark up the different lines into buffer
+        """
         f1 = open(self.file1)
         f2 = open(self.file2)
         if self.file1_line_num > self.file2_line_num:
@@ -97,6 +106,10 @@ class FileBuf(object):
                 if line1 == line2:
                     continue
                 else:
+                    if line1 == '':
+                        line1 = line1 + '\n'
+                    if line2 == '':
+                        line2 = line2 + '\n'
                     line1 = str(line1_num_counter) + '-' + line1
                     line2 = str(line2_num_counter) + '-' + line2
                     self.buffer.append(line1)
@@ -111,12 +124,19 @@ class FileBuf(object):
                 if line1 == line2:
                     continue
                 else:
+                    if line1 == '':
+                        line1 = line1 + '\n'
+                    if line2 == '':
+                        line2 = line2 + '\n'
                     line1 = str(line1_num_counter) + '+' + line1
                     line2 = str(line2_num_counter) + '+' + line2
                     self.buffer.append(line1)
                     self.buffer.append(line2)
 
     def write_file(self):
+        """
+        Write the buffer into buffer file `tmp` in current direction
+        """
         file_write = open('tmp','w')
         for line in self.buffer:
             file_write.write(line)
