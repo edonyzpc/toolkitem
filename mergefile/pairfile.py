@@ -85,6 +85,7 @@ class PyColor(object):
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
+import os
 from packages.filesline.filesline import FileLine as FL
 from filebuf import FileBuf as FB
 
@@ -120,9 +121,47 @@ class FilePair(FL):
             else:
                 self.nonpaired_file.append(file)
 
+class FileCheck(FB):
+    """
+    FILECHECK: class to check the paired files and record the different lines
+    """
+    def __init__(self, paired_files, to_paire_dir, paired_dir):
+        self.paired_files = paired_files
+        self.to_paire_dir = to_paire_dir
+        self.paired_dir = paired_dir
+        self.buffer = []
+        self.new_file = []
+
+    def check_diff(self):
+        for filename in self.paired_files:
+            self.buffer.append('FILE ' + filename + '\n')
+            self.file1 = self.to_paire_dir + '/' + filename
+            self.file2 = self.paired_dir + '/' + filename
+            self.file1_line_num = len(open(self.file1).readlines())
+            self.file2_line_num = len(open(self.file2).readlines())
+            self.mark_diff()
+
+    def record_diff(self):
+        os.chdir(self.to_paire_dir)
+        self.write_file()
+
+    def new_file(self):
+        """
+        Check the to pair direction to find if there are new files.
+        """
+        directlist = os.listdir(self.to_paire_dir)
+        os.chdir(self.to_paire_dir)
+        for filename in directlist:
+            if os.path.isfile(filename):
+                if filename not in self.paired_files:
+                    self.new_file.append(filename)
+
 if __name__ == '__main__':
     dir = '/home/edony/code/github/toolkitem/mergefile'
     tmp = FilePair(dir+'/f1', dir+'/f2')
     tmp.pairfiles()
     print tmp.paired_file
     print tmp.nonpaired_file
+    tmp1 = FileCheck(tmp.paired_file, dir+'/f1', dir+'/f2')
+    tmp1.check_diff()
+    tmp1.record_diff()
