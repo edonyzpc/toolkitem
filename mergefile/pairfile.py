@@ -133,6 +133,9 @@ class FileCheck(FB):
         self.new_file = []
 
     def check_diff(self):
+        """
+        Check difference in paired file list.
+        """
         for filename in self.paired_files:
             self.buffer.append('FILE ' + filename + '\n')
             self.file1 = self.to_paire_dir + '/' + filename
@@ -142,6 +145,9 @@ class FileCheck(FB):
             self.mark_diff()
 
     def record_diff(self):
+        """
+        Record the difference into buffer file named `tmp`.
+        """
         os.chdir(self.to_paire_dir)
         self.write_file()
 
