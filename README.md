@@ -10,6 +10,6 @@
 
 > * update system for preparation and update the git repositroies
 
-> * mark up the files different lines(if they have)
+> * mark up the files different lines(if they have) and write them into buffer
 
-> * convert the ```*.rst```, ```*.md``` and ```*.txt``` files into pdf
+> * convert the ```*.rst```, ```*.md``` and ```*.txt``` files into pdf(TODO)
