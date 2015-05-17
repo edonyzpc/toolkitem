@@ -199,3 +199,5 @@ if __name__ == '__main__':
     pdf2.pdf.ln(20)
     pdf2.footer('Arial')
     pdf2.pdf.output('test2.pdf', 'F')
+
+    # TODO(edony):class Txt2Pdf test
