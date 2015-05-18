@@ -111,15 +111,24 @@ class PdfConvertor:
             if file.split('.')[1] in ['txt', 'md', 'rst']:
                 self.txt_files.append(file)
     def img_convert(self):
+        """
+        Image convetor.
+        """
         imgpdf = Img2Pdf(self.img_files, 1, 'img.pdf')
         imgpdf.img2pdf()
         imgpdf.convertor()
 
     def txt_convert(self):
+        """
+        Plain text file convertor.
+        """
         txtpdf = Txt2Pdf('fireflysung', self.txt_files)
         txtpdf.convertor()
 
     def merge_all(self):
+        """
+        Convert all given files into a pdf.
+        """
         merge_pdf = PdfFileWriter()
         merge_tmp_img = PdfFileReader(open('img.pdf', 'rb'))
         merge_tmp_txt = PdfFileReader(open('txt.pdf', 'rb'))
@@ -137,6 +146,7 @@ class PdfConvertor:
 
 
 if __name__ == '__main__':
+    # testing
     files = ['txt1.txt', 'txt2.txt','img1.png', 'img2.png']
     tmp = PdfConvertor(files)
     tmp.type_filter()

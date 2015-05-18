@@ -99,7 +99,7 @@ class PDF:
 
     def header(self, title):
         """
-        Write title into pdf.
+        Write title page into pdf.
         """
         self.pdf.set_font(self.font, '', 18)
         # Move to the right
@@ -112,6 +112,9 @@ class PDF:
         #self.pdf.ln(1)
 
     def footer(self, font=None):
+        """
+        Set pdf file footer format.
+        """
         # Position at 1.5cm from bottom
         self.pdf.set_y(-35)
         if font:
@@ -122,6 +125,9 @@ class PDF:
         self.pdf.cell(0, 10, str(self.pdf.page_no())+'\n', 'T', 0, 'C')
 
     def body(self, font=None):
+        """
+        Set pdf file body format.
+        """
         if font:
             self.pdf.add_font(font, '', font+'.ttf', uni=True)
             self.pdf.set_font(font, '', 16)
@@ -140,6 +146,9 @@ class Txt2Pdf(PDF):
         self.file_buf = {}
 
     def convertor(self):
+        """
+        Convertor for plain text file into pdf file.
+        """
         for file in self.files:
             file_open = open(file)
             self.file_buf[file] = file_open.readlines()
@@ -184,6 +193,7 @@ class Txt2Pdf(PDF):
 
         
 if __name__ == '__main__':
+    # testing
     pdf = FPDF()
     pdf.add_page('','A4',True)
     pdf.add_font('fireflysung', '', '/usr/share/fonts/fireflysung/fireflysung.ttf', uni=True)

@@ -172,6 +172,11 @@ import os
 import argparse
 
 class Img2Pdf:
+    """
+    IMG2PDF: a convertor class for image --> pdf
+
+    TODO(edony): manual the position of image to add.
+    """
     def __init__(self, img_files, add_positions, out_pdf_name):
         self.imgs = img_files
         self.add_position = add_positions
@@ -179,6 +184,9 @@ class Img2Pdf:
         self.img_pdf_file = []
 
     def img2pdf(self):
+        """
+        Convert image file into pdf file.
+        """
         for img in self.imgs:
             print img
             im = PIL.Image.open(img)
@@ -189,6 +197,9 @@ class Img2Pdf:
             #im.close()
 
     def convertor(self):
+        """
+        Convert all given images into pdf file with stream way.
+        """
         merge_img2pdf = PdfFileWriter()
         for img_pdf in self.img_pdf_file:
             merge_tmp = PdfFileReader(open(img_pdf, 'rb'))
@@ -202,6 +213,7 @@ class Img2Pdf:
 
 
 if __name__ == '__main__':
+    # testing
     images = ['img1.png', 'img2.png']
     pdf = 'imgtest.pdf'
     test = Img2Pdf(images, 1, pdf)
