@@ -196,8 +196,8 @@ class Img2Pdf:
             for i in range(num_pages):
                 merge_img2pdf.addPage(merge_tmp.getPage(i))
             os.remove(img_pdf)
-        with open(self.out_pdf_name, 'wb') as outputStream:
-            merge_img2pdf.write(outputStream)
+        with open(self.out_pdf_name, 'wb') as outputstream:
+            merge_img2pdf.write(outputstream)
 
 
 

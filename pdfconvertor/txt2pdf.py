@@ -134,7 +134,7 @@ class Txt2Pdf(PDF):
     PDF Convertor for text files.
     """
     def __init__(self, font, txt_files):
-        PDF.__init__(font)
+        PDF.__init__(self, font)
         self.files = txt_files
         self.convert_one_pdf = 1  # default to convert txt_files into one pdf file
         self.file_buf = {}
@@ -146,10 +146,13 @@ class Txt2Pdf(PDF):
             file_open.close()
         if self.convert_one_pdf:
             self.pdf.add_page('', 'A4', True)
-            self.pdf.header(pdf_name = raw_input('\aPDF file name: '))
+            pdf_name = raw_input('\aPDF file name: ')
+            self.header(pdf_name)
             self.pdf.add_page('', 'A4', True)
             counter = 0
+            file_counter = 0
             for file in self.files:
+                file_counter += 1
                 for line in self.file_buf[file]:
                     self.body()
                     self.pdf.write(12, line)
@@ -158,7 +161,7 @@ class Txt2Pdf(PDF):
                         self.footer()
                         self.pdf.add_page('', 'A4', True)
                         counter = 0
-                if counter != 60:
+                if counter != 60 and file_counter < len(self.files):
                     self.footer()
                     self.pdf.add_page('', 'A4', True)
             self.pdf.output(pdf_name + '.pdf')
