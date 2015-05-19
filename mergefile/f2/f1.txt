@@ -3,5 +3,4 @@ func(a, b)
     b = a
 
 test{
-cout<<"test..."<<endl;
 }
