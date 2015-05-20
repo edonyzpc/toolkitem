@@ -22,4 +22,4 @@ elif [ "$NUM" -gt "$OPT" ];then
 #    sed -i 's/@@@@/d' buf.diff
     patch $1 buf.diff
 fi
-#rm -f buf.diff
+rm -f buf.diff
