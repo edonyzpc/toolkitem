@@ -99,18 +99,21 @@ class ZJUCareer(object):
         self.url_main_class = 'con list2'
         self.url_main_li = 'ul'
         self.tabs_num = 8
+        self.char_encode = ''
         
     def crawler(self):
         source = requests.get(self.url_main)
-        char_encode = source.encoding
+        self.char_encode = source.encoding
         if source:
             soup = BS(source.content)
+            soup.decode_contents()
             file_buf = open("buf", 'w')
             for i in range(self.tabs_num):
                 #ID = self.url_main_id + str(i)
                 info_tmp = soup.findAll("a")
-                tmp_str = str(info_tmp)
-                file_buf.write(tmp_str)
+                #tmp_str = info_tmp
+                #file_buf.write(tmp_str)
+                file_buf.write(str(info_tmp))
             file_buf.close()
             os.system("dos2unix -o buf")
         else:
@@ -120,7 +123,9 @@ class ZJUCareer(object):
         file_buf = open('buf', 'r')
         file_info = open('career', 'w')
         for line in file_buf.readlines():
-            file_info.write(re.sub('.*title="', '', line))
+            tmp_line = re.sub('.*title="', '', line)
+            #tmp_line = tmp_line.decode('utf-8')
+            file_info.write(tmp_line)
         file_info.close()
         file_buf.close()
 
