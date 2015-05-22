@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 r"""
  #        .---.         .-----------
  #       /     \  __  /    ------
@@ -90,11 +89,13 @@ import html2text
 from bs4 import BeautifulSoup as BS
 import requests
 import os
+import sys
 import re
 
 class ZJUCareer(object):
     def __init__(self):
         self.url_main = u'http://www.career.zju.edu.cn/ejob/login_student.do'
+        self.url_sub = u'http://www.career.zju.edu.cn/ejob/'
         self.url_main_id = 'con'
         self.url_main_class = 'con list2'
         self.url_main_li = 'ul'
@@ -104,16 +105,13 @@ class ZJUCareer(object):
     def crawler(self):
         source = requests.get(self.url_main)
         self.char_encode = source.encoding
+        reload(sys)
+        sys.setdefaultencoding(self.char_encode)
         if source:
-            soup = BS(source.content)
-            soup.decode_contents()
+            soup = BS(source.content, from_encoding=self.char_encode)
             file_buf = open("buf", 'w')
-            for i in range(self.tabs_num):
-                #ID = self.url_main_id + str(i)
-                info_tmp = soup.findAll("a")
-                #tmp_str = info_tmp
-                #file_buf.write(tmp_str)
-                file_buf.write(str(info_tmp))
+            info_tmp = soup.findAll("a")
+            file_buf.write(str(info_tmp))
             file_buf.close()
             os.system("dos2unix -o buf")
         else:
@@ -123,9 +121,16 @@ class ZJUCareer(object):
         file_buf = open('buf', 'r')
         file_info = open('career', 'w')
         for line in file_buf.readlines():
-            tmp_line = re.sub('.*title="', '', line)
-            #tmp_line = tmp_line.decode('utf-8')
-            file_info.write(tmp_line)
+            #tmp_line = re.sub('.*title="', '', line)
+            pattern = re.compile('.*href="(.*)" style.*title="(.*)".*')
+            tmp_line = pattern.search(line)
+            if tmp_line:
+                group = tmp_line.groups()
+                file_info.write(group[1]+'\n')
+                file_info.write(self.url_sub + group[0]+'\n')
+                file_info.write("\n")
+            else:
+                continue
         file_info.close()
         file_buf.close()
 
@@ -134,5 +139,9 @@ if __name__ == '__main__':
     test = ZJUCareer()
     test.crawler()
     test.info_filter()
+    print "\aIf the web site got ^M, you need remove it for better reading\n"
+    opt = raw_input('REMOVE or NOT?\n')
+    if opt == 'Y' or opt == 'y':
+        os.system('vim career')
 
 
