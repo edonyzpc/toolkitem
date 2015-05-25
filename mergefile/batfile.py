@@ -132,7 +132,7 @@ class BatchFileMerge(FileLine):
         file_counter = 0
         os.chdir(self.main_direction)
         for file in self.mergeinto_files:
-            merge_command = "./analysefile.sh "
+            merge_command = "/home/edony/code/github/toolkitem/mergefile/analysefile.sh "
             merge_command += "." + file.split(self.main_direction)[1]
             merge_command += " " + "."
             merge_command += self.mergefrom_files[file_counter].split(self.main_direction)[1]

@@ -7,6 +7,7 @@ diff -c $1 $2 > buf.diff
 # Remove the delete lines
 #sed -i 's/^-\( \{1,\}.*\)/ /2' buf.diff
 sed -i 's/^-\( \{1,\}.*\)/ \1/g' buf.diff
+sed -i 's/^!\( \{1,\}.*\)/ \1/g' buf.diff
 #grep '^- \{1,\}' buf.diff | sed 's/^-/ /'
 VAR=$(grep '^- \{1,\}' buf.diff | sed 's/^-/ /')
 NUM=$(echo "$VAR" | wc -l)
@@ -22,4 +23,4 @@ elif [ "$NUM" -gt "$OPT" ];then
 #    sed -i 's/@@@@/d' buf.diff
     patch $1 buf.diff
 fi
-rm -f buf.diff
+#rm -f buf.diff

@@ -10,6 +10,9 @@ int main() {
     double tmp_double;
     std::cout<<"test"<<std::endl;
     for(int i=0;i<10;++i) {
+        std::cout<<i+10<<std::endl;
+    }
+    for(int i=0;i<10;++i) {
         std::cout<<i+1<<std::endl;
     }
 }
