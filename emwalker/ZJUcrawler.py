@@ -136,12 +136,18 @@ class ZJUCareer(object):
 
 
 if __name__ == '__main__':
+    os.system('mv career career_old')
     test = ZJUCareer()
     test.crawler()
     test.info_filter()
     print "\aIf the web site got ^M, you need remove it for better reading\n"
     opt = raw_input('REMOVE or NOT?\n')
     if opt == 'Y' or opt == 'y':
-        os.system('vim career')
+        opt = os.system('vim career')
+        if opt == 0:
+            opt1 = os.system('vim -d career career_old')
+            if opt1 == 0:
+                os.system('mv career career_old')
+
 
 
