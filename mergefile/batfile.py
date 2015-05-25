@@ -131,6 +131,7 @@ class BatchFileMerge(FileLine):
         self.mergefrom_files = sorted(self.mergefrom_files)
         file_counter = 0
         os.chdir(self.main_direction)
+        file_diff = open('difffile.txt', 'w')
         for file in self.mergeinto_files:
             merge_command = "/home/edony/code/github/toolkitem/mergefile/analysefile.sh "
             merge_command += "." + file.split(self.main_direction)[1]
@@ -138,7 +139,13 @@ class BatchFileMerge(FileLine):
             merge_command += self.mergefrom_files[file_counter].split(self.main_direction)[1]
             print merge_command
             os.system(merge_command)
+            file_tmp = open('buf.diff')
+            if len(file_tmp.readlines()) > 2:
+                file_diff.write(file)
+                file_diff.write('\n')
+            file_tmp.close()
             file_counter += 1
+        file_diff.close()
 
 if __name__ == "__main__":
     dir1 = "/home/edony/code/github/toolkitem/mergefile/f1"
