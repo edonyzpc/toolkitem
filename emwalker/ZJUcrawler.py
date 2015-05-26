@@ -133,6 +133,7 @@ class ZJUCareer(object):
                 continue
         file_info.close()
         file_buf.close()
+        os.system('mv buf')
 
 
 if __name__ == '__main__':
