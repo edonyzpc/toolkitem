@@ -136,7 +136,8 @@ class ZJUCareer(object):
 
 
 if __name__ == '__main__':
-    os.system('mv career career_old')
+    if 'career' in os.listdir('./'):
+        os.system('mv career career_old')
     test = ZJUCareer()
     test.crawler()
     test.info_filter()
