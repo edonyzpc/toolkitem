@@ -6,3 +6,5 @@
 ------------
 
 * Accumulate url address and add descriptor for this address from Markdown file.
+
+* Extract the specific contents according to the keys from the text.
