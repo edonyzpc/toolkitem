@@ -39,14 +39,17 @@ class Extractor(object):
             self.keys =[keys]
         else:
             raise ValueError("Wrong Key type")
+
         if output_file:
             self.output_file = output_file
         else:
             self.output_file = 'EXTRACT'
-        if flag:
+
+        if flag is None:
             self.flag = [0, 0]  #flag are controlling add the keys into write file
         else:
             self.flag = flag
+
         self.pattern = Extractor.re_pattern(self.keys)
         self.extracted_file = extracted_file
 
@@ -66,7 +69,6 @@ class Extractor(object):
                     g = self.pattern.search(line)
                     if g:
                         if self.flag[0]:
-                            print('test')
                             out.write(self.keys[0])
                         out.write(g.group('con'))
                         if self.flag[1]:
@@ -75,6 +77,5 @@ class Extractor(object):
         print('Finish Extract')
 
 if __name__ == '__main__':
-    tmp = Extractor('http:', 'career_old')
-    tmp.flag = [1,0]
+    tmp = Extractor('http:', 'career_old', flag=[1,0])
     tmp.parser()
