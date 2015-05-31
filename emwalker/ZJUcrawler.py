@@ -133,7 +133,7 @@ class ZJUCareer(object):
                 continue
         file_info.close()
         file_buf.close()
-        os.system('mv buf')
+        os.system('rm buf')
 
 
 if __name__ == '__main__':
@@ -147,9 +147,8 @@ if __name__ == '__main__':
     if opt == 'Y' or opt == 'y':
         opt = os.system('vim career')
         if opt == 0:
+            os.system('diff -c career career_old > difference')
             opt1 = os.system('vim -d career career_old')
             if opt1 == 0:
                 os.system('mv career career_old')
-
-
 
