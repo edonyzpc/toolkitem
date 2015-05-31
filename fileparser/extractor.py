@@ -63,6 +63,9 @@ class Extractor(object):
         return re.compile(regular_expression)
 
     def parser(self):
+        """
+        Extract the content between keys(if has).
+        """
         with open(self.output_file, 'w') as out:
             with open(self.extracted_file) as exfile:
                 for line in exfile.readlines():
