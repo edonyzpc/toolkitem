@@ -208,7 +208,10 @@ class UpdateSys(object):
         pwf.close()
         echo = ['echo']
         echo.append(password)
-        cmd = 'sudo -S yum -y update'
+        if pf.linux_distribution()[1] > '21':
+            cmd = 'sudo -S dnf -y update'
+        else:
+            cmd = 'sudo -S yum -y update'
         pipein = sp.Popen(echo, stdout=sp.PIPE)
         pipeout = sp.Popen(cmd.split(), stdin=pipein.stdout, stdout=sp.PIPE)
         for line in pipeout.stdout.readlines():
