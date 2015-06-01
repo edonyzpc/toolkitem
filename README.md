@@ -14,6 +14,6 @@
 
 > * convert the ```*.rst```, ```*.md``` and ```*.txt``` files into pdf  ====>  `pdfconvertor`
 
-> * delete syntax format from files (```*.md```,```*.rst``` and so on)and get the plain text file.  ====>  `fileparser`
+> * delete syntax format from files (```*.md```,```*.rst``` and so on)and get the plain text file. Extact the content from the given keys.  ====>  `fileparser`
 
 > * personal crawler for information accumulate  ====>  `emwalker`
