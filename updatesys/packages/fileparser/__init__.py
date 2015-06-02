@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 r"""
  #        .---.         .-----------
@@ -16,7 +17,7 @@ r"""
  #
  # twitter : @edonyzpc
  #
- # Last modified: 2015-05-08 14:47
+ # Last modified: 2015-06-02 20:55
  #
  # Filename: __init__.py
  #
@@ -25,5 +26,4 @@ r"""
 """
 from __future__ import absolute_import
 
-from . import filesline
-from . import fileparser
+from . import extractor
