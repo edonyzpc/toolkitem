@@ -233,26 +233,20 @@ class UpdateSys(object):
         Update projects in self.path.
         If gitpath is given, Update project in the given path.
         """
-        if gitpath == None:
-            for direction in self.gitdir:
-                os.chdir(direction)
-                status = os.popen('git pull')
-                print self.pcolor.warningcolor,
-                print direction,
-                print self.pcolor.endcolor
-                self.__outstatus(status)
-            print self.pcolor.tipcolor,
-            print 'update git repositroies finished',
-            print self.pcolor.endcolor
-        else:
-            print 'update git path'
-            os.chdir(gitpath)
+        if gitpath:
+            self.path = gitpath
+            self.__gitrepos()
+            print 'update git path %s'%self.path
+        for direction in self.gitdir:
+            os.chdir(direction)
             status = os.popen('git pull')
-            print self.pcolor.warningcolor + gitpath + self.pcolor.endcolor
-            self.__outstatus(status)
-            print self.pcolor.tipcolor,
-            print 'update git repositroies finished',
+            print self.pcolor.warningcolor,
+            print direction,
             print self.pcolor.endcolor
+            self.__outstatus(status)
+        print self.pcolor.tipcolor,
+        print 'update git repositroies finished',
+        print self.pcolor.endcolor
 
     def main(self):
         """
@@ -276,7 +270,7 @@ class UpdateSys(object):
         -m  : Manage MacOS Builtin Tools
         -g  : Update projects in default diection
         -gp : Update projects in given path
-        -c  : Cleanup the old kernel in Fedora system
+        -cl : Cleanup the old kernel in Fedora system
         argv: Path to update
         """
         if sys.argv[1] == '-l':
@@ -297,9 +291,13 @@ class UpdateSys(object):
             self.updategit()
         if sys.argv[1] == '-gp' and len(sys.argv) == 3:
             self.updategit(sys.argv[2])
-        if sys.argv[1] == '-c':
-            clean_kernel = KC(1)
-            clean_kernel.main()
+        if sys.argv[1] == '-cl':
+            if pf.system() == 'Linux' and len(sys.argv) == 2:
+                os.system('dnf clean all')
+                clean_kernel = KC(1)
+                clean_kernel.main()
+            elif pf.system() == 'Darwin' and len(sys.argv) == 2:
+                os.system('brew cleanup')
 
 if __name__ == '__main__':
     UPDATE = UpdateSys()
