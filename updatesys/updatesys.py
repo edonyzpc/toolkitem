@@ -237,6 +237,7 @@ class UpdateSys(object):
             self.path = gitpath
             self.__gitrepos()
             print 'update git path %s'%self.path
+            print 'update %d repositroies'%len(self.gitdir)
         for direction in self.gitdir:
             os.chdir(direction)
             status = os.popen('git pull')
@@ -290,6 +291,7 @@ class UpdateSys(object):
             print 'update %d repositroies'%len(self.gitdir)
             self.updategit()
         if sys.argv[1] == '-gp' and len(sys.argv) == 3:
+            print "system info: " + pf.system()
             self.updategit(sys.argv[2])
         if sys.argv[1] == '-cl':
             if pf.system() == 'Linux' and len(sys.argv) == 2:
