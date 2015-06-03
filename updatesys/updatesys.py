@@ -92,6 +92,7 @@ import os
 import platform as pf
 import subprocess as sp
 from packages.filesline.filesline import FileLine as fl
+from kernelclean import KernelClean as KC
 
 class UpdateSys(object):
     """
@@ -273,6 +274,7 @@ class UpdateSys(object):
         -m  : Manage MacOS Builtin Tools
         -g  : Update projects in default diection
         -gp : Update projects in given path
+        -c  : Cleanup the old kernel in Fedora system
         argv: Path to update
         """
         if sys.argv[1] == '-l':
@@ -293,6 +295,9 @@ class UpdateSys(object):
             self.updategit()
         if sys.argv[1] == '-gp' and len(sys.argv) == 3:
             self.updategit(sys.argv[2])
+        if sys.argv[1] == '-c':
+            clean_kernel = KC(1)
+            clean_kernel.main()
 
 if __name__ == '__main__':
     UPDATE = UpdateSys()

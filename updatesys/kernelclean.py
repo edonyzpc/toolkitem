@@ -158,9 +158,9 @@ class KernelClean(object):
                     print line
             print self.color.tipcolor + 'end cleanup' + self.color.endcolor
         else:
-            print self.color.warningcolor,
-            print 'Your Kernel is Update!',
-            print self.color.endcolor
+            print self.color.warningcolor +\
+                    'Your Kernel is Update!' +\
+                    self.color.endcolor
 
     def main(self):
         self.using_kernel()
