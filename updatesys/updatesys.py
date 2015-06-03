@@ -25,6 +25,23 @@ r"""
  #
  # This module is a tool for managing system.
 """
+from __future__ import absolute_import
+#import numpy as np
+#import scipy as sp
+#import math as m
+#import matplotlib as mpl
+#import matplotlib.pyplot as plt
+#from mpl_toolkits.mplot3d import Axes3D as Ax3
+#from scipy import stats as st
+#from matplotlib import cm
+
+import sys
+import os
+import platform as pf
+import subprocess as sp
+from packages.filesline.filesline import FileLine as fl
+from kernelclean import KernelClean as KC
+
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
     "F3" call Addpy() function to add this class which is defined
@@ -78,21 +95,6 @@ class PyColor(object):
         """
         self.warningcolor = ''
         self.endcolor = ''
-#import numpy as np
-#import scipy as sp
-#import math as m
-#import matplotlib as mpl
-#import matplotlib.pyplot as plt
-#from mpl_toolkits.mplot3d import Axes3D as Ax3
-#from scipy import stats as st
-#from matplotlib import cm
-
-import sys
-import os
-import platform as pf
-import subprocess as sp
-from packages.filesline.filesline import FileLine as fl
-from kernelclean import KernelClean as KC
 
 class UpdateSys(object):
     """

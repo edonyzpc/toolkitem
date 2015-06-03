@@ -32,8 +32,11 @@ r"""
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
+from __future__ import absolute_import
+
 import os
 import subprocess as sp
+import platform as pf
 from packages.fileparser.extractor import Extractor
 
 class PyColor(object):
@@ -77,7 +80,7 @@ class PyColor(object):
         """
         return self._newcolor
     @new.setter
-    def new(self,color_str):
+    def new(self, color_str):
         """
         New Color.
         """
@@ -95,20 +98,32 @@ class KernelClean(object):
     """
     def __init__(self, check=0):
         self._filebuf = 'kernelclean'
-        self.command_rpm_kernel = 'rpm -qa | grep kernel- > kernelclean'
-        os.system(self.command_rpm_kernel)
-        self.command_kernel = 'uname -r'
+        #self.command_rpm_kernel = 'rpm -qa | grep kernel- > kernelclean'
+        #os.system(self.command_rpm_kernel)
+        #self.command_kernel = 'uname -r'
         self.kernel = ''
         self.old_kernel = ''
         self.kernel_clean = ''
         self.color = PyColor()
         self.check = check
+        self.pwd = 'pwd.pyo'
 
     def using_kernel(self):
-        pipeout = sp.Popen(self.command_kernel.split(), stdout=sp.PIPE)
+        """
+        RPM query about the kernel existing in the system => self._filebuf
+        Get the version of running kernel => self.kernel
+        """
+        command_rpm_kernel = 'rpm -qa | grep kernel- > '
+        command_rpm_kernel += self._filebuf
+        os.system(command_rpm_kernel)
+        command_kernel = 'uname -r'
+        pipeout = sp.Popen(command_kernel.split(), stdout=sp.PIPE)
         self.kernel = pipeout.stdout.readline().rstrip()
-        
+
     def find_old_kernel(self):
+        """
+        Find the old kernel in system => self.old_kernel
+        """
         with open(self._filebuf) as buf:
             counter = 0
             for line in buf.readlines():
@@ -124,6 +139,9 @@ class KernelClean(object):
                     break
 
     def clean_kernel(self):
+        """
+        Ensure the to be cleaned kernel in queried list => self.kernelclean
+        """
         if self.old_kernel:
             with open(self._filebuf) as buf:
                 for line in buf.readlines():
@@ -132,7 +150,24 @@ class KernelClean(object):
                         self.kernel_clean += ' '
 
     def cleanup(self):
-        if self.kernel_clean:
+        """
+        Cleanup the old kernel
+        """
+        if self.old_kernel > self.kernel:
+            print 'Running Kernel ' +\
+                    self.kernel +\
+                    self.color.warningcolor +\
+                    ' < ' +\
+                    self.color.endcolor +\
+                    'To Be Removed Kernel ' +\
+                    self.old_kernel
+            reboot = raw_input('You Need to Reboot System to Make Sure Running On New Kernel')
+            if reboot == 'y':
+                os.system('reboot')
+            else:
+                print 'Not A Running On Newer Kernel!'
+                print 'Cleanup Abort!'
+        elif self.kernel_clean:
             print self.color.warningcolor + 'cleanup kernel' + self.color.endcolor
             pwf = open(self.pwd)
             password = pwf.readline().rstrip()
@@ -153,7 +188,7 @@ class KernelClean(object):
                 elif 'error:' in line.split()\
                         or 'warning:' in line.split()\
                         or 'fatal:' in line.split():
-                    print self.pcolor.warningcolor + line + self.pcolor.endcolor
+                    print self.color.warningcolor + line + self.color.endcolor
                 else:
                     print line
             print self.color.tipcolor + 'end cleanup' + self.color.endcolor
@@ -163,6 +198,9 @@ class KernelClean(object):
                     self.color.endcolor
 
     def main(self):
+        """
+        Union the cleanup stream
+        """
         self.using_kernel()
         self.find_old_kernel()
         self.clean_kernel()
@@ -186,5 +224,7 @@ class KernelClean(object):
             print 'Do Not Remove Old kernel\n'
 
 if __name__ == '__main__':
-    test = KernelClean(1)
-    test.main()
+    TEST = KernelClean(1)
+    TEST.main()
+    EXT = Extractor(TEST.old_kernel, 'kernelclean')
+    EXT.parser()
