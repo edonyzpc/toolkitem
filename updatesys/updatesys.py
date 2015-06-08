@@ -35,12 +35,15 @@ from __future__ import absolute_import
 #from scipy import stats as st
 #from matplotlib import cm
 
-import sys
 import os
 import platform as pf
 import subprocess as sp
+import argparse as ap
 from packages.filesline.filesline import FileLine as fl
 from kernelclean import KernelClean as KC
+
+__version__ = 1.0
+__author__ = 'edony'
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -102,16 +105,16 @@ class UpdateSys(object):
 
     This tool update your system, manage your builtin tools, update your project.
 
-    See UpdateSys.updategit, UpdateSys.main, UpdateSys.cmd_exec.
+    See UpdateSys.updategit, UpdateSys.main, UpdateSys.cmd_parser.
 
-    Usage updategit [-l | -m | -g | -gp]...[argv]
+    Usage updategit [-l | -m | -g | -c | -p | -attr]...[argv]
     default : Update System and Repositories
     -l      : Manage Linux Builtin Tools
     -m      : Manage MacOS Builtin Tools
-    -g      : Update projects in default diection
-    -gp     : Update projects in given path
-    -cl     : Cleanup the old kernel in Fedora system or cleanup Mac brew pkg
-    argv    : Path to update
+    -g      : Update projects in default diection or given path
+    -c      : Cleanup the old kernel in Fedora system or cleanup Mac brew pkg
+    -p      : Specific the Path to Manage
+    -attr   : Get Details in Document of Attributes
     """
     def __init__(self, path=None):
         """
@@ -239,14 +242,20 @@ class UpdateSys(object):
 
     def updategit(self, gitpath=None):
         """
-        Update projects in self.path.
+        Update projects in default path.
         If gitpath is given, Update project in the given path.
         """
         if gitpath:
             self.path = gitpath
-            self.__gitrepos()
-            print 'update git path %s'%self.path
-            print 'update %d repositroies'%len(self.gitdir)
+        else:
+            if pf.system() == 'Darwin':
+                self.path = '/Users/edony/coding/'
+            elif pf.system() == 'Linux':
+                self.path = '/home/edony/code/github/'
+
+        self.__gitrepos()
+        print 'update git path %s'%self.path
+        print 'update %d repositroies'%len(self.gitdir)
         for direction in self.gitdir:
             os.chdir(direction)
             status = os.popen('git pull')
@@ -272,58 +281,68 @@ class UpdateSys(object):
         print 'update %d repositroies'%len(self.gitdir)
         self.updategit()
 
-    def cmd_exec(self):
-        """
-        Command line to execute part management:
-        Usage updategit [-l | -m | -g | -gp]...[argv]
-        -l  : Manage Linux Builtin Tools
-        -m  : Manage MacOS Builtin Tools
-        -g  : Update projects in default diection
-        -gp : Update projects in given path
-        -cl : Cleanup the old kernel in Fedora system or cleanup Mac brew pkg
-        argv: Path to update
-        """
-        if sys.argv[1] == '-l':
-            self.__updateyum()
-        if sys.argv[1] == '-m':
-            self.__updatebrew()
-        if sys.argv[1] == '-g':
-            print "system info: " + pf.system()
-            if pf.system() == 'Darwin' and len(sys.argv) == 2:
-                self.path = '/Users/edony/coding/'
-            elif pf.system() == 'Linux' and len(sys.argv) == 2:
-                self.path = '/home/edony/code/github/'
-            if len(sys.argv) == 3:
-                self.path = sys.argv[2]
-            print 'git repositroies path: ' + self.path
-            self.__gitrepos()
-            print 'update %d repositroies'%len(self.gitdir)
-            self.updategit()
-        if sys.argv[1] == '-gp' and len(sys.argv) == 3:
-            print "system info: " + pf.system()
-            self.updategit(sys.argv[2])
-        if sys.argv[1] == '-cl':
-            if pf.system() == 'Linux' and len(sys.argv) == 2:
-                os.system('dnf clean all')
-                clean_kernel = KC(1)
-                clean_kernel.main()
-            elif pf.system() == 'Darwin' and len(sys.argv) == 2:
-                os.system('brew cleanup')
-        if sys.argv[1] == '-h':
-            if len(sys.argv) > 2:
-                self.help(sys.argv[2])
-            else:
-                self.help()
-
     def help(self, attr=None):
+        """
+        Class UpdateSys Attributes Documents Details
+        """
         if attr:
             print self.__getattribute__(attr).__doc__
         else:
             print self.__doc__
 
+    def cmd_parser(self):
+        """
+        Command Line Parser:
+        Usage updategit [-l | -m | -g | -gp]...[argv]
+        default : Update System and Repositories
+        -l      : Manage Linux Builtin Tools
+        -m      : Manage MacOS Builtin Tools
+        -g      : Update projects in default diection or given path
+        -c      : Cleanup the old kernel in Fedora system or cleanup Mac brew pkg
+        -p      : Specific the Path to Manage
+        -attr   : Get Details in Document of Attributes
+        """
+        parser = ap.ArgumentParser()
+        parser.add_argument('-l', '--linux', action='store_true',
+                            help='Manage and Update Linux Builtin Tools')
+        parser.add_argument('-m', '--mac', action='store_true',
+                            help='Manage and Update Mac Brewed Tools')
+        parser.add_argument('-g', '--git', action='store_true',
+                            help='Update Git Repositories in Default Path')
+        parser.add_argument('-c', '--cleanup', dest='c', action='store_true',
+                            help='Update Git Repositories in Default Path')
+        parser.add_argument('-p', nargs='*', help='Path Where to Management')
+        parser.add_argument('-attr', '--attribute', nargs='+',
+                            help='Help for Details On Component')
+        args = parser.parse_args()
+        if args.linux:
+            self.__updateyum()
+        elif args.mac:
+            self.__updatebrew()
+        elif args.git:
+            print "system info: " + pf.system()
+            if args.path:
+                for path in args.path:
+                    self.updategit(path)
+            else:
+                self.updategit()
+        elif args.c:
+            if pf.system() == 'Linux':
+                os.system('dnf clean all')
+                clean_kernel = KC(1)
+                clean_kernel.main()
+            elif pf.system() == 'Darwin':
+                os.system('brew cleanup')
+        elif args.attribute:
+            for attr in args.attribute:
+                self.help(attr)
+        else:
+            self.main()
+
 if __name__ == '__main__':
     UPDATE = UpdateSys()
-    if len(sys.argv) == 1:
-        UPDATE.main()
-    elif len(sys.argv) > 1:
-        UPDATE.cmd_exec()
+    UPDATE.cmd_parser()
+#    if len(sys.argv) == 1:
+#        UPDATE.main()
+#    elif len(sys.argv) > 1:
+#        UPDATE.cmd_exec()
