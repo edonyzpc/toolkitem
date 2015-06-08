@@ -103,6 +103,15 @@ class UpdateSys(object):
     This tool update your system, manage your builtin tools, update your project.
 
     See UpdateSys.updategit, UpdateSys.main, UpdateSys.cmd_exec.
+
+    Usage updategit [-l | -m | -g | -gp]...[argv]
+    default : Update System and Repositories
+    -l      : Manage Linux Builtin Tools
+    -m      : Manage MacOS Builtin Tools
+    -g      : Update projects in default diection
+    -gp     : Update projects in given path
+    -cl     : Cleanup the old kernel in Fedora system or cleanup Mac brew pkg
+    argv    : Path to update
     """
     def __init__(self, path=None):
         """
@@ -271,7 +280,7 @@ class UpdateSys(object):
         -m  : Manage MacOS Builtin Tools
         -g  : Update projects in default diection
         -gp : Update projects in given path
-        -cl : Cleanup the old kernel in Fedora system
+        -cl : Cleanup the old kernel in Fedora system or cleanup Mac brew pkg
         argv: Path to update
         """
         if sys.argv[1] == '-l':
@@ -300,6 +309,17 @@ class UpdateSys(object):
                 clean_kernel.main()
             elif pf.system() == 'Darwin' and len(sys.argv) == 2:
                 os.system('brew cleanup')
+        if sys.argv[1] == '-h':
+            if len(sys.argv) > 2:
+                self.help(sys.argv[2])
+            else:
+                self.help()
+
+    def help(self, attr=None):
+        if attr:
+            print self.__getattribute__(attr).__doc__
+        else:
+            print self.__doc__
 
 if __name__ == '__main__':
     UPDATE = UpdateSys()
