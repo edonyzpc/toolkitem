@@ -311,7 +311,7 @@ class UpdateSys(object):
                             help='Update Git Repositories in Default Path')
         parser.add_argument('-c', '--cleanup', dest='c', action='store_true',
                             help='Update Git Repositories in Default Path')
-        parser.add_argument('-p', nargs='*', help='Path Where to Management')
+        parser.add_argument('-p', '--path', nargs='*', help='Path Where to Management')
         parser.add_argument('-attr', '--attribute', nargs='+',
                             help='Help for Details On Component')
         args = parser.parse_args()
