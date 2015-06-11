@@ -37,10 +37,12 @@ from __future__ import absolute_import
 
 import os
 import re
+import hashlib
+from getpass import getpass
 import platform as pf
 import subprocess as sp
 import argparse as ap
-from packages.filesline.filesline import FileLine as fl
+from packages.filesline.getdirections import GetDirections as GD
 from kernelclean import KernelClean as KC
 
 __version__ = 1.0
@@ -132,47 +134,19 @@ class UpdateSys(object):
         #self.parse_args = []
         if path:
             self.path = path
-        if pf.system() == 'Darwin':
-            self.path = '/Users/edony/coding/'
-        if pf.system() == 'Linux':
-            self.path = '/home/edony/code/github/'
+        else:
+            self.path = ''
 
     def __gitrepos(self):
         """
         Find the git repositroies in the self.path
         """
-        rec = []
-        gitdir = []
-        fl.dirlist(self.path, rec)
-        for direction in rec:
-            tmp = direction.split('/')
-            self.__delblank(tmp)
-            if '.git' in tmp:
-                tmpgitdir = self.__gitroot(tmp)
-                gitdir.append(tmpgitdir)
-        self.gitdir = set(gitdir)
-
-    @staticmethod
-    def __gitroot(gitpath):
-        """
-        Get the git project root path
-        """
-        root = ''
-        for item in gitpath:
-            if item == '.git':
-                break
-            else:
-                root += '/'+item
-        return root
-
-    @staticmethod
-    def __delblank(linels):
-        """
-        Delete the blank line in lines list
-        """
-        for item in linels:
-            if item == '':
-                linels.remove(item)
+        tmp_getdirection = GD(self.path)
+        tmp_getdirection.get_dir()
+        for direction in tmp_getdirection.directions:
+            os.chdir(direction)
+            if '.git' in os.listdir(direction):
+                self.gitdir.append(direction)
 
     def __outstatus(self, outstatus_file):
         """
@@ -213,22 +187,40 @@ class UpdateSys(object):
         return self._password_linux
 
     @pwd.setter
-    def pwd(self, password_path):
+    def pwd(self, password):
         """
         Change the Protected Password
         """
-        self._password_linux = password_path
+        self._password_linux = password
+
+    def getpassword(self):
+        """
+        Access to the administor with enter password
+        """
+        self._password_linux = getpass("Enter your password: ")
+        counter = 1
+        pwd_md5 = 'b04c541ed735353c44c52984a1be27f8'
+        #pwf = open(self.pwd)
+        #password = pwf.readline().rstrip()
+        #pwf.close()
+        while counter < 3:
+            if pwd_md5 != hashlib.md5(self._password_linux).hexdigest():
+                print self.pcolor.warningcolor +\
+                        "Wrong Password!" +\
+                        self.pcolor.endcolor
+                self._password_linux = getpass("Try again: ")
+                counter += 1
+            else:
+                raise ValueError("Wrong Password!")
 
     def __updateyum(self):
         """
         Manage Linux builtin tools.
         """
         print self.pcolor.warningcolor + 'yum update' + self.pcolor.endcolor
-        pwf = open(self.pwd)
-        password = pwf.readline().rstrip()
-        pwf.close()
+        self.getpassword()
         echo = ['echo']
-        echo.append(password)
+        echo.append(self._password_linux)
         if pf.linux_distribution()[1] > '21':
             cmd = 'sudo -S dnf -y update'
         else:
@@ -255,9 +247,9 @@ class UpdateSys(object):
             self.path = gitpath
         else:
             if pf.system() == 'Darwin':
-                self.path = '/Users/edony/coding/'
+                self.path = '/Users/edony/coding'
             elif pf.system() == 'Linux':
-                self.path = '/home/edony/code/github/'
+                self.path = '/home/edony/code/github'
 
         self.__gitrepos()
         print 'update git repositories path: %s'%self.path
@@ -342,7 +334,6 @@ class UpdateSys(object):
         self.parser.add_argument('-a', '--attribute',
                                  nargs='+',
                                  help='Help for Details On Component')
-        #self.parse_args = self.parser.parse_args()
 
     def main(self):
         """
