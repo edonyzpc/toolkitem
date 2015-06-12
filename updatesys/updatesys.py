@@ -211,7 +211,8 @@ class UpdateSys(object):
                 self._password_linux = getpass("Try again: ")
                 counter += 1
             else:
-                raise ValueError("Wrong Password!")
+                return
+        if counter >= 3: raise ValueError("Wrong Password!")
 
     def __updateyum(self):
         """
@@ -248,7 +249,7 @@ class UpdateSys(object):
         else:
             if pf.system() == 'Darwin':
                 self.path = '/Users/edony/coding'
-            elif pf.system() == 'Linux':
+            if pf.system() == 'Linux':
                 self.path = '/home/edony/code/github'
 
         self.__gitrepos()
@@ -275,7 +276,7 @@ class UpdateSys(object):
         elif pf.system() == 'Linux':
             self.__updateyum()
         #print 'git repositroies path: %s'%self.path
-        self.__gitrepos()
+        #self.__gitrepos()
         #print 'update %d repositroies'%len(self.gitdir)
         self.updategit()
 
