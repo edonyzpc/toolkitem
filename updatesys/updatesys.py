@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 r"""
  #        .---.         .-----------
@@ -212,7 +212,8 @@ class UpdateSys(object):
                 counter += 1
             else:
                 return
-        if counter >= 3: raise ValueError("Wrong Password!")
+        if counter >= 3:
+            raise ValueError("Wrong Password!")
 
     def __updateyum(self):
         """
