@@ -158,15 +158,15 @@ class UpdateSys(object):
             elif 'error:' in line.split()\
                     or 'warning:' in line.split()\
                     or 'fatal:' in line.split():
-                print self.pcolor.warningcolor + line + self.pcolor.endcolor
+                print(self.pcolor.warningcolor + line + self.pcolor.endcolor)
             else:
-                print line
+                print(line)
 
     def __updatebrew(self):
         """
         Mange MacOS builtin tools.
         """
-        print self.pcolor.warningcolor + 'brew update' + self.pcolor.endcolor
+        print(self.pcolor.warningcolor + 'brew update' + self.pcolor.endcolor)
         brewstatus = os.popen('brew update')
         for line in brewstatus:
             if line == '':
@@ -174,10 +174,10 @@ class UpdateSys(object):
             elif 'error:' in line.split()\
                     or 'warning:' in line.split()\
                     or 'fatal:' in line.split():
-                print self.pcolor.warningcolor + line + self.pcolor.endcolor
+                print(self.pcolor.warningcolor + line + self.pcolor.endcolor)
             else:
-                print line
-        print self.pcolor.tipcolor + 'end brew update' + self.pcolor.endcolor
+                print(line)
+        print(self.pcolor.tipcolor + 'end brew update' + self.pcolor.endcolor)
 
     @property
     def pwd(self):
@@ -205,9 +205,9 @@ class UpdateSys(object):
         #pwf.close()
         while counter < 3:
             if pwd_md5 != hashlib.md5(self._password_linux).hexdigest():
-                print self.pcolor.warningcolor +\
+                print(self.pcolor.warningcolor +\
                         "Wrong Password!" +\
-                        self.pcolor.endcolor
+                        self.pcolor.endcolor)
                 self._password_linux = getpass("Try again: ")
                 counter += 1
             else:
@@ -219,7 +219,7 @@ class UpdateSys(object):
         """
         Manage Linux builtin tools.
         """
-        print self.pcolor.warningcolor + 'yum update' + self.pcolor.endcolor
+        print(self.pcolor.warningcolor + 'yum update' + self.pcolor.endcolor)
         self.getpassword()
         echo = ['echo']
         echo.append(self._password_linux)
@@ -235,10 +235,10 @@ class UpdateSys(object):
             elif 'error:' in line.split()\
                     or 'warning:' in line.split()\
                     or 'fatal:' in line.split():
-                print self.pcolor.warningcolor + line + self.pcolor.endcolor
+                print(self.pcolor.warningcolor + line + self.pcolor.endcolor)
             else:
-                print line
-        print self.pcolor.tipcolor + 'end yum update' + self.pcolor.endcolor
+                print(line)
+        print(self.pcolor.tipcolor + 'end yum update' + self.pcolor.endcolor)
 
     def updategit(self, gitpath=None):
         """
@@ -254,24 +254,20 @@ class UpdateSys(object):
                 self.path = '/home/edony/code/github'
 
         self.__gitrepos()
-        print 'update git repositories path: %s'%self.path
-        print 'update %d repositroies'%len(self.gitdir)
+        print('update git repositories path: %s'%self.path)
+        print('update %d repositroies'%len(self.gitdir))
         for direction in self.gitdir:
             os.chdir(direction)
             status = os.popen('git pull')
-            print self.pcolor.warningcolor,
-            print direction,
-            print self.pcolor.endcolor
+            print(self.pcolor.warningcolor, direction, self.pcolor.endcolor)
             self.__outstatus(status)
-        print self.pcolor.tipcolor,
-        print 'update git repositroies finished',
-        print self.pcolor.endcolor
+        print(self.pcolor.tipcolor, 'update git repositroies finished', self.pcolor.endcolor)
 
     def default(self):
         """
         Manage system with default operation, update builtin tools and projects.
         """
-        print "system info: " + pf.system()
+        print("system info: " + pf.system())
         if pf.system() == 'Darwin':
             self.__updatebrew()
         elif pf.system() == 'Linux':
@@ -287,23 +283,23 @@ class UpdateSys(object):
         """
         if attr:
             if attr in UpdateSys.__dict__.keys():
-                print self.__getattribute__(attr).__doc__
+                print(self.__getattribute__(attr).__doc__)
             else:
-                print self.pcolor.warningcolor +\
+                print(self.pcolor.warningcolor +\
                         "ERROR" +\
                         self.pcolor.endcolor +\
-                        ": You get wrong attribute for help."
-                print self.pcolor.tipcolor+\
+                        ": You get wrong attribute for help.")
+                print(self.pcolor.tipcolor+\
                         "They must in: " +\
-                        self.pcolor.endcolor
+                        self.pcolor.endcolor)
                 for item in UpdateSys.__dict__.keys():
                     if re.match("^_+/w+", item):
                         continue
                     else:
-                        print item + ",",
-                print ""
+                        print(item + ",",)
+                print("")
         else:
-            print self.__doc__
+            print(self.__doc__)
 
     def cmd_parser(self):
         """
@@ -347,7 +343,7 @@ class UpdateSys(object):
         elif self.parser.parse_args().mac:
             self.__updatebrew()
         elif self.parser.parse_args().git:
-            print "system info: " + pf.system()
+            print("system info: " + pf.system())
             if self.parser.parse_args().path:
                 for path in self.parser.parse_args().path:
                     self.updategit(path)

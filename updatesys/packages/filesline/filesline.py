@@ -125,7 +125,7 @@ class FileLine:
         p = re.compile(str(pattern))
         for d in self.alldir:
             if not p.match(d) is None:
-                print 'poping',
+                print('poping',)
                 self.alldir.remove(d)
 
 class FileFilter(FileLine):
