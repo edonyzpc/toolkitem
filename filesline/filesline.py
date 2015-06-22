@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 r"""
  #        .---.         .-----------
@@ -144,7 +144,7 @@ class FileLine:
         p = re.compile(str(pattern))
         for d in self.alldir:
             if not p.match(d) is None:
-                print 'poping',
+                print('poping',)
                 self.alldir.remove(d)
 
 
@@ -184,5 +184,5 @@ if __name__ == '__main__':
     #for f in files:
     #    print f
     lines = FileLine.lofdir(files)
-    print 'total lines are %d'%lines
+    print('total lines are %d'%lines)
  

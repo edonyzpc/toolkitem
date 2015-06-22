@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 r"""
  #        .---.         .-----------
@@ -163,13 +163,13 @@ class GetDirections(object):
         self.get_dir()
         self.all_files()
         if self.files:
-            print self.color.tipcolor, self.path, self.color.endcolor, '\n'
+            print(self.color.tipcolor, self.path, self.color.endcolor, '\n')
             for key in self.files.keys():
-                print self.color.warningcolor, "|-- .%s\\"%key.split(self.path)[1],\
-                        self.color.endcolor
+                print(self.color.warningcolor, "|-- .%s\\"%key.split(self.path)[1],\
+                        self.color.endcolor)
                 for file_name in self.files[key]:
-                    print " |    %s"%file_name
-                print " |"
+                    print(" |    %s"%file_name)
+                print(" |")
 
 if __name__ == '__main__':
     TEST = GetDirections('/home/edony/code/github/pyexer')
