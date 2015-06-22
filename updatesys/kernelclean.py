@@ -37,6 +37,8 @@ from __future__ import absolute_import
 import os
 import subprocess as sp
 import platform as pf
+from getpass import getpass 
+import hashlib
 from packages.fileparser.extractor import Extractor
 
 class PyColor(object):
@@ -98,9 +100,6 @@ class KernelClean(object):
     """
     def __init__(self, check=0):
         self._filebuf = 'kernelclean'
-        #self.command_rpm_kernel = 'rpm -qa | grep kernel- > kernelclean'
-        #os.system(self.command_rpm_kernel)
-        #self.command_kernel = 'uname -r'
         self.kernel = ''
         self.old_kernel = ''
         self.kernel_clean = ''
@@ -108,7 +107,7 @@ class KernelClean(object):
         self.check = check
         self.pwd = 'pwd.pyo'
 
-    def using_kernel(self):
+    def in_using_kernel(self):
         """
         RPM query about the kernel existing in the system => self._filebuf
         Get the version of running kernel => self.kernel
@@ -126,19 +125,19 @@ class KernelClean(object):
         """
         with open(self._filebuf) as buf:
             counter = 0
+            heads = []
             for line in buf.readlines():
                 if line.rstrip().endswith(self.kernel):
-                    if counter < len(buf.readlines()):
-                        counter += 1
-                        continue
-                    else:
-                        return
-                else:
-                    head = line.rstrip().split(self.kernel)[0]
-                    self.old_kernel = line.rstrip().split(head)[1]
-                    break
+                    print line.rstrip().split(self.kernel)[0]
+                    heads.append(line.rstrip().split(self.kernel)[0])
+            length = len(heads[0])
+            for item in heads:
+                if len(item) > length:
+                    if line.rstrip().startswith(item):
+                        print line.rstrip().split(item)
+                        self.old_kernel = line.rstrip().split(item)[1]
 
-    def clean_kernel(self):
+    def to_cleaned_kernel(self):
         """
         Ensure the to be cleaned kernel in queried list => self.kernelclean
         """
@@ -167,13 +166,15 @@ class KernelClean(object):
             else:
                 print 'Not A Running On Newer Kernel!'
                 print 'Cleanup Abort!'
-        elif self.kernel_clean:
+        elif self.old_kernel:
             print self.color.warningcolor + 'cleanup kernel' + self.color.endcolor
-            pwf = open(self.pwd)
-            password = pwf.readline().rstrip()
-            pwf.close()
+            pwd_md5 = 'b04c541ed735353c44c52984a1be27f8'
+            pwd = getpass("Enter Your Password: ")
+            if hashlib.md5(pwd).hexdigest() != pwd_md5:
+                print "Wrong Password\n"
+                return
             echo = ['echo']
-            echo.append(password)
+            echo.append(pwd)
             if pf.linux_distribution()[1] > '21':
                 command = 'sudo -S dnf -y remove '
                 command += self.kernel_clean
@@ -192,18 +193,18 @@ class KernelClean(object):
                 else:
                     print line
             print self.color.tipcolor + 'end cleanup' + self.color.endcolor
-        else:
-            print self.color.warningcolor +\
-                    'Your Kernel is Update!' +\
-                    self.color.endcolor
+#        else:
+#            print self.color.warningcolor +\
+#                    'Your Kernel is Update!' +\
+#                    self.color.endcolor
 
     def main(self):
         """
         Union the cleanup stream
         """
-        self.using_kernel()
+        self.in_using_kernel()
         self.find_old_kernel()
-        self.clean_kernel()
+        self.to_cleaned_kernel()
         if self.check == 1:
             print self.color.warningcolor +\
                     'Your Using Kernel is ' +\
