@@ -153,6 +153,8 @@ class UpdateSys(object):
         Print highlight the executed cmd results.
         """
         for line in outstatus_file.readlines():
+            if isinstance(line, bytes):
+                line = line.decode()
             if line == '':
                 break
             elif 'error:' in line.split()\
@@ -168,15 +170,16 @@ class UpdateSys(object):
         """
         print(self.pcolor.warningcolor + 'brew update' + self.pcolor.endcolor)
         brewstatus = os.popen('brew update')
-        for line in brewstatus:
-            if line == '':
-                break
-            elif 'error:' in line.split()\
-                    or 'warning:' in line.split()\
-                    or 'fatal:' in line.split():
-                print(self.pcolor.warningcolor + line + self.pcolor.endcolor)
-            else:
-                print(line)
+        self.__outstatus(brewstatus)
+#        for line in brewstatus:
+#            if line == '':
+#                break
+#            elif 'error:' in line.split()\
+#                    or 'warning:' in line.split()\
+#                    or 'fatal:' in line.split():
+#                print(self.pcolor.warningcolor + line + self.pcolor.endcolor)
+#            else:
+#                print(line)
         print(self.pcolor.tipcolor + 'end brew update' + self.pcolor.endcolor)
 
     @property
@@ -204,7 +207,7 @@ class UpdateSys(object):
         #password = pwf.readline().rstrip()
         #pwf.close()
         while counter < 3:
-            if pwd_md5 != hashlib.md5(self._password_linux).hexdigest():
+            if pwd_md5 != hashlib.md5(self._password_linux.encode('utf-8')).hexdigest():
                 print(self.pcolor.warningcolor +\
                         "Wrong Password!" +\
                         self.pcolor.endcolor)
@@ -229,15 +232,16 @@ class UpdateSys(object):
             cmd = 'sudo -S yum -y update'
         pipein = sp.Popen(echo, stdout=sp.PIPE)
         pipeout = sp.Popen(cmd.split(), stdin=pipein.stdout, stdout=sp.PIPE)
-        for line in pipeout.stdout.readlines():
-            if line == '':
-                break
-            elif 'error:' in line.split()\
-                    or 'warning:' in line.split()\
-                    or 'fatal:' in line.split():
-                print(self.pcolor.warningcolor + line + self.pcolor.endcolor)
-            else:
-                print(line)
+        self.__outstatus(pipeout.stdout)
+#        for line in pipeout.stdout.readlines():
+#            if line == '':
+#                break
+#            elif 'error:' in line.split()\
+#                    or 'warning:' in line.split()\
+#                    or 'fatal:' in line.split():
+#                print(self.pcolor.warningcolor + line + self.pcolor.endcolor)
+#            else:
+#                print(line.decode('utf-8'))
         print(self.pcolor.tipcolor + 'end yum update' + self.pcolor.endcolor)
 
     def updategit(self, gitpath=None):
@@ -363,7 +367,10 @@ class UpdateSys(object):
             self.default()
 
 if __name__ == '__main__':
+    import sys
     UPDATE = UpdateSys()
+    UPDATE.pcolor.new = '\033[0;36m'
+    print(UPDATE.pcolor.new, sys.version, UPDATE.pcolor.endcolor)
     UPDATE.main()
 #    if len(sys.argv) == 1:
 #        UPDATE.main()
