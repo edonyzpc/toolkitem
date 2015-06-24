@@ -227,7 +227,7 @@ class UpdateSys(object):
         echo = ['echo']
         echo.append(self._password_linux)
         if pf.linux_distribution()[1] > '21':
-            cmd = 'sudo -S dnf -y update'
+            cmd = 'sudo -S dnf -y upgrade'
         else:
             cmd = 'sudo -S yum -y update'
         pipein = sp.Popen(echo, stdout=sp.PIPE)
