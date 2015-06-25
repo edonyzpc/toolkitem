@@ -131,7 +131,6 @@ class UpdateSys(object):
         self.pcolor = PyColor()
         self._password_linux = '/home/edony/code/github/toolkitem/updatesys/pwd.pyo'
         self.parser = ap.ArgumentParser()
-        #self.parse_args = []
         if path:
             self.path = path
         else:
@@ -171,16 +170,8 @@ class UpdateSys(object):
         print(self.pcolor.warningcolor + 'brew update' + self.pcolor.endcolor)
         brewstatus = os.popen('brew update')
         self.__outstatus(brewstatus)
-#        for line in brewstatus:
-#            if line == '':
-#                break
-#            elif 'error:' in line.split()\
-#                    or 'warning:' in line.split()\
-#                    or 'fatal:' in line.split():
-#                print(self.pcolor.warningcolor + line + self.pcolor.endcolor)
-#            else:
-#                print(line)
         print(self.pcolor.tipcolor + 'end brew update' + self.pcolor.endcolor)
+        print("")
 
     @property
     def pwd(self):
@@ -203,9 +194,6 @@ class UpdateSys(object):
         self._password_linux = getpass("Enter your password: ")
         counter = 1
         pwd_md5 = 'b04c541ed735353c44c52984a1be27f8'
-        #pwf = open(self.pwd)
-        #password = pwf.readline().rstrip()
-        #pwf.close()
         while counter < 3:
             if pwd_md5 != hashlib.md5(self._password_linux.encode('utf-8')).hexdigest():
                 print(self.pcolor.warningcolor +\
@@ -233,16 +221,8 @@ class UpdateSys(object):
         pipein = sp.Popen(echo, stdout=sp.PIPE)
         pipeout = sp.Popen(cmd.split(), stdin=pipein.stdout, stdout=sp.PIPE)
         self.__outstatus(pipeout.stdout)
-#        for line in pipeout.stdout.readlines():
-#            if line == '':
-#                break
-#            elif 'error:' in line.split()\
-#                    or 'warning:' in line.split()\
-#                    or 'fatal:' in line.split():
-#                print(self.pcolor.warningcolor + line + self.pcolor.endcolor)
-#            else:
-#                print(line.decode('utf-8'))
         print(self.pcolor.tipcolor + 'end yum update' + self.pcolor.endcolor)
+        print("")
 
     def updategit(self, gitpath=None):
         """
@@ -258,6 +238,7 @@ class UpdateSys(object):
                 self.path = '/home/edony/code/github'
 
         self.__gitrepos()
+        print(self.pcolor.tipcolor, 'update git', self.pcolor.endcolor)
         print('update git repositories path: %s'%self.path)
         print('update %d repositroies'%len(self.gitdir))
         for direction in self.gitdir:
@@ -266,6 +247,7 @@ class UpdateSys(object):
             print(self.pcolor.warningcolor, direction, self.pcolor.endcolor)
             self.__outstatus(status)
         print(self.pcolor.tipcolor, 'update git repositroies finished', self.pcolor.endcolor)
+        print("")
 
     def default(self):
         """
@@ -276,9 +258,6 @@ class UpdateSys(object):
             self.__updatebrew()
         elif pf.system() == 'Linux':
             self.__updateyum()
-        #print 'git repositroies path: %s'%self.path
-        #self.__gitrepos()
-        #print 'update %d repositroies'%len(self.gitdir)
         self.updategit()
 
     def help(self, attr=None):
@@ -348,11 +327,11 @@ class UpdateSys(object):
             self.__updatebrew()
         elif self.parser.parse_args().git:
             print("system info: " + pf.system())
-            if self.parser.parse_args().path:
-                for path in self.parser.parse_args().path:
-                    self.updategit(path)
-            else:
-                self.updategit()
+            self.updategit()
+        elif self.parser.parse_args().path:
+            print("system info: " + pf.system())
+            for path in self.parser.parse_args().path:
+                self.updategit(path)
         elif self.parser.parse_args().c:
             if pf.system() == 'Linux':
                 os.system('dnf clean all')
@@ -372,7 +351,3 @@ if __name__ == '__main__':
     UPDATE.pcolor.new = '\033[0;36m'
     print(UPDATE.pcolor.new, sys.version, UPDATE.pcolor.endcolor)
     UPDATE.main()
-#    if len(sys.argv) == 1:
-#        UPDATE.main()
-#    elif len(sys.argv) > 1:
-#        UPDATE.cmd_exec()
