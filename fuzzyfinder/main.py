@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import re
-from . import export
+#from . import export
 
-@export
+#@export
 def fuzzyfinder(text, collection):
     """
     Args:
