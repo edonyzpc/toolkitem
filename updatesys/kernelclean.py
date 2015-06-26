@@ -37,7 +37,7 @@ from __future__ import absolute_import
 import os
 import subprocess as sp
 import platform as pf
-from getpass import getpass 
+from getpass import getpass
 import hashlib
 from packages.fileparser.extractor import Extractor
 
@@ -124,17 +124,20 @@ class KernelClean(object):
         Find the old kernel in system => self.old_kernel
         """
         with open(self._filebuf) as buf:
-            counter = 0
             heads = []
             for line in buf.readlines():
                 if line.rstrip().endswith(self.kernel):
                     heads.append(line.rstrip().split(self.kernel)[0])
-            length = len(heads[0])
-            for item in heads:
-                if len(item) > length:
-                    if line.rstrip().startswith(item) and line.rstrip().split(item)[1]!=self.kernel:
-                        print(line.rstrip().split(item))
-                        self.old_kernel = line.rstrip().split(item)[1]
+            longest_head = heads[0]
+            for head in heads:
+                if len(head) > len(longest_head):
+                    longest_head = head
+            buf.seek(0)
+            for line in buf.readlines():
+                if line.rstrip().startswith(longest_head) and\
+                        line.rstrip().split(longest_head)[1] != self.kernel:
+                    print(line.rstrip().split(longest_head))
+                    self.old_kernel = line.rstrip().split(longest_head)[1]
 
     def to_cleaned_kernel(self):
         """
@@ -159,7 +162,7 @@ class KernelClean(object):
                     self.color.endcolor +\
                     'To Be Removed Kernel ' +\
                     self.old_kernel)
-            reboot = raw_input('You Need to Reboot System to Make Sure Running On New Kernel')
+            reboot = input('You Need to Reboot System to Make Sure Running On New Kernel')
             if reboot == 'y':
                 os.system('reboot')
             else:
