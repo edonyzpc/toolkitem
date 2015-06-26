@@ -36,7 +36,7 @@ class Extractor(object):
         if type(keys) is list:
             self.keys = keys
         elif type(keys) is str:
-            self.keys =[keys]
+            self.keys = [keys]
         else:
             raise ValueError("Wrong Key type")
 
@@ -80,5 +80,5 @@ class Extractor(object):
         print('Finish Extract')
 
 if __name__ == '__main__':
-    tmp = Extractor('http:', 'career_old', flag=[1,0])
-    tmp.parser()
+    TMP = Extractor('http:', 'career_old', flag=[1, 0])
+    TMP.parser()
