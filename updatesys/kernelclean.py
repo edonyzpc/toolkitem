@@ -117,7 +117,7 @@ class KernelClean(object):
         os.system(command_rpm_kernel)
         command_kernel = 'uname -r'
         pipeout = sp.Popen(command_kernel.split(), stdout=sp.PIPE)
-        self.kernel = pipeout.stdout.readline().rstrip()
+        self.kernel = pipeout.stdout.readline().rstrip().decode('utf-8')
 
     def find_old_kernel(self):
         """
@@ -128,12 +128,11 @@ class KernelClean(object):
             heads = []
             for line in buf.readlines():
                 if line.rstrip().endswith(self.kernel):
-                    print(line.rstrip().split(self.kernel)[0])
                     heads.append(line.rstrip().split(self.kernel)[0])
             length = len(heads[0])
             for item in heads:
                 if len(item) > length:
-                    if line.rstrip().startswith(item):
+                    if line.rstrip().startswith(item) and line.rstrip().split(item)[1]!=self.kernel:
                         print(line.rstrip().split(item))
                         self.old_kernel = line.rstrip().split(item)[1]
 
@@ -193,10 +192,9 @@ class KernelClean(object):
                 else:
                     print(line)
             print(self.color.tipcolor + 'end cleanup' + self.color.endcolor)
-#        else:
-#            print self.color.warningcolor +\
-#                    'Your Kernel is Update!' +\
-#                    self.color.endcolor
+        print(self.color.warningcolor +\
+                'Your Kernel is Update!' +\
+                self.color.endcolor)
 
     def main(self):
         """
@@ -209,16 +207,19 @@ class KernelClean(object):
             print(self.color.warningcolor +\
                     'Your Using Kernel is ' +\
                     self.kernel +\
-                    self.color.endcolor +\
-                    '\n' +\
-                    self.color.tipcolor +\
-                    'Your Old Kernel is ' +\
-                    self.old_kernel +\
-                    self.color.endcolor +\
-                    '\n' +\
-                    'To Be Removed Kernel Packages ' +\
+                    self.color.endcolor)
+            if self.old_kernel:
+                print(self.color.tipcolor +\
+                        'Your Old Kernel is ' +\
+                        self.old_kernel +\
+                        self.color.endcolor)
+            else:
+                print(self.color.tipcolor +\
+                        'Your System Has No Old Kernel' +\
+                        self.color.endcolor)
+            print('To Be Removed Kernel Packages ' +\
                     self.kernel_clean)
-            check_cmd = raw_input('Remove the old kernel?(y or n)')
+            check_cmd = input('Remove the old kernel?(y or n)')
         if check_cmd == 'y':
             self.cleanup()
             os.system("rm kernelclean")

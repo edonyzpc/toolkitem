@@ -128,6 +128,7 @@ class UpdateSys(object):
         The path has its default direction with different platform.
         """
         self.gitdir = []
+        self.hgdir = []
         self.pcolor = PyColor()
         self._password_linux = '/home/edony/code/github/toolkitem/updatesys/pwd.pyo'
         self.parser = ap.ArgumentParser()
@@ -144,8 +145,10 @@ class UpdateSys(object):
         tmp_getdirection.get_dir()
         for direction in tmp_getdirection.directions:
             os.chdir(direction)
-            if '.git' in os.listdir(direction):
+            if '.git' in os.listdir(direction) and direction not in self.gitdir:
                 self.gitdir.append(direction)
+            if '.hg' in os.listdir(direction) and direction not in self.hgdir:
+                self.hgdir.append(direction)
 
     def __outstatus(self, outstatus_file):
         """
@@ -226,7 +229,7 @@ class UpdateSys(object):
 
     def updategit(self, gitpath=None):
         """
-        Update projects in default path.
+        Update git projects in default path.
         If gitpath is given, Update project in the given path.
         """
         if gitpath:
@@ -248,6 +251,37 @@ class UpdateSys(object):
             self.__outstatus(status)
         print(self.pcolor.tipcolor, 'update git repositroies finished', self.pcolor.endcolor)
         print("")
+
+    def updatehg(self, hgpath=None):
+        """
+        Update hg projects in default path.
+        If hgpath is given, Update project in the given path.
+        """
+        if hgpath:
+            self.path = hgpath
+        self.__gitrepos()
+        print(self.pcolor.tipcolor, 'update hg', self.pcolor.endcolor)
+        print('update hg repositories path: %s'%self.path)
+        print('update %d repositroies'%len(self.hgdir))
+        for direction in self.hgdir:
+            os.chdir(direction)
+            status = os.popen('hg update')
+            print(self.pcolor.warningcolor, direction, self.pcolor.endcolor)
+            self.__outstatus(status)
+        print(self.pcolor.tipcolor, 'update hg repositroies finished', self.pcolor.endcolor)
+        print("")
+
+    @staticmethod
+    def cleanup():
+        """
+        Manage to Cleanup System Cache and Old Kernel
+        """
+        if pf.system() == 'Linux':
+            os.system('dnf clean all')
+            clean_kernel = KC(1)
+            clean_kernel.main()
+        elif pf.system() == 'Darwin':
+            os.system('brew cleanup')
 
     def default(self):
         """
@@ -305,13 +339,16 @@ class UpdateSys(object):
         self.parser.add_argument('-g', '--git',
                                  action='store_true',
                                  help='Update Git Repositories in Default Path')
+        self.parser.add_argument('-H', '--hg',
+                                 action='store_true',
+                                 help='Update HG Repositories in Default Path')
         self.parser.add_argument('-c', '--cleanup',
                                  dest='c',
                                  action='store_true',
-                                 help='Update Git Repositories in Default Path')
+                                 help='Cleanup All Repositories Cache and Old Kernel in System')
         self.parser.add_argument('-p', '--path',
                                  nargs='*',
-                                 help='Path Where to Management')
+                                 help='Repository Path Where to Management')
         self.parser.add_argument('-a', '--attribute',
                                  nargs='+',
                                  help='Help for Details On Component')
@@ -328,17 +365,23 @@ class UpdateSys(object):
         elif self.parser.parse_args().git:
             print("system info: " + pf.system())
             self.updategit()
+        elif self.parser.parse_args().hg:
+            print("system info: " + pf.system())
+            self.updatehg()
         elif self.parser.parse_args().path:
             print("system info: " + pf.system())
             for path in self.parser.parse_args().path:
                 self.updategit(path)
+            for path in self.parser.parse_args().path:
+                self.updatehg(path)
         elif self.parser.parse_args().c:
-            if pf.system() == 'Linux':
-                os.system('dnf clean all')
-                clean_kernel = KC(1)
-                clean_kernel.main()
-            elif pf.system() == 'Darwin':
-                os.system('brew cleanup')
+            UpdateSys.cleanup()
+#            if pf.system() == 'Linux':
+#                os.system('dnf clean all')
+#                clean_kernel = KC(1)
+#                clean_kernel.main()
+#            elif pf.system() == 'Darwin':
+#                os.system('brew cleanup')
         elif self.parser.parse_args().attribute:
             for attr in self.parser.parse_args().attribute:
                 self.help(attr)
