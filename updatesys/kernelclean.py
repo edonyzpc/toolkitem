@@ -71,8 +71,8 @@ class PyColor(object):
         \033[1;31;40m   <!--1-highlight;31-foreground red;40-background black-->
         \033[0m         <!--set all into default-->
         """
-        self.warningcolor = '\033[0;37;41m'
-        self.tipcolor = '\033[0;31;42m'
+        self.warningcolor = '\033[0;31m'
+        self.tipcolor = '\033[0;32m'
         self.endcolor = '\033[0m'
         self._newcolor = ''
     @property
@@ -136,7 +136,6 @@ class KernelClean(object):
             for line in buf.readlines():
                 if line.rstrip().startswith(longest_head) and\
                         line.rstrip().split(longest_head)[1] != self.kernel:
-                    print(line.rstrip().split(longest_head))
                     self.old_kernel = line.rstrip().split(longest_head)[1]
 
     def to_cleaned_kernel(self):
@@ -162,7 +161,7 @@ class KernelClean(object):
                     self.color.endcolor +\
                     'To Be Removed Kernel ' +\
                     self.old_kernel)
-            reboot = input('You Need to Reboot System to Make Sure Running On New Kernel')
+            reboot = input('You Need to Reboot System!(y or n)\n')
             if reboot == 'y':
                 os.system('reboot')
             else:
@@ -222,7 +221,7 @@ class KernelClean(object):
                         self.color.endcolor)
             print('To Be Removed Kernel Packages ' +\
                     self.kernel_clean)
-            check_cmd = input('Remove the old kernel?(y or n)')
+            check_cmd = input('Remove the old kernel?(y or n)\n')
         if check_cmd == 'y':
             self.cleanup()
             os.system("rm kernelclean")

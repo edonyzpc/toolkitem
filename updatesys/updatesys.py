@@ -79,8 +79,8 @@ class PyColor(object):
         \033[1;31;40m   <!--1-highlight;31-foreground red;40-background black-->
         \033[0m         <!--set all into default-->
         """
-        self.warningcolor = '\033[0;37;41m'
-        self.tipcolor = '\033[0;31;42m'
+        self.warningcolor = '\033[0;31m'
+        self.tipcolor = '\033[0;32m'
         self.endcolor = '\033[0m'
         self._newcolor = ''
     @property
