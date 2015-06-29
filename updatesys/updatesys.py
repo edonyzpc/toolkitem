@@ -241,15 +241,15 @@ class UpdateSys(object):
                 self.path = '/home/edony/code/github'
 
         self.__gitrepos()
-        print(self.pcolor.tipcolor, 'update git', self.pcolor.endcolor)
+        print(self.pcolor.tipcolor + 'update git' + self.pcolor.endcolor)
         print('update git repositories path: %s'%self.path)
         print('update %d repositroies'%len(self.gitdir))
         for direction in self.gitdir:
             os.chdir(direction)
             status = os.popen('git pull')
-            print(self.pcolor.warningcolor, direction, self.pcolor.endcolor)
+            print(self.pcolor.warningcolor + direction + self.pcolor.endcolor)
             self.__outstatus(status)
-        print(self.pcolor.tipcolor, 'update git repositroies finished', self.pcolor.endcolor)
+        print(self.pcolor.tipcolor + 'update git repositroies finished' + self.pcolor.endcolor)
         print("")
 
     def updatehg(self, hgpath=None):
@@ -260,15 +260,15 @@ class UpdateSys(object):
         if hgpath:
             self.path = hgpath
         self.__gitrepos()
-        print(self.pcolor.tipcolor, 'update hg', self.pcolor.endcolor)
+        print(self.pcolor.tipcolor + 'update hg' + self.pcolor.endcolor)
         print('update hg repositories path: %s'%self.path)
         print('update %d repositroies'%len(self.hgdir))
         for direction in self.hgdir:
             os.chdir(direction)
             status = os.popen('hg update')
-            print(self.pcolor.warningcolor, direction, self.pcolor.endcolor)
+            print(self.pcolor.warningcolor + direction + self.pcolor.endcolor)
             self.__outstatus(status)
-        print(self.pcolor.tipcolor, 'update hg repositroies finished', self.pcolor.endcolor)
+        print(self.pcolor.tipcolor + 'update hg repositroies finished' + self.pcolor.endcolor)
         print("")
 
     @staticmethod
