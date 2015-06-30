@@ -171,7 +171,7 @@ class KernelClean(object):
             print(self.color.warningcolor + 'cleanup kernel' + self.color.endcolor)
             pwd_md5 = 'b04c541ed735353c44c52984a1be27f8'
             pwd = getpass("Enter Your Password: ")
-            if hashlib.md5(pwd).hexdigest() != pwd_md5:
+            if hashlib.md5(pwd.encode('utf-8')).hexdigest() != pwd_md5:
                 print("Wrong Password\n")
                 return
             echo = ['echo']
@@ -185,6 +185,8 @@ class KernelClean(object):
             pipein = sp.Popen(echo, stdout=sp.PIPE)
             pipeout = sp.Popen(command.split(), stdin=pipein.stdout, stdout=sp.PIPE)
             for line in pipeout.stdout.readlines():
+                if isinstance(line, bytes):
+                    line = line.decode()
                 if line == '':
                     break
                 elif 'error:' in line.split()\
