@@ -104,6 +104,7 @@ class KernelClean(object):
         self.old_kernel = ''
         self.kernel_clean = ''
         self.color = PyColor()
+        # self.check for manual check to remove system kernel(1 for check, 0 for not check)
         self.check = check
         self.pwd = 'pwd.pyo'
 
