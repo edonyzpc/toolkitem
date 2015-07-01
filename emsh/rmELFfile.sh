@@ -1,4 +1,9 @@
-list=$(ls -la | grep '^-rwxrwxr-x.*' | sed 's/^-rwx.*[0-9] //g')
+if [ ! -n "$1" ]
+then
+    rmlist=$(ls -la | grep '^-rwxrwxr-x.*' | sed 's/^-rwxrwxr-x.*[0-9] //g')
+else
+    rmlist=$(ls -la $1| grep '^-rwxrwxr-x.*' | sed 's/^-rwxrwxr-x.*[0-9] //g')
+fi
 echo $rmlist
 echo "Remove?"
 read check
