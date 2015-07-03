@@ -38,6 +38,7 @@ if sys.version.startswith('3.4'):
     import tkinter
 else:
     import Tkinter as tkinter
+from packages.filesline.getdirections import GetDirections as GD
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -93,60 +94,81 @@ class PyColor(object):
         self.endcolor = ''
 
 class GUI(tkinter.Frame):
-    def __init__(self, root):
+    def __init__(self, root, path="/Users/edony/coding/toolkitem/emgui"):
         tkinter.Frame.__init__(self, root, background="white")
         self.root = root
         self.root.title("File Manager")
-        self.path = "./"
-        self.InitUI()
+        self.path = path
+        self.files = {}
+        self.initUI()
         self.pack(fill=tkinter.BOTH, expand=1)
 
-    def InitUI(self):
+    def get_files(self):
+        files_list = GD(self.path)
+        files_list.get_dir()
+        files_list.all_files()
+        self.files = files_list.files
+
+    def initUI(self):
+        self.get_files()
         # main frame
-        frame_top =  tkinter.Frame(root, height=350, width=800, background="black")
+        frame_top =  tkinter.Frame(root, height=400, width=800, background="black")
         frame_top.pack(side=tkinter.TOP, fill=tkinter.BOTH)
-        frame_bottom =  tkinter.Frame(root, height=100, width=800, background="black")
-        frame_bottom.pack(after=frame_top, fill=tkinter.BOTH)
+        frame_bottom =  tkinter.Frame(root, height=100, width=400, background="black")
+        frame_bottom.pack(side=tkinter.RIGHT, fill=tkinter.BOTH)
+        frame_bottom_l = tkinter.Frame(root, height=100, width=400, background="black")
+        frame_bottom_l.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
 
         # labelframe of bottom frame
         labframe = tkinter.LabelFrame(frame_bottom, text="Console",
-                height=100, width=800, background="white")
-        labframe.pack(side=tkinter.BOTTOM, fill=tkinter.BOTH, expand=1)
+                height=50, width=400, background="white")
+        labframe.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
+        # labelframel of bottom frame
+        labframel = tkinter.LabelFrame(frame_bottom_l, text="Enter",
+                height=50, width=400, background="white")
+        labframel.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=1)
         # labelframe of top frame
         labframe_bottom = tkinter.LabelFrame(frame_top, text="Point Cloud",
-                height=350, width=800, background="cyan")
+                height=400, width=800, background="cyan")
         labframe_bottom.pack(side=tkinter.BOTTOM, fill=tkinter.BOTH)
-
-        labframe_left= tkinter.LabelFrame(frame_top, text="STL",height=350, width=400, background="cyan")
+        labframe_left= tkinter.LabelFrame(frame_top, text="STL",height=400, width=400, background="cyan")
         labframe_left.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=1)
-
-        labframe_right = tkinter.LabelFrame(frame_top, text="IGS",height=350,  width=400, background="cyan")
+        labframe_right = tkinter.LabelFrame(frame_top, text="IGS",height=400,  width=400, background="cyan")
         labframe_right.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
 
         # message 
         # message of labframe
         txt = tkinter.StringVar()
-        msm_status = tkinter.Message(labframe, textvariable=txt, width=400, background="white")
-        msm_status.pack(side=tkinter.TOP, fill=tkinter.BOTH)
+        msm_status = tkinter.Message(labframe, textvariable=txt, width=200, background="white")
+        msm_status.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
+        txt.set("FILE MANAGEMENT START...")
+        # entry
+        # entry of labframe
+        enter_str = tkinter.StringVar()
+        enter = tkinter.Entry(labframel, textvariable=enter_str, width=200, background="red")
+        enter.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         
         # listbox
         # listbox of point cloud labelframe
+        ## lsbox_pc event handler
         def selectpcfile(event):
-            txt.set("selected!")
-            return lsbox_pc.get(lsbox_pc.curselection())
+            txt.set(lsbox_pc.get(lsbox_pc.curselection()))
+
         lsbox_pc = tkinter.Listbox(labframe_bottom, selectmode=tkinter.BROWSE, background="yellow")
         lsbox_pc.bind("<Double-Button-1>", selectpcfile)
-        for ind, file in enumerate(os.listdir(self.path)):
-            lsbox_pc.insert(tkinter.END, file)
-        print(lsbox_pc.size())
+        for ind, file in enumerate(self.files):
+            for name in self.files[file]:
+                lsbox_pc.insert(tkinter.END, name)
         lsbox_pc.pack(side=tkinter.TOP, fill=tkinter.BOTH)
+
         # listbox of STL labelframe
         def selectstlfile(event):
             return lsbox_stl.get(lsbox_stlpc.curselection())
         lsbox_stl = tkinter.Listbox(labframe_left, selectmode=tkinter.BROWSE, background="yellow")
         lsbox_stl.bind("<Double-Button-1>", selectstlfile)
-        for ind, file in enumerate(os.listdir(self.path)):
-            lsbox_stl.insert(tkinter.END, file)
+        for ind, file in enumerate(self.files):
+            for name in self.files[file]:
+                lsbox_stl.insert(tkinter.END, name)
         print(lsbox_stl.size())
         lsbox_stl.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         # listbox of IGS labelframe
@@ -154,8 +176,9 @@ class GUI(tkinter.Frame):
             return lsbox_igs.get(lsbox_igs.curselection())
         lsbox_igs = tkinter.Listbox(labframe_right, selectmode=tkinter.BROWSE, background="yellow")
         lsbox_igs.bind("<Double-Button-1>", selectigsfile)
-        for ind, file in enumerate(os.listdir(self.path)):
-            lsbox_igs.insert(tkinter.END, file)
+        for ind, file in enumerate(self.files):
+            for name in self.files[file]:
+                lsbox_igs.insert(tkinter.END, name)
         print(lsbox_igs.size())
         lsbox_igs.pack(side=tkinter.TOP, fill=tkinter.BOTH)
 
@@ -163,8 +186,8 @@ class GUI(tkinter.Frame):
 if __name__ == "__main__":
     root = tkinter.Tk()
     root.geometry("800x450")
-    root.resizable(width=False, height=False)
-    gui = GUI(root)
+#    root.resizable(width=False, height=False)
+    gui = GUI(root, "/Users/edony/coding/toolkitem")
     root.mainloop()
 
 
