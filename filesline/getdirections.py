@@ -122,11 +122,12 @@ class GetDirections(object):
         """
         os.chdir(path)
         tmp_dir = GetDirections._find_subdir(path)
-        total_dirs.append(tmp_dir)
+        total_dirs.append(path)
         if len(tmp_dir) == 0:
             return
         else:
             for item in tmp_dir:
+                total_dirs.append(item)
                 GetDirections._all_dir(item, total_dirs)
 
     def structed_dir(self):
@@ -134,7 +135,7 @@ class GetDirections(object):
         Structure the all directions found with their names.
         """
         if self.directions:
-            self.directions = sorted([direction for item in self.directions for direction in item])
+            self.directions = sorted([direction for direction in self.directions])
         else:
             raise ValueError("Directions is empty!")
 

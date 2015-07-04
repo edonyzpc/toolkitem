@@ -94,10 +94,10 @@ class PyColor(object):
         self.endcolor = ''
 
 class GUI(tkinter.Frame):
-    def __init__(self, root, path="/Users/edony/coding/toolkitem/emgui"):
+    def __init__(self, root):
         tkinter.Frame.__init__(self, root, background="white")
         self.root = root
-        self.path = path
+        self.path = ""
         self.files = {}
         self.pc_file = ""
         self.stl_file = ""
@@ -147,7 +147,7 @@ class GUI(tkinter.Frame):
                 return path + "/" + name
 
     def init_gui(self):
-        self.get_files()
+        #self.get_files()
         # main frame
         self.frame_top = tkinter.Frame(self.root, height=400, width=800, background="black")
         self.frame_top.pack(side=tkinter.TOP, fill=tkinter.BOTH)
@@ -255,7 +255,7 @@ if __name__ == "__main__":
     WIN.geometry("800x450")
     WIN.title("File Manager")
 #    root.resizable(width=False, height=False)
-    GUI = GUI(WIN, "/Users/edony/coding/toolkitem")
+    GUI = GUI(WIN)
     WIN.mainloop()
     STL = GUI.stl_file
     IGS = GUI.igs_file
