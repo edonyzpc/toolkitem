@@ -30,19 +30,25 @@ if sys.version.startswith('3.4'):
 else:
     import Tkinter as tkinter
 from project_file_browser import GUI
+import os
 
 def app():
+    path = os.getcwd()
     win = tkinter.Tk()
     win.geometry("800x450")
     win.title("File Manager")
     gui = GUI(win)
     win.mainloop()
-    print(gui.pc_file)
-    return (gui.pc_file, gui.stl_file, gui.igs_file)
+    return (path, gui.pc_file, gui.stl_file, gui.igs_file)
 
 if __name__ == "__main__":
     #pc, stl, igs = app()
     #print(pc, stl, igs)
     tmp = app()
-    print(type(tmp))
+    os.chdir(tmp[0])
+    f = open("./buf", "w")
+    f.write(tmp[1]+"\n")
+    f.write(tmp[2]+"\n")
+    f.write(tmp[3]+"\n")
+    f.close()
 

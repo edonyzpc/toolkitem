@@ -38,14 +38,22 @@ int main() {
 		printf("ERROR: Python Initialize failed.\n");
 		return -1;
 	}
-    string path = "./emgui";
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("import subprocess");
     //PyRun_SimpleString("sys.path.append('./emgui')");
     string tmp = "['python', './emgui/appgui.py']";
     string cmd = "subprocess.call(" + tmp + ")";
     PyRun_SimpleString(cmd.c_str());
-    file =
+    char line[256];
+    ifstream file("buf", ios::binary|ios::in);
+    vector<string> filelist;
+    while (!file.eof()) {
+        file.getline(line, 256, '\n');
+        cout << line << endl;
+        string tmp(line);
+        filelist.push_back(tmp);
+    }
+    Py_Finalize();
     //PyRun_SimpleString("import appgui");
     //PyCall funcall(path,"app","appgui",NULL);
     //PyObject *result = NULL;
