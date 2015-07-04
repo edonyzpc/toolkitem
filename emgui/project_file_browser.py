@@ -182,6 +182,12 @@ class GUI(tkinter.Frame):
         msm_status.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
         txt.set("FILE MANAGEMENT START...")
 
+        # button
+        # quit button
+        quit_button = tkinter.Button(self.labframe, text="Browser", relief=tkinter.SUNKEN,
+                                     fg="blue", height=50,
+                                     activebackground="green", command=self.quit)
+        quit_button.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
         # entry
         # entry of labframe
         ## enter event handler
