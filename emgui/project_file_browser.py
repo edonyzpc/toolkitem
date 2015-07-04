@@ -32,7 +32,7 @@ r"""
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
-import os
+#import os
 import sys
 if sys.version.startswith('3.4'):
     import tkinter
@@ -97,97 +97,161 @@ class GUI(tkinter.Frame):
     def __init__(self, root, path="/Users/edony/coding/toolkitem/emgui"):
         tkinter.Frame.__init__(self, root, background="white")
         self.root = root
-        self.root.title("File Manager")
         self.path = path
         self.files = {}
-        self.initUI()
+        self.pc_file = ""
+        self.stl_file = ""
+        self.igs_file = ""
+        self.init_gui()
         self.pack(fill=tkinter.BOTH, expand=1)
 
-    def get_files(self):
-        files_list = GD(self.path)
+    def get_files(self, path=None):
+        if path:
+            files_list = GD(path)
+        else:
+            files_list = GD(self.path)
         files_list.get_dir()
         files_list.all_files()
         self.files = files_list.files
 
-    def initUI(self):
+    def update_files(self, path):
+        if self.path != path:
+            self.get_files(path)
+
+    def update_listbox(self):
+        self.lsbox_pc.delete(0, self.lsbox_pc.size())
+        self.lsbox_stl.delete(0, self.lsbox_stl.size())
+        self.lsbox_igs.delete(0, self.lsbox_igs.size())
+        for file in self.files:
+            for name in self.files[file]:
+                if name.endswith(".sp"):
+                    self.lsbox_pc.insert(tkinter.END, name)
+                if name.endswith(".stl"):
+                    self.lsbox_stl.insert(tkinter.END, name)
+                if name.endswith(".igs"):
+                    self.lsbox_igs.insert(tkinter.END, name)
+
+    def match_files(self, match_re):
+        self.lsbox_stl.delete(0, self.lsbox_stl.size())
+        self.lsbox_igs.delete(0, self.lsbox_igs.size())
+        for file in self.files:
+            for name in self.files[file]:
+                if name.startswith(match_re+".") and name.endswith("stl"):
+                    self.lsbox_stl.insert(tkinter.END, name)
+                if name.startswith(match_re+".") and name.endswith("igs"):
+                    self.lsbox_igs.insert(tkinter.END, name)
+
+    def full_path_file(self, name):
+        for path, item in self.files.items():
+            if name in item:
+                return path + "/" + name
+
+    def init_gui(self):
         self.get_files()
         # main frame
-        frame_top =  tkinter.Frame(root, height=400, width=800, background="black")
-        frame_top.pack(side=tkinter.TOP, fill=tkinter.BOTH)
-        frame_bottom =  tkinter.Frame(root, height=100, width=400, background="black")
-        frame_bottom.pack(side=tkinter.RIGHT, fill=tkinter.BOTH)
-        frame_bottom_l = tkinter.Frame(root, height=100, width=400, background="black")
-        frame_bottom_l.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
+        self.frame_top = tkinter.Frame(self.root, height=400, width=800, background="black")
+        self.frame_top.pack(side=tkinter.TOP, fill=tkinter.BOTH)
+        self.frame_bottom = tkinter.Frame(self.root, height=100, width=400, background="black")
+        self.frame_bottom.pack(side=tkinter.RIGHT, fill=tkinter.BOTH)
+        self.frame_bottom_l = tkinter.Frame(self.root, height=100, width=400, background="black")
+        self.frame_bottom_l.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
 
         # labelframe of bottom frame
-        labframe = tkinter.LabelFrame(frame_bottom, text="Console",
-                height=50, width=400, background="white")
-        labframe.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
+        self.labframe = tkinter.LabelFrame(self.frame_bottom, text="Console",
+                                           height=50, width=400, background="white")
+        self.labframe.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
         # labelframel of bottom frame
-        labframel = tkinter.LabelFrame(frame_bottom_l, text="Enter",
-                height=50, width=400, background="white")
-        labframel.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=1)
+        self.labframel = tkinter.LabelFrame(self.frame_bottom_l, text="Enter",
+                                            height=50, width=400, background="white")
+        self.labframel.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=1)
         # labelframe of top frame
-        labframe_bottom = tkinter.LabelFrame(frame_top, text="Point Cloud",
-                height=400, width=800, background="cyan")
-        labframe_bottom.pack(side=tkinter.BOTTOM, fill=tkinter.BOTH)
-        labframe_left= tkinter.LabelFrame(frame_top, text="STL",height=400, width=400, background="cyan")
-        labframe_left.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=1)
-        labframe_right = tkinter.LabelFrame(frame_top, text="IGS",height=400,  width=400, background="cyan")
-        labframe_right.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
+        self.labframe_bottom = tkinter.LabelFrame(self.frame_top, text="Point Cloud",
+                                                  height=400, width=800, background="cyan")
+        self.labframe_bottom.pack(side=tkinter.BOTTOM, fill=tkinter.BOTH)
+        self.labframe_left = tkinter.LabelFrame(self.frame_top, text="STL",
+                                                height=400, width=400, background="cyan")
+        self.labframe_left.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=1)
+        self.labframe_right = tkinter.LabelFrame(self.frame_top, text="IGS",
+                                                 height=400, width=400, background="cyan")
+        self.labframe_right.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
 
-        # message 
+        # message
         # message of labframe
         txt = tkinter.StringVar()
-        msm_status = tkinter.Message(labframe, textvariable=txt, width=200, background="white")
+        msm_status = tkinter.Message(self.labframe, textvariable=txt, width=200, background="white")
         msm_status.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
         txt.set("FILE MANAGEMENT START...")
+
         # entry
         # entry of labframe
+        ## enter event handler
+        def getin(content):
+            content = enter.get()
+            self.update_files(content)
+            self.update_listbox()
+            txt.set(enter.get())
+
         enter_str = tkinter.StringVar()
-        enter = tkinter.Entry(labframel, textvariable=enter_str, width=200, background="red")
+        enter = tkinter.Entry(self.labframel, textvariable=enter_str, width=200, background="red")
         enter.pack(side=tkinter.TOP, fill=tkinter.BOTH)
-        
+        enter.bind("<Return>", getin)
+
         # listbox
         # listbox of point cloud labelframe
         ## lsbox_pc event handler
         def selectpcfile(event):
-            txt.set(lsbox_pc.get(lsbox_pc.curselection()))
+            event = self.lsbox_pc.get(self.lsbox_pc.curselection())
+            name_without = event.split(".")[0]
+            self.match_files(name_without)
+            self.pc_file = self.full_path_file(event)
+            txt.set(self.lsbox_pc.get(self.lsbox_pc.curselection()))
+            txt.set(self.pc_file)
 
-        lsbox_pc = tkinter.Listbox(labframe_bottom, selectmode=tkinter.BROWSE, background="yellow")
-        lsbox_pc.bind("<Double-Button-1>", selectpcfile)
-        for ind, file in enumerate(self.files):
+        self.lsbox_pc = tkinter.Listbox(self.labframe_bottom,
+                                        selectmode=tkinter.BROWSE, background="yellow")
+        self.lsbox_pc.bind("<Double-Button-1>", selectpcfile)
+        for file in self.files:
             for name in self.files[file]:
-                lsbox_pc.insert(tkinter.END, name)
-        lsbox_pc.pack(side=tkinter.TOP, fill=tkinter.BOTH)
-
+                if name.endswith(".sp"):
+                    self.lsbox_pc.insert(tkinter.END, name)
+        self.lsbox_pc.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         # listbox of STL labelframe
         def selectstlfile(event):
-            return lsbox_stl.get(lsbox_stlpc.curselection())
-        lsbox_stl = tkinter.Listbox(labframe_left, selectmode=tkinter.BROWSE, background="yellow")
-        lsbox_stl.bind("<Double-Button-1>", selectstlfile)
-        for ind, file in enumerate(self.files):
+            event = self.lsbox_stl.get(self.lsbox_stl.curselection())
+            self.stl_file = self.full_path_file(event)
+            txt.set(self.stl_file)
+
+        self.lsbox_stl = tkinter.Listbox(self.labframe_left,
+                                         selectmode=tkinter.BROWSE, background="yellow")
+        self.lsbox_stl.bind("<Double-Button-1>", selectstlfile)
+        for file in self.files:
             for name in self.files[file]:
-                lsbox_stl.insert(tkinter.END, name)
-        print(lsbox_stl.size())
-        lsbox_stl.pack(side=tkinter.TOP, fill=tkinter.BOTH)
+                if name.endswith(".stl"):
+                    self.lsbox_stl.insert(tkinter.END, name)
+        self.lsbox_stl.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         # listbox of IGS labelframe
         def selectigsfile(event):
-            return lsbox_igs.get(lsbox_igs.curselection())
-        lsbox_igs = tkinter.Listbox(labframe_right, selectmode=tkinter.BROWSE, background="yellow")
-        lsbox_igs.bind("<Double-Button-1>", selectigsfile)
-        for ind, file in enumerate(self.files):
-            for name in self.files[file]:
-                lsbox_igs.insert(tkinter.END, name)
-        print(lsbox_igs.size())
-        lsbox_igs.pack(side=tkinter.TOP, fill=tkinter.BOTH)
+            event = self.lsbox_igs.get(self.lsbox_igs.curselection())
+            self.igs_file = self.full_path_file(event)
+            txt.set(self.igs_file)
 
+        self.lsbox_igs = tkinter.Listbox(self.labframe_right,
+                                         selectmode=tkinter.BROWSE, background="yellow")
+        self.lsbox_igs.bind("<Double-Button-1>", selectigsfile)
+        for file in self.files:
+            for name in self.files[file]:
+                if name.endswith(".igs"):
+                    self.lsbox_igs.insert(tkinter.END, name)
+        self.lsbox_igs.pack(side=tkinter.TOP, fill=tkinter.BOTH)
 
 if __name__ == "__main__":
-    root = tkinter.Tk()
-    root.geometry("800x450")
+    WIN = tkinter.Tk()
+    WIN.geometry("800x450")
+    WIN.title("File Manager")
 #    root.resizable(width=False, height=False)
-    gui = GUI(root, "/Users/edony/coding/toolkitem")
-    root.mainloop()
-
-
+    GUI = GUI(WIN, "/Users/edony/coding/toolkitem")
+    WIN.mainloop()
+    STL = GUI.stl_file
+    IGS = GUI.igs_file
+    print(STL)
+    print(IGS)
