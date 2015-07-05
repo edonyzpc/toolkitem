@@ -61,24 +61,24 @@ int main() {
 		printf("ERROR: Python Initialize failed.\n");
 		return -1;
 	}
-    //string func_name("app");
-    //string model("./emgui/appgui.py");
-    //vector<PyObject*> args;
-    //CPY fun(func_name, model, args);
-    //PyObject *result = NULL;
-    //result = fun.RunFunc();
-    //PyObject *list = NULL;
-    //Py_ssize_t len = PyList_Size(result);
-    //for (Py_ssize_t i=0; i < len; ++i) {
-    //    list = PyList_GetItem(result, i);
-    //    char *str_tmp = NULL;
-    //    str_tmp = PyString_AsString(list);
-    //    cout << str_tmp << endl;
-    //}
+    string func_name("app");
+    string model("./emgui/appgui.py");
+    vector<PyObject*> args;
+    CPY fun(func_name, model, args);
+    PyObject *result = NULL;
+    result = fun.RunFunc();
+    PyObject *list = NULL;
+    Py_ssize_t len = PyList_Size(result);
+    for (Py_ssize_t i=0; i < len; ++i) {
+        list = PyList_GetItem(result, i);
+        char *str_tmp = NULL;
+        str_tmp = PyString_AsString(list);
+        cout << i << str_tmp << endl;
+    }
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("import subprocess");
-    //PyRun_SimpleString("sys.path.append('./emgui')");
-    string tmp = "['python', './emgui/appgui.py']";
+    PyRun_SimpleString("sys.path.append('/Users/edony/coding/toolkitem/app/emgui')");
+    string tmp = "['python', '/Users/edony/coding/toolkitem/app/emgui/appgui.py']";
     string cmd = "subprocess.call(" + tmp + ")";
     PyRun_SimpleString(cmd.c_str());
     char line[256];
