@@ -25,19 +25,56 @@
 #include <fstream>
 #include <string>
 #include <python2.7/Python.h>
-#include "pycall.h"
+#include "cpy.h"
 
 using std::cout;
 using std::cin;
 using std::endl;
 using std::string;
+using std::ifstream;
 
+void gui() {
+	Py_Initialize();
+	if (!Py_IsInitialized()) {
+		printf("ERROR: Python Initialize failed.\n");
+		return;
+	}
+    string func_name("app");
+    string model("./emgui/appgui.py");
+    vector<PyObject*> args;
+    CPY fun(func_name, model, args);
+    PyObject *result = NULL;
+    result = fun.RunFunc();
+    PyObject *list = NULL;
+    Py_ssize_t len = PyList_Size(result);
+    for (Py_ssize_t i=0; i < len; ++i) {
+        list = PyList_GetItem(result, i);
+        char *str_tmp = NULL;
+        str_tmp = PyString_AsString(list);
+        cout << str_tmp << endl;
+    }
+    Py_Finalize();
+}
 int main() {
 	Py_Initialize();
 	if (!Py_IsInitialized()) {
 		printf("ERROR: Python Initialize failed.\n");
 		return -1;
 	}
+    //string func_name("app");
+    //string model("./emgui/appgui.py");
+    //vector<PyObject*> args;
+    //CPY fun(func_name, model, args);
+    //PyObject *result = NULL;
+    //result = fun.RunFunc();
+    //PyObject *list = NULL;
+    //Py_ssize_t len = PyList_Size(result);
+    //for (Py_ssize_t i=0; i < len; ++i) {
+    //    list = PyList_GetItem(result, i);
+    //    char *str_tmp = NULL;
+    //    str_tmp = PyString_AsString(list);
+    //    cout << str_tmp << endl;
+    //}
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("import subprocess");
     //PyRun_SimpleString("sys.path.append('./emgui')");
@@ -45,7 +82,7 @@ int main() {
     string cmd = "subprocess.call(" + tmp + ")";
     PyRun_SimpleString(cmd.c_str());
     char line[256];
-    ifstream file("buf", ios::binary|ios::in);
+    std::ifstream file("buf", std::ios::binary|std::ios::in);
     vector<string> filelist;
     while (!file.eof()) {
         file.getline(line, 256, '\n');

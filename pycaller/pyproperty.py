@@ -87,11 +87,14 @@ class protest(object):
         del sel._name
         
 def main(n,a):
+    #import Tkinter as tkinter
+    #win = tkinter.Tk()
+    #win.mainloop()
     tmp = protest(n,a)
     print(tmp.age)
     print(tmp.name)
     print(tmp._name)
-    tmp.name = 'Murphy' #property
+    tmp.name = '@Murphy' #property
     tmp.age = 33 #bad idea to change member data
     print(tmp.age)
     print(tmp.name)
@@ -101,6 +104,16 @@ def main(n,a):
     print(tmp.age)
     print(tmp.name)
     print(tmp._name)
+    return tmp.age
+
+def gui():
+    print "gui"
+    import Tkinter as tkinter
+    import subprocess
+    def inter():
+        win = tkinter.Tk()
+        win.mainloop()
+    subprocess.system()
 
 class Person(object):
     def __init__(self, name):
@@ -123,6 +136,9 @@ class Person(object):
         print('remove...')
         del self._name
 if __name__ == '__main__':
+    import Tkinter as tkinter
+    win = tkinter.Tk()
+    win.mainloop()
     bob = Person('Bob Smith') # bob has a managed attribute
     print(bob.name) # Runs name getter (name 1)
     bob.name = 'Robert Smith' # Runs name setter (name 2)
@@ -145,3 +161,4 @@ if __name__ == '__main__':
     print(tmp._name)
     import sys
     print(sys.argv)
+    return tmp.age
