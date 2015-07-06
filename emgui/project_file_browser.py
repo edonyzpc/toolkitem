@@ -193,7 +193,7 @@ class GUI(tkinter.Frame):
         # quit button
         quit_button = tkinter.Button(self.labframe, text="Browser", relief=tkinter.SUNKEN,
                                      fg="blue", height=50,
-                                     activebackground="green", command=self.quit)
+                                     activebackground="green", command=self.root.destroy)
         quit_button.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
         # entry
         # entry of labframe
@@ -270,7 +270,7 @@ class GUI(tkinter.Frame):
 
 if __name__ == "__main__":
     WIN = tkinter.Tk()
-    WIN.geometry("800x450")
+    WIN.geometry("800x450+200+300")
     WIN.title("File Manager")
 #    root.resizable(width=False, height=False)
     GUI = GUI(WIN)

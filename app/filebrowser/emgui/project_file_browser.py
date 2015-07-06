@@ -131,6 +131,13 @@ class GUI(tkinter.Frame):
                 if name.endswith(".igs"):
                     self.lsbox_igs.insert(tkinter.END, name)
 
+    def update_listbox_search(self, search_txt):
+        self.lsbox_pc.delete(0, self.lsbox_pc.size())
+        for file in self.files:
+            for name in self.files[file]:
+                if name.endswith(".sp") and search_txt in name:
+                    self.lsbox_pc.insert(tkinter.END, name)
+
     def match_files(self, match_re):
         self.lsbox_stl.delete(0, self.lsbox_stl.size())
         self.lsbox_igs.delete(0, self.lsbox_igs.size())
@@ -186,7 +193,7 @@ class GUI(tkinter.Frame):
         # quit button
         quit_button = tkinter.Button(self.labframe, text="Browser", relief=tkinter.SUNKEN,
                                      fg="blue", height=50,
-                                     activebackground="green", command=self.quit)
+                                     activebackground="green", command=self.root.destroy)
         quit_button.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=1)
         # entry
         # entry of labframe
@@ -198,7 +205,7 @@ class GUI(tkinter.Frame):
             txt.set(enter.get())
 
         enter_str = tkinter.StringVar()
-        enter = tkinter.Entry(self.labframel, textvariable=enter_str, width=200, background="red")
+        enter = tkinter.Entry(self.labframel, textvariable=enter_str, width=400, background="red")
         enter.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         enter.bind("<Return>", getin)
 
@@ -220,7 +227,18 @@ class GUI(tkinter.Frame):
             for name in self.files[file]:
                 if name.endswith(".sp"):
                     self.lsbox_pc.insert(tkinter.END, name)
-        self.lsbox_pc.pack(side=tkinter.TOP, fill=tkinter.BOTH)
+        self.lsbox_pc.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=1)
+        ## entry for lsbox_pc search
+        ### enter for lsbox_pc  event handler
+        def getsearch(content):
+            content = enter_pc.get()
+            self.update_listbox_search(content)
+            txt.set(enter_pc.get())
+
+        enter_str_pc = tkinter.StringVar()
+        enter_pc = tkinter.Entry(self.labframe, textvariable=enter_str_pc, background="cyan")
+        enter_pc.pack(side=tkinter.BOTTOM, fill=tkinter.BOTH, expand=1)
+        enter_pc.bind("<Return>", getsearch)
         # listbox of STL labelframe
         def selectstlfile(event):
             event = self.lsbox_stl.get(self.lsbox_stl.curselection())
@@ -252,7 +270,7 @@ class GUI(tkinter.Frame):
 
 if __name__ == "__main__":
     WIN = tkinter.Tk()
-    WIN.geometry("800x450")
+    WIN.geometry("800x450+200+300")
     WIN.title("File Manager")
 #    root.resizable(width=False, height=False)
     GUI = GUI(WIN)
