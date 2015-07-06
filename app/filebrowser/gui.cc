@@ -75,11 +75,14 @@ int main() {
         str_tmp = PyString_AsString(list);
         cout << i << str_tmp << endl;
     }
-    PyRun_SimpleString("import sys");
+//    PyRun_SimpleString("import sys");
     PyRun_SimpleString("import subprocess");
-    PyRun_SimpleString("sys.path.append('/Users/edony/coding/toolkitem/app/emgui')");
-    string tmp = "['python', '/Users/edony/coding/toolkitem/app/emgui/appgui.py']";
+//    PyRun_SimpleString("sys.path.append('/Users/edony/coding/toolkitem/app/emgui')");
+//    PyRun_SimpleString("import os");
+//    PyRun_SimpleString("os.chdir('/Users/edony/coding/toolkitem/app/emgui')");
+    string tmp = "['python', '/Users/edony/coding/toolkitem/app/filebrowser/emgui/appgui.py']";
     string cmd = "subprocess.call(" + tmp + ")";
+    cout << cmd << endl;
     PyRun_SimpleString(cmd.c_str());
     char line[256];
     std::ifstream file("buf", std::ios::binary|std::ios::in);
