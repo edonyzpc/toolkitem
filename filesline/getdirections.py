@@ -33,6 +33,7 @@ r"""
 #from matplotlib import cm
 #import numpy as np
 import os
+import platform
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -100,6 +101,12 @@ class GetDirections(object):
         files: all files in the paht (include the files in sub-directions)
         """
         self.path = path
+        if platform.system() == "Windows":
+            def add(x, y):
+                if y == '\\':
+                    y = '/'
+                return x + y
+            self.path = reduce(add, [i for i in self.path])
         self.directions = []
         self.files = {}
         self.color = PyColor()
