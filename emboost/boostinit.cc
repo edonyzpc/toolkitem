@@ -1,34 +1,37 @@
-#include <boost/noncopyable.hpp>
+//#include <boost/noncopyable.hpp>
+#include <python2.7/Python.h>
 #include <boost/python.hpp>
 #include <iostream>
 
 using namespace std;
-using namespace boost;
+using namespace boost::python;
 
-class pyinit: boost::noncopyable {
-    public:
-        pyinit(int initsigs = 1) {
-            assert(initsigs == 0 || initsigs == 1);
-            Py_InitializeEx(initsigs);
-        }
-        ~pyinit(){};
-
-        bool isInitialized() {
-            return Py_IsInitialized();
-        }
-        const char* version() {
-            return Py_GetVersion();
-        }
-};
+//class pyinit {
+//    public:
+//        pyinit(int initsigs = 1) {
+//            assert(initsigs == 0 || initsigs == 1);
+//            Py_InitializeEx(initsigs);
+//        }
+//        ~pyinit(){};
+//
+//        bool isInitialized() {
+//            return Py_IsInitialized();
+//        }
+//        const char* version() {
+//            return Py_GetVersion();
+//        }
+//};
 
 int main() {
-    pyinit pinit;
+    //pyinit pinit;
+    cout << "beg\n";
 
+    Py_Initialize();
     boost::python::list l;
     l.append("edony");
     l.append(12);
 
-    cout << boost::python::len(l) << endl;
+    cout << len(l) << endl;
 }
 //#cat test.cpp 
 //#include <boost/lexical_cast.hpp>
