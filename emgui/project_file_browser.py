@@ -209,6 +209,9 @@ class GUI(tkinter.Frame):
         enter.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         enter.bind("<Return>", getin)
 
+        def rmfile(event):
+            remove_file = self.full_path_file(event)
+            os.remove(remove_file)
         # listbox
         # listbox of point cloud labelframe
         ## lsbox_pc event handler
