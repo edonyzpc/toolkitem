@@ -36,7 +36,7 @@ import sys
 if sys.version.startswith("3."):
     from functools import reduce
 import os
-import platform
+#import platform
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -114,6 +114,9 @@ class GetDirections(object):
         Normalize the path string split with "/"
         """
         def add(head, tail):
+            """
+            Replace \\ with / in path
+            """
             if tail == "\\":
                 tail = "/"
             return head + tail
