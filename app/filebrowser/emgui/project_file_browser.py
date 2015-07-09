@@ -109,8 +109,10 @@ class GUI(tkinter.Frame):
 
     def get_files(self, path=None):
         if path:
+            path = GD.normal_path(path)
             files_list = GD(path)
         else:
+            self.path = GD.normal_path(self.path)
             files_list = GD(self.path)
         files_list.get_dir()
         files_list.all_files()
