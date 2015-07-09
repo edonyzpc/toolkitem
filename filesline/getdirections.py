@@ -104,12 +104,6 @@ class GetDirections(object):
         files: all files in the paht (include the files in sub-directions)
         """
         self.path = path
-        if platform.system() == "Windows":
-            def add(x, y):
-                if y == '\\':
-                    y = '/'
-                return x + y
-            self.path = reduce(add, [i for i in self.path])
         self.directions = []
         self.files = {}
         self.color = PyColor()
@@ -119,10 +113,10 @@ class GetDirections(object):
         """
         Normalize the path string split with "/"
         """
-        def add(x, y):
-            if y == "\\":
-                y = "/"
-            return x + y
+        def add(head, tail):
+            if tail == "\\":
+                tail = "/"
+            return head + tail
         return reduce(add, path)
 
     @staticmethod
