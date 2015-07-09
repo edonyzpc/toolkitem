@@ -1,64 +1,82 @@
-#! /usr/bin/python
-#encoding: utf-8
- #        .---.         .-----------  
- #       /     \  __  /    ------    
- #      / /     \(  )/    -----   (`-')  _ _(`-')              <-. (`-')_            
- #     //////    '\/ `   ---      ( OO).-/( (OO ).->     .->      \( OO) )     .->   
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+r"""
+ #        .---.         .-----------
+ #       /     \  __  /    ------
+ #      / /     \(  )/    -----   (`-')  _ _(`-')              <-. (`-')_
+ #     //////    '\/ `   ---      ( OO).-/( (OO ).->     .->      \( OO) )     .->
  #    //// / //  :   : ---      (,------. \    .'_ (`-')----. ,--./ ,--/  ,--.'  ,-.
  #   // /   /  / `\/ '--         |  .---' '`'-..__)( OO).-. ' |   \ |  | (`-')'.'  /
- #  //          //..\\          (|  '--.  |  |  ' |( _) | | | |  . '|  |)(OO \    / 
- # ============UU====UU====      |  .--'  |  |  / : \|  |)| | |  |\    |  |  /   /) 
- #             '//||\\`          |  `---. |  '-'  /  '  '-' ' |  | \   |  `-/   /`  
- #               ''``            `------' `------'    `-----' `--'  `--'    `--'    
- # ########################################################################################################
- # 
- # Author: edony - edonyzpc@gmail.com                 
- # 
- # twitter : @edonyzpc                                
- # 
- # Last modified: 2015-04-16 23:44
- # 
+ #  //          //..\\          (|  '--.  |  |  ' |( _) | | | |  . '|  |)(OO \    /
+ # ============UU====UU====      |  .--'  |  |  / : \|  |)| | |  |\    |  |  /   /)
+ #             '//||\\`          |  `---. |  '-'  /  '  '-' ' |  | \   |  `-/   /`
+ #               ''``            `------' `------'    `-----' `--'  `--'    `--'
+ # ######################################################################################
+ #
+ # Author: edony - edonyzpc@gmail.com
+ #
+ # twitter : @edonyzpc
+ #
+ # Last modified: 2015-05-08 15:33
+ #
  # Filename: filesline.py
- # 
- # Description: All Rights Are Reserved                 
-class pcolor:
-    ''' This class is for colored print in the python interpreter!
-    "py" call Addpy() function to add this class which is defined
-    in the .vimrc for vim Editor.
-    
-    STYLE: \033['display model';'foreground';'background'm
-    DETAILS:
-    FOREGROUND        BACKGOUND       COLOR
-    ---------------------------------------
-    30                40              black
-    31                41              red
-    32                42              green
-    33                43              yellow
-    34                44              blue
-    35                45              purple
-    36                46              cyan
-    37                47              white
-    DISPLAY MODEL    DETAILS
-    -------------------------
-    0                default
-    1                highlight
-    4                underline
-    5                flicker
-    7                reverse
-    8                non-visiable
-    
-    e.g：
-    \033[1;31;40m   <!--1-highlight;31-foreground red;40-background black-->
-    \033[0m         <!--set all into default-->
-    '''
-    WARN = '\033[0;37;41m'
-    NOTE = '\033[4;32m'
-    ENDC = '\033[0m'
+ #
+ # Description: All Rights Are Reserved
+ #
+"""
+class PyColor(object):
+    """ This class is for colored print in the python interpreter!
+    "F3" call Addpy() function to add this class which is defined
+    in the .vimrc for vim Editor."""
+    def __init__(self):
+        self.self_doc = r"""
+        STYLE: \033['display model';'foreground';'background'm
+        DETAILS:
+        FOREGROUND        BACKGOUND       COLOR
+        ---------------------------------------
+        30                40              black
+        31                41              red
+        32                42              green
+        33                43              yellow
+        34                44              blue
+        35                45              purple
+        36                46              cyan
+        37                47              white
+        DISPLAY MODEL    DETAILS
+        -------------------------
+        0                default
+        1                highlight
+        4                underline
+        5                flicker
+        7                reverse
+        8                non-visiable
+        e.g:
+        \033[1;31;40m   <!--1-highlight;31-foreground red;40-background black-->
+        \033[0m         <!--set all into default-->
+        """
+        self.warningcolor = '\033[0;37;41m'
+        self.tipcolor = '\033[0;31;42m'
+        self.endcolor = '\033[0m'
+        self._newcolor = ''
+    @property
+    def new(self):
+        """
+        Customized Python Print Color.
+        """
+        return self._newcolor
+    @new.setter
+    def new(self, color_str):
+        """
+        New Color.
+        """
+        self._newcolor = color_str
     def disable(self):
-        self.ENDC = ''
-        self.WARNING = ''
- 
-#import numpy as np
+        """
+        Disable Color Print.
+        """
+        self.warningcolor = ''
+        self.endcolor = ''
+
 #import scipy as sp
 #import math as m
 #import matplotlib as mpl
@@ -66,18 +84,20 @@ class pcolor:
 #from mpl_toolkits.mplot3d import Axes3D as Ax3
 #from scipy import stats as st
 #from matplotlib import cm
+#import numpy as np
+
 import os
 import re
 
 
 class FileLine:
-    def __init__(self,dir):
+    def __init__(self, dir):
         self.dir = dir
         os.chdir(dir)
         self.files = {}
 
     @staticmethod
-    def dirlist(dir,rec):
+    def dirlist(dir, rec):
         '''
         record all the directions of included in the given direction and its sub-direction
         '''
@@ -88,7 +108,7 @@ class FileLine:
         if dirls:
             for item in dirls:
                 #print(dir+'/'+item)
-                FileLine.dirlist(dir+'/'+item,rec)
+                FileLine.dirlist(dir + '/' + item, rec)
                 #print dirls
         else:
             #dirls.append(dir)
@@ -96,7 +116,7 @@ class FileLine:
 
     def adddirs(self):
         rec = []
-        fileline.dirlist(self.dir,rec)
+        FileLine.dirlist(self.dir, rec)
         self.alldir = rec
         self.alldir.append(self.dir)
 
@@ -119,14 +139,14 @@ class FileLine:
             f.close()
         return lofdir
 
-    def popexceptdir(self,exceptdir):
-        import re
+    def popexceptdir(self, exceptdir):
         pattern = exceptdir+'/.*'
         p = re.compile(str(pattern))
         for d in self.alldir:
             if not p.match(d) is None:
                 print('poping',)
                 self.alldir.remove(d)
+
 
 class FileFilter(FileLine):
     def ffilter(self):
@@ -141,18 +161,19 @@ class FileFilter(FileLine):
                     cou = self.files[key].index(item)
                     self.files[key][cou] = None
 
+
 if __name__ == '__main__':
-    dir = raw_input('Enter the direction you want to count: ')
+    direction = input('Enter the direction you want to count: ')
     #dt = []
     #tmp = fileline.dirlist(dir,dt)
     #print dt
     #delegation rule of filtering the files
 
-    tmp = FileFilter(dir)
+    tmp = FileFilter(direction)
     tmp.adddirs()
-    exceptdir = raw_input("Enter the direction you want ignore: ")
+    exceptdir = input("Enter the direction you want ignore: ")
     tmp.popexceptdir(exceptdir)
-    tmp.FileList()
+    tmp.filelist()
     tmp.filter()
     key = tmp.files.keys()
     files = []
@@ -162,6 +183,6 @@ if __name__ == '__main__':
                 files.append(i+'/'+item)
     #for f in files:
     #    print f
-    lines = fileline.lofdir(files)
+    lines = FileLine.lofdir(files)
     print('total lines are %d'%lines)
-                
+ 

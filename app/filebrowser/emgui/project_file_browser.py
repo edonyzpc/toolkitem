@@ -32,12 +32,14 @@ r"""
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
-#import os
+import os
 import sys
 if sys.version.startswith('3.4'):
     import tkinter
 else:
     import Tkinter as tkinter
+import tkMessageBox
+import shutil
 from packages.filesline.getdirections import GetDirections as GD
 
 class PyColor(object):
@@ -117,6 +119,8 @@ class GUI(tkinter.Frame):
     def update_files(self, path):
         if self.path != path:
             self.get_files(path)
+        else:
+            self.get_files(self.path)
 
     def update_listbox(self):
         self.lsbox_pc.delete(0, self.lsbox_pc.size())
@@ -200,6 +204,7 @@ class GUI(tkinter.Frame):
         ## enter event handler
         def getin(content):
             content = enter.get()
+            self.path = content
             self.update_files(content)
             self.update_listbox()
             txt.set(enter.get())
@@ -209,6 +214,52 @@ class GUI(tkinter.Frame):
         enter.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         enter.bind("<Return>", getin)
 
+        def rmpcfile(event):
+            if tkMessageBox.askokcancel("Remove", "Are you sure to remove the file?"):
+                event = self.lsbox_pc.get(self.lsbox_pc.curselection())
+                remove_file = self.full_path_file(event)
+                os.remove(remove_file)
+                self.get_files()
+                self.update_listbox()
+        def rmstlfile(event):
+            if tkMessageBox.askokcancel("Remove", "Are you sure to remove the file?"):
+                event = self.lsbox_stl.get(self.lsbox_stl.curselection())
+                remove_file = self.full_path_file(event)
+                os.remove(remove_file)
+                self.get_files()
+                self.update_listbox()
+        def rmigsfile(event):
+            if tkMessageBox.askokcancel("Remove", "Are you sure to remove the file?"):
+                event = self.lsbox_igs.get(self.lsbox_igs.curselection())
+                remove_file = self.full_path_file(event)
+                os.remove(remove_file)
+                self.get_files()
+                self.update_listbox()
+        def addfile(evect):
+            topdlg = tkinter.Toplevel(self.root)
+            topdlg.title("Add Files")
+            topdlg.geometry("250x80+300+200")
+            def mvfile():
+                if self.path:
+                    event = enter_add_file.get()
+                    print event
+                    filename = event[event.rfind("/"):]
+                    shutil.move(event, self.path+"/"+filename)
+                    self.get_files()
+                    self.update_listbox()
+                    topdlg.destroy()
+                else:
+                    txt.set("Please Set The Root Path")
+                    topdlg.destroy()
+            enter_add_file = tkinter.Entry(topdlg, width=250)
+            label = tkinter.Label(topdlg, text="New File Name With Path", width=250, anchor="w", justify="left")
+            label.pack(side=tkinter.TOP)
+            #enter_add_file.bind("<Retrun>", mvfile)
+            enter_add_file.pack()
+            button_add_file = tkinter.Button(topdlg, text="Add Single File", command=mvfile)
+            button_add_file.pack(side=tkinter.LEFT)
+            button_add_file_list = tkinter.Button(topdlg, text="Add Multiple File", command=mvfile)
+            button_add_file_list.pack(side=tkinter.RIGHT)
         # listbox
         # listbox of point cloud labelframe
         ## lsbox_pc event handler
@@ -223,6 +274,8 @@ class GUI(tkinter.Frame):
         self.lsbox_pc = tkinter.Listbox(self.labframe_bottom,
                                         selectmode=tkinter.BROWSE, background="yellow")
         self.lsbox_pc.bind("<Double-Button-1>", selectpcfile)
+        self.lsbox_pc.bind("<Double-Button-3>", rmpcfile)
+        self.lsbox_pc.bind("<Button-2>", addfile)
         for file in self.files:
             for name in self.files[file]:
                 if name.endswith(".sp"):
@@ -248,6 +301,7 @@ class GUI(tkinter.Frame):
         self.lsbox_stl = tkinter.Listbox(self.labframe_left,
                                          selectmode=tkinter.BROWSE, background="yellow")
         self.lsbox_stl.bind("<Double-Button-1>", selectstlfile)
+        self.lsbox_stl.bind("<Double-Button-3>", rmstlfile)
         for file in self.files:
             for name in self.files[file]:
                 if name.endswith(".stl"):
@@ -262,6 +316,7 @@ class GUI(tkinter.Frame):
         self.lsbox_igs = tkinter.Listbox(self.labframe_right,
                                          selectmode=tkinter.BROWSE, background="yellow")
         self.lsbox_igs.bind("<Double-Button-1>", selectigsfile)
+        self.lsbox_igs.bind("<Double-Button-3>", rmigsfile)
         for file in self.files:
             for name in self.files[file]:
                 if name.endswith(".igs"):

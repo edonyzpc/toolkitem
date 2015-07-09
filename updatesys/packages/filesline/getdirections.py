@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 r"""
  #        .---.         .-----------
@@ -32,7 +32,11 @@ r"""
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
+import sys
+if sys.version.startswith("3."):
+    from functools import reduce
 import os
+import platform
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -100,15 +104,33 @@ class GetDirections(object):
         files: all files in the paht (include the files in sub-directions)
         """
         self.path = path
+        if platform.system() == "Windows":
+            def add(x, y):
+                if y == '\\':
+                    y = '/'
+                return x + y
+            self.path = reduce(add, [i for i in self.path])
         self.directions = []
         self.files = {}
         self.color = PyColor()
+
+    @staticmethod
+    def normal_path(path):
+        """
+        Normalize the path string split with "/"
+        """
+        def add(x, y):
+            if y == "\\":
+                y = "/"
+            return x + y
+        return reduce(add, path)
 
     @staticmethod
     def _find_subdir(path):
         """
         A protected method for list all the sub-directions in the path.
         """
+        path = GetDirections.normal_path(path)
         all_subdir = []
         for item in os.listdir(path):
             if os.path.isdir(item):
@@ -120,13 +142,15 @@ class GetDirections(object):
         """
         A protected method for list all the directions in path and record them.
         """
+        path = GetDirections.normal_path(path)
         os.chdir(path)
         tmp_dir = GetDirections._find_subdir(path)
-        total_dirs.append(tmp_dir)
+        total_dirs.append(path)
         if len(tmp_dir) == 0:
             return
         else:
             for item in tmp_dir:
+                total_dirs.append(item)
                 GetDirections._all_dir(item, total_dirs)
 
     def structed_dir(self):
@@ -134,7 +158,7 @@ class GetDirections(object):
         Structure the all directions found with their names.
         """
         if self.directions:
-            self.directions = sorted([direction for item in self.directions for direction in item])
+            self.directions = sorted([direction for direction in self.directions])
         else:
             raise ValueError("Directions is empty!")
 
