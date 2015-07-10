@@ -15,6 +15,7 @@ setup(
             "argparse",
             "platform",
             "hashlib",
-            "subprocess"
+            "subprocess",
+            "functools"
             ],
         )
