@@ -18,4 +18,16 @@
 
 > * Extact the content from the given keys.  ====>  `fileparser`
 
-> * personal crawler for information accumulate  ====>  `emwalker`
+> * personal crawler for information accumulation about ZJU Career.  ====>  `emwalker`
+
+> * filter for files or directions search.  ====>  `fuzzyfinder`
+
+> * personal Linux automatic management and efficient tools with Shell script.  ====> `emsh`
+
+> * GUI with Tcl/Tk.  ====> `emgui`
+
+> * boost::python for embeding python script into C++ project.  ====>  `emboost`
+
+> * boost::python for extending C++ class or function object into python module.  ====>  `emboost`
+
+> * integrate all above into personal interactive app with Tcl/Tk GUI.  ====>  `app`
