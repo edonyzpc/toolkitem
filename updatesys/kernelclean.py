@@ -106,14 +106,14 @@ class KernelClean(object):
         self.color = PyColor()
         # self.check for manual check to remove system kernel(1 for check, 0 for not check)
         self.check = check
-        self.pwd = 'pwd.pyo'
+        self.record = []
 
     def in_using_kernel(self):
         """
         RPM query about the kernel existing in the system => self._filebuf
         Get the version of running kernel => self.kernel
         """
-        command_rpm_kernel = 'rpm -qa | grep kernel- > '
+        command_rpm_kernel = 'rpm -qa | grep "^kernel-" > '
         command_rpm_kernel += self._filebuf
         os.system(command_rpm_kernel)
         command_kernel = 'uname -r'
@@ -129,26 +129,35 @@ class KernelClean(object):
             for line in buf.readlines():
                 if line.rstrip().endswith(self.kernel):
                     heads.append(line.rstrip().split(self.kernel)[0])
-            longest_head = heads[0]
-            for head in heads:
-                if len(head) > len(longest_head):
-                    longest_head = head
             buf.seek(0)
+            tmp_check_old_kernel = []
             for line in buf.readlines():
-                if line.rstrip().startswith(longest_head) and\
-                        line.rstrip().split(longest_head)[1] != self.kernel:
-                    self.old_kernel = line.rstrip().split(longest_head)[1]
+                line = line.rstrip()
+                for head in heads:
+                    if head in line and not line.endswith(self.kernel):
+                        self.record.append(line)
+                        if line.startswith(head):
+                            tmp_check_old_kernel.append(line.split(head)[1])
+            if tmp_check_old_kernel:
+                check_item = tmp_check_old_kernel[0]
+                counter = 0
+                for item in tmp_check_old_kernel:
+                    if len(item) < len(check_item):
+                        check_item = item
+                for item in tmp_check_old_kernel:
+                    if check_item == item or item.endswith(check_item):
+                        counter += 1
+                if counter == len(tmp_check_old_kernel):
+                    self.old_kernel = tmp_check_old_kernel[0]
 
     def to_cleaned_kernel(self):
         """
         Ensure the to be cleaned kernel in queried list => self.kernelclean
         """
-        if self.old_kernel:
-            with open(self._filebuf) as buf:
-                for line in buf.readlines():
-                    if line.rstrip().endswith(self.old_kernel):
-                        self.kernel_clean += line.rstrip()
-                        self.kernel_clean += ' '
+        if self.record:
+            for tmp in self.record:
+                self.kernel_clean += tmp
+                self.kernel_clean += ' '
 
     def cleanup(self):
         """
@@ -229,7 +238,7 @@ class KernelClean(object):
             self.cleanup()
             os.system("rm kernelclean")
         else:
-            print('Do Not Remove Old kernel\n')
+            print('Do Not Remove Old kernel')
 
 if __name__ == '__main__':
     TEST = KernelClean(1)
