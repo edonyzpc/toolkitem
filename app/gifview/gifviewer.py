@@ -5,7 +5,7 @@ elif sys.version.startswith("3.4."):
     import tkinter
 from PIL import Image
 from PIL import ImageTk
-
+from filemanage import GUI
 
 class GIFWin(tkinter.Label):
     def __init__(self, master, filename):
@@ -46,7 +46,7 @@ class GIFWin(tkinter.Label):
     def Stop(self):
         self.after_cancel(self.cancel)
 
-def GUI(filename):
+def ViewGUI(filename):
     root = tkinter.Tk()
     root.title("GIF Viewer")
     anim = GIFWin(root, filename)
@@ -55,7 +55,7 @@ def GUI(filename):
     fram.grid(column=0, columnspan=2, rowspan=2, sticky=tkinter.N+tkinter.S+tkinter.W+tkinter.E)
     labtext_1 = tkinter.Label(fram, text="File: ")
     labtext_1.grid(row=1, column=0, sticky=tkinter.W)
-    labtext_11 = tkinter.Label(fram,text=anim.im.filename)
+    labtext_11 = tkinter.Label(fram,text=anim.im.filename[anim.im.filename.rfind("/")+1:])
     labtext_11.grid(row=1, column=1, sticky=tkinter.N+tkinter.S+tkinter.W+tkinter.E)
     labtext_2 = tkinter.Label(fram,text="GIF Delay: ")
     labtext_2.grid(row=2, column=0, sticky=tkinter.W)
@@ -68,4 +68,9 @@ def GUI(filename):
     root.mainloop()
 
 if __name__ == "__main__":
-    GUI(sys.argv[1])
+    WIN = tkinter.Tk()
+    WIN.title("File Manager")
+    GUI = GUI(WIN)
+    WIN.mainloop()
+    file = GUI.gif_file
+    ViewGUI(file)
