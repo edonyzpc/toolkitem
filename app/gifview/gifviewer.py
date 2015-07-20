@@ -70,7 +70,11 @@ def ViewGUI(filename):
 if __name__ == "__main__":
     WIN = tkinter.Tk()
     WIN.title("File Manager")
+    WIN.resizable(width=False, height=False)
     GUI = GUI(WIN)
     WIN.mainloop()
     file = GUI.gif_file
-    ViewGUI(file)
+    if file:
+        ViewGUI(file)
+    else:
+        pass
