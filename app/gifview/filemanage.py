@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 r"""
  #        .---.         .-----------
@@ -36,9 +36,10 @@ import os
 import sys
 if sys.version.startswith('3.4'):
     import tkinter
+    from tkinter import messagebox as tkMessageBox
 elif sys.version.startswith('2.7'):
     import Tkinter as tkinter
-import tkMessageBox
+    import tkMessageBox
 import shutil
 from packages.filesline.getdirections import GetDirections as GD
 
@@ -170,7 +171,7 @@ class GUI(object):
             def mvfile():
                 if self.path:
                     event = enter_add_file.get()
-                    print event
+                    #print event
                     filename = event[event.rfind("/"):]
                     shutil.move(event, self.path+"/"+filename)
                     self.get_files()
@@ -231,6 +232,7 @@ if __name__ == "__main__":
     WIN.title("File Manager")
     WIN.resizable(width=False, height=False)
     GUI = GUI(WIN)
+    WIN.wm_attributes("-topmost", 1)
     WIN.mainloop()
     STL = GUI.gif_file
     print(STL)
