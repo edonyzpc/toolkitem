@@ -96,7 +96,7 @@ class PyColor(object):
         self.warningcolor = ''
         self.endcolor = ''
 
-class GUI(object):
+class FileGUI(object):
     def __init__(self, root):
         self.root = root
         self.path = ""
@@ -231,7 +231,7 @@ if __name__ == "__main__":
     WIN = tkinter.Tk()
     WIN.title("File Manager")
     WIN.resizable(width=False, height=False)
-    GUI = GUI(WIN)
+    GUI = FileGUI(WIN)
     WIN.wm_attributes("-topmost", 1)
     WIN.mainloop()
     STL = GUI.gif_file

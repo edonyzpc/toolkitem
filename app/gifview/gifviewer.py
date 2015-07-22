@@ -31,7 +31,7 @@ elif sys.version.startswith("3.4."):
     import tkinter
 from PIL import Image
 from PIL import ImageTk
-from filemanage import GUI
+from filemanage import FileGUI
 #import scipy as sp
 #import math as m
 #import matplotlib as mpl
@@ -121,17 +121,17 @@ class GIFWin(tkinter.Label):
             frame = temp.convert('RGBA')
             self.frames.append(ImageTk.PhotoImage(frame))
         self.idx = 0
-        self.cancel = self.after(self.delay, self.Play)
+        self.cancel = self.after(self.delay, self.play)
         #self.button = tkinter.Button(self.master, text='stop', command=Stop)
 
-    def Play(self):
+    def play(self):
         self.config(image=self.frames[self.idx])
         self.idx += 1
         if self.idx == len(self.frames):
             self.idx = 0
-        self.cancel = self.after(self.delay, self.Play)        
+        self.cancel = self.after(self.delay, self.play)        
 
-    def Stop(self):
+    def stop(self):
         self.after_cancel(self.cancel)
 
 def ViewGUI(filename):
@@ -149,7 +149,7 @@ def ViewGUI(filename):
     labtext_2.grid(row=2, column=0, sticky=tkinter.W)
     labtext_22 = tkinter.Label(fram,text=anim.im.info["duration"])
     labtext_22.grid(row=2, column=1, sticky=tkinter.N+tkinter.S+tkinter.W+tkinter.E)
-    button = tkinter.Button(root, text="stop", command=anim.Stop)
+    button = tkinter.Button(root, text="stop", command=anim.stop)
     button.grid(row=1, column=2, sticky=tkinter.N+tkinter.S+tkinter.W+tkinter.E)
     button_q = tkinter.Button(root, text="quit", command=root.destroy)
     button_q.grid(row=2, column=2, sticky=tkinter.N+tkinter.S+tkinter.W+tkinter.E)
@@ -163,7 +163,7 @@ if __name__ == "__main__":
         WIN = tkinter.Tk()
         WIN.title("File Manager")
         WIN.resizable(width=False, height=False)
-        GUI = GUI(WIN)
+        GUI = FileGUI(WIN)
         WIN.wm_attributes("-topmost", 1)
         WIN.mainloop()
         file = GUI.gif_file
