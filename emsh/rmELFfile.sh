@@ -1,8 +1,23 @@
-if [ ! -n "$1" ]
+sys=$(uname)
+sys_m="Darwin"
+sys_l="Linux"
+if [ "$sys" == "$sys_l" ]
 then
-    rmlist=$(ls -la | grep '^-rwxrwxr-x.*' | sed 's/^-rwxrwxr-x.*[0-9] //g')
-else
-    rmlist=$(ls -la $1| grep '^-rwxrwxr-x.*' | sed 's/^-rwxrwxr-x.*[0-9] //g')
+    if [ ! -n "$1" ]
+    then
+        rmlist=$(ls -la | grep '^-rwxrwxr-x.*' | sed 's/^-rwxrwxr-x.*[0-9] //g')
+    else
+        rmlist=$(ls -la $1| grep '^-rwxrwxr-x.*' | sed 's/^-rwxrwxr-x.*[0-9] //g')
+    fi
+fi
+if [ "$sys" == "$sys_m" ]
+then
+    if [ ! -n "$1" ]
+    then
+        rmlist=$(ls -la | grep '^-rwxr-xr-x.*' | sed 's/^-rwxr-xr-x.*[0-9] //g')
+    else
+        rmlist=$(ls -la $1| grep '^-rwxr-xr-x.*' | sed 's/^-rwxr-xr-x.*[0-9] //g')
+    fi
 fi
 echo $rmlist
 echo "Remove?"
