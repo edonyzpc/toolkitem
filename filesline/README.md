@@ -7,3 +7,7 @@
 * Print the strcutured files and directions.
 
 ***P.S. Abandon moduel of `filesline` and replace it with the moduel of `getdirections`.***
+
+-------
+
+* Find all directions and the files with `multi-threading` for speed up.
