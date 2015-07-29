@@ -152,17 +152,22 @@ class DirBrowser(object):
 
 if __name__ == "__main__":
     import time
+    import platform
     #path = '/home/edony/code/github'
-    path = '/usr'
+    #path = '/usr'
+    if platform.system == "Linux":
+        path = "/usr"
+    else:
+        path = "/usr/local/Cellar/opencv"
     db = DirBrowser(path)
     paths = db.path_sub
     speedup = True
-    start = time.time()
-    total1 = main(path)
-    end = time.time()
-    start1 = time.time()
-    total2 = main(path, speedup)
-    end1 = time.time()
+#    start = time.time()
+#    total1 = main(path)
+#    end = time.time()
+#    start1 = time.time()
+#    total2 = main(path, speedup)
+#    end1 = time.time()
     queue = multiprocessing.Queue()
     lock = multiprocessing.Lock()
     start2 = time.time()
@@ -189,11 +194,11 @@ if __name__ == "__main__":
 #    start1 = time.time()
 #    tmpsp.main()
 #    end1 = time.time()
-    print end-start
-    print end1-start1
+#    print end-start
+#    print end1-start1
     print end2-start2
-    print len(total1)
-    print len(total2)
+#    print len(total1)
+#    print len(total2)
     db1 = DirBrowser(path)
     start3 = time.time()
     db1.parallelprocess()

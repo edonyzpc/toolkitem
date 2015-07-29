@@ -93,7 +93,7 @@ class PyColor(object):
 def find_subdir(path):
     all_subdir = []
     for item in os.listdir(path):
-        if os.path.isdir(item):
+        if os.path.isdir(item) and not os.path.islink(item):
             all_subdir.append(path + '/' + item)
     return all_subdir
 def all_dir(path, total_dirs):
@@ -110,7 +110,7 @@ def all_dir(path, total_dirs):
 def find_subdir_p(path):
     all_subdir = []
     for item in os.listdir(path):
-        if os.path.isdir(item):
+        if os.path.isdir(item) and not os.path.islink(item):
             all_subdir.append(path + '/' + item)
     return all_subdir
 def all_dir_p(path, total_dirs):
@@ -131,7 +131,7 @@ def all_dir_p_(path):
 def _find_subdir(path):
     all_subdir = []
     for item in os.listdir(path):
-        if os.path.isdir(item):
+        if os.path.isdir(item) and not os.path.islink(item):
             all_subdir.append(path + '/' + item)
     return all_subdir
 def _all_dir(path, total_dirs):
@@ -146,13 +146,17 @@ def _all_dir(path, total_dirs):
             _all_dir(item, total_dirs)
 if __name__ == "__main__":
     import time
+    import platform 
     global lock
     total = [] 
     totalp = multiprocessing.Queue() 
     l = multiprocessing.Lock()
     lock = threading.Lock()
     lock.acquire()
-    path = "/usr"
+    if platform.system == "Linux":
+        path = "/usr"
+    else:
+        path = "/usr/local/Cellar/opencv"
     paths = []
     for i in os.listdir(path):
         os.chdir(path)
