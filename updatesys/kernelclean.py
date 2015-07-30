@@ -35,10 +35,14 @@ r"""
 from __future__ import absolute_import
 
 import os
+import re
+import sys
 import subprocess as sp
 import platform as pf
 from getpass import getpass
 import hashlib
+if sys.version.startswith("3.4."):
+    from functools import reduce
 from packages.fileparser.extractor import Extractor
 
 class PyColor(object):
@@ -124,91 +128,106 @@ class KernelClean(object):
         """
         Find the old kernel in system => self.old_kernel
         """
-        with open(self._filebuf) as buf:
-            heads = []
-            for line in buf.readlines():
-                if line.rstrip().endswith(self.kernel):
-                    heads.append(line.rstrip().split(self.kernel)[0])
-            buf.seek(0)
-            tmp_check_old_kernel = []
-            for line in buf.readlines():
-                line = line.rstrip()
-                for head in heads:
-                    if head in line and not line.endswith(self.kernel):
-                        self.record.append(line)
-                        if line.startswith(head):
-                            tmp_check_old_kernel.append(line.split(head)[1])
-            if tmp_check_old_kernel:
-                check_item = tmp_check_old_kernel[0]
-                counter = 0
-                for item in tmp_check_old_kernel:
-                    if len(item) < len(check_item):
-                        check_item = item
-                for item in tmp_check_old_kernel:
-                    if check_item == item or item.endswith(check_item):
-                        counter += 1
-                if counter == len(tmp_check_old_kernel):
-                    self.old_kernel = tmp_check_old_kernel[0]
+        pattern = "^kernel-[a-zA-Z-]*([0-9.-]*)([a-zA-Z]+)(.*)"
+        filebuf = open(self._filebuf)
+        lines = [line.rstrip() for line in filebuf.readlines()]
+        kernel_record = [re.match(pattern, line).groups() for line in lines]
+        kernel_record = [tmp[0]+tmp[1]+tmp[2] for tmp in kernel_record]
+        record = list(set(kernel_record))
+        if len(record) > 1:
+            self.old_kernel = record[1-record.index(self.kernel)]
+            self.record = [item for item in lines if self.old_kernel in item]
+        #with open(self._filebuf) as buf:
+        #    heads = []
+        #    for line in buf.readlines():
+        #        if line.rstrip().endswith(self.kernel):
+        #            heads.append(line.rstrip().split(self.kernel)[0])
+        #    buf.seek(0)
+        #    tmp_check_old_kernel = []
+        #    for line in buf.readlines():
+        #        line = line.rstrip()
+        #        for head in heads:
+        #            if head in line and not line.endswith(self.kernel):
+        #                self.record.append(line)
+        #                if line.startswith(head):
+        #                    tmp_check_old_kernel.append(line.split(head)[1])
+        #    if tmp_check_old_kernel:
+        #        check_item = tmp_check_old_kernel[0]
+        #        counter = 0
+        #        for item in tmp_check_old_kernel:
+        #            if len(item) < len(check_item):
+        #                check_item = item
+        #        for item in tmp_check_old_kernel:
+        #            if check_item == item or item.endswith(check_item):
+        #                counter += 1
+        #        if counter == len(tmp_check_old_kernel):
+        #            self.old_kernel = tmp_check_old_kernel[0]
 
     def to_cleaned_kernel(self):
         """
         Ensure the to be cleaned kernel in queried list => self.kernelclean
         """
         if self.record:
-            for tmp in self.record:
-                self.kernel_clean += tmp
-                self.kernel_clean += ' '
+            def addblank(x, y):
+                    return x + ' ' + y
+            self.kernel_clean = reduce(addblank, self.record)
+            #for tmp in self.record:
+            #    self.kernel_clean += tmp
+            #    self.kernel_clean += ' '
 
     def cleanup(self):
         """
         Cleanup the old kernel
         """
-        if self.old_kernel > self.kernel:
-            print('Running Kernel ' +\
-                    self.kernel +\
-                    self.color.warningcolor +\
-                    ' < ' +\
-                    self.color.endcolor +\
-                    'To Be Removed Kernel ' +\
-                    self.old_kernel)
+        if self.old_kernel:
+            if self.old_kernel > self.kernel:
+                print('Running Kernel ' +\
+                        self.kernel +\
+                        self.color.warningcolor +\
+                        ' < ' +\
+                        self.color.endcolor +\
+                        'To Be Removed Kernel ' +\
+                        self.old_kernel)
+                reboot = input('You Need to Reboot System!(y or n)\n')
+                if reboot == 'y':
+                    os.system('reboot')
+                else:
+                    print('Not A Running On Newer Kernel!')
+                    print('Cleanup Abort!')
+            else:
+                print(self.color.warningcolor + 'cleanup kernel' + self.color.endcolor)
+                pwd_md5 = 'b04c541ed735353c44c52984a1be27f8'
+                pwd = getpass("Enter Your Password: ")
+                if hashlib.md5(pwd.encode('utf-8')).hexdigest() != pwd_md5:
+                    print("Wrong Password\n")
+                    return
+                echo = ['echo']
+                echo.append(pwd)
+                if pf.linux_distribution()[1] > '21':
+                    command = 'sudo -S dnf -y remove '
+                    command += self.kernel_clean
+                else:
+                    command = 'sudo -S yum -y remove '
+                    command += self.kernel_clean
+                pipein = sp.Popen(echo, stdout=sp.PIPE)
+                pipeout = sp.Popen(command.split(), stdin=pipein.stdout, stdout=sp.PIPE)
+                for line in pipeout.stdout.readlines():
+                    if line == '':
+                        break
+                    if isinstance(line, bytes):
+                        line = line.decode()
+                    print(line)
+                print(self.color.tipcolor + 'end cleanup' + self.color.endcolor)
+                print(self.color.warningcolor +\
+                        'Your Kernel is Update!' +\
+                        self.color.endcolor)
             reboot = input('You Need to Reboot System!(y or n)\n')
             if reboot == 'y':
                 os.system('reboot')
             else:
-                print('Not A Running On Newer Kernel!')
-                print('Cleanup Abort!')
-        elif self.old_kernel:
-            print(self.color.warningcolor + 'cleanup kernel' + self.color.endcolor)
-            pwd_md5 = 'b04c541ed735353c44c52984a1be27f8'
-            pwd = getpass("Enter Your Password: ")
-            if hashlib.md5(pwd.encode('utf-8')).hexdigest() != pwd_md5:
-                print("Wrong Password\n")
-                return
-            echo = ['echo']
-            echo.append(pwd)
-            if pf.linux_distribution()[1] > '21':
-                command = 'sudo -S dnf -y remove '
-                command += self.kernel_clean
-            else:
-                command = 'sudo -S yum -y remove '
-                command += self.kernel_clean
-            pipein = sp.Popen(echo, stdout=sp.PIPE)
-            pipeout = sp.Popen(command.split(), stdin=pipein.stdout, stdout=sp.PIPE)
-            for line in pipeout.stdout.readlines():
-                if isinstance(line, bytes):
-                    line = line.decode()
-                if line == '':
-                    break
-                elif 'error:' in line.split()\
-                        or 'warning:' in line.split()\
-                        or 'fatal:' in line.split():
-                    print(self.color.warningcolor + line + self.color.endcolor)
-                else:
-                    print(line)
-            print(self.color.tipcolor + 'end cleanup' + self.color.endcolor)
-        print(self.color.warningcolor +\
-                'Your Kernel is Update!' +\
-                self.color.endcolor)
+                print('Not Reboot Now!')
+        else:
+            print('No Need To Cleanup!')
 
     def main(self):
         """
@@ -242,6 +261,11 @@ class KernelClean(object):
 
 if __name__ == '__main__':
     TEST = KernelClean(1)
-    TEST.main()
-    EXT = Extractor(TEST.old_kernel, 'kernelclean')
-    EXT.parser()
+    TEST.in_using_kernel()
+    TEST.find_old_kernel()
+    TEST.to_cleaned_kernel()
+    #print TEST.old_kernel
+    #print TEST.kernel
+    #TEST.main()
+    #EXT = Extractor(TEST.old_kernel, 'kernelclean')
+    #EXT.parser()
