@@ -130,8 +130,8 @@ class UpdateSys(object):
         self.gitdir = []
         self.hgdir = []
         self.pcolor = PyColor()
-        self._password_linux = '/home/edony/code/github/toolkitem/updatesys/pwd.pyo'
         self.parser = ap.ArgumentParser()
+        self.pwd_md5 = 'b04c541ed735353c44c52984a1be27f8'
         if path:
             self.path = path
         else:
@@ -159,53 +159,46 @@ class UpdateSys(object):
                 line = line.decode()
             if line == '':
                 break
-            elif 'error:' in line.split()\
-                    or 'warning:' in line.split()\
-                    or 'fatal:' in line.split():
-                print(self.pcolor.warningcolor + line + self.pcolor.endcolor)
-            else:
-                print(line)
+            print(line.rstrip())
 
     def __updatebrew(self):
         """
         Mange MacOS builtin tools.
         """
-        print(self.pcolor.warningcolor + 'brew update' + self.pcolor.endcolor)
+        print(self.pcolor.warningcolor + 'brew updating' + self.pcolor.endcolor)
         brewstatus = os.popen('brew update')
         self.__outstatus(brewstatus)
         print(self.pcolor.tipcolor + 'end brew update' + self.pcolor.endcolor)
-        print("")
 
     @property
     def pwd(self):
         """
         Protected Password
         """
-        return self._password_linux
+        return self.pwd_md5
 
     @pwd.setter
     def pwd(self, password):
         """
         Change the Protected Password
         """
-        self._password_linux = password
+        self.pwd_md5 = hashlib.md5(password.encode('utf-8')).hexdigest()
 
     def getpassword(self):
         """
         Access to the administor with enter password
         """
-        self._password_linux = getpass("Enter your password: ")
+        password = getpass("Enter your password: ")
         counter = 1
-        pwd_md5 = 'b04c541ed735353c44c52984a1be27f8'
         while counter < 3:
-            if pwd_md5 != hashlib.md5(self._password_linux.encode('utf-8')).hexdigest():
+            if self.pwd_md5 != hashlib.md5(password.encode('utf-8')).hexdigest():
                 print(self.pcolor.warningcolor +\
                         "Wrong Password!" +\
                         self.pcolor.endcolor)
-                self._password_linux = getpass("Try again: ")
+                password = getpass("Try again: ")
                 counter += 1
             else:
-                return
+                return password
         if counter >= 3:
             raise ValueError("Wrong Password!")
 
@@ -213,10 +206,10 @@ class UpdateSys(object):
         """
         Manage Linux builtin tools.
         """
-        print(self.pcolor.warningcolor + 'yum update' + self.pcolor.endcolor)
-        self.getpassword()
+        print(self.pcolor.warningcolor + 'yum updating...' + self.pcolor.endcolor)
+        password = self.getpassword()
         echo = ['echo']
-        echo.append(self._password_linux)
+        echo.append(password)
         if pf.linux_distribution()[1] > '21':
             cmd = 'sudo -S dnf -y upgrade'
         else:
@@ -225,7 +218,6 @@ class UpdateSys(object):
         pipeout = sp.Popen(cmd.split(), stdin=pipein.stdout, stdout=sp.PIPE)
         self.__outstatus(pipeout.stdout)
         print(self.pcolor.tipcolor + 'end yum update' + self.pcolor.endcolor)
-        print("")
 
     def updategit(self, gitpath=None):
         """
@@ -241,16 +233,15 @@ class UpdateSys(object):
                 self.path = '/home/edony/code/github'
 
         self.__gitrepos()
-        print(self.pcolor.tipcolor + 'update git' + self.pcolor.endcolor)
-        print('update git repositories path: %s'%self.path)
-        print('update %d repositroies'%len(self.gitdir))
+        print(self.pcolor.tipcolor + 'updating git...' + self.pcolor.endcolor)
+        print('>> to update git repositories path: %s'%self.path)
+        print('>> to update %d repositroies'%len(self.gitdir))
         for direction in self.gitdir:
             os.chdir(direction)
             status = os.popen('git pull')
             print(self.pcolor.warningcolor + direction + self.pcolor.endcolor)
             self.__outstatus(status)
         print(self.pcolor.tipcolor + 'update git repositroies finished' + self.pcolor.endcolor)
-        print("")
 
     def updatehg(self, hgpath=None):
         """
@@ -260,16 +251,15 @@ class UpdateSys(object):
         if hgpath:
             self.path = hgpath
         self.__gitrepos()
-        print(self.pcolor.tipcolor + 'update hg' + self.pcolor.endcolor)
-        print('update hg repositories path: %s'%self.path)
-        print('update %d repositroies'%len(self.hgdir))
+        print(self.pcolor.tipcolor + 'updating hg...' + self.pcolor.endcolor)
+        print('>> to update hg repositories path: %s'%self.path)
+        print('>> to update %d repositroies'%len(self.hgdir))
         for direction in self.hgdir:
             os.chdir(direction)
             status = os.popen('hg update')
             print(self.pcolor.warningcolor + direction + self.pcolor.endcolor)
             self.__outstatus(status)
         print(self.pcolor.tipcolor + 'update hg repositroies finished' + self.pcolor.endcolor)
-        print("")
 
     @staticmethod
     def cleanup():
@@ -314,7 +304,6 @@ class UpdateSys(object):
                         continue
                     else:
                         print(item + ",",)
-                print("")
         else:
             print(self.__doc__)
 
@@ -376,12 +365,6 @@ class UpdateSys(object):
                 self.updatehg(path)
         elif self.parser.parse_args().c:
             UpdateSys.cleanup()
-#            if pf.system() == 'Linux':
-#                os.system('dnf clean all')
-#                clean_kernel = KC(1)
-#                clean_kernel.main()
-#            elif pf.system() == 'Darwin':
-#                os.system('brew cleanup')
         elif self.parser.parse_args().attribute:
             for attr in self.parser.parse_args().attribute:
                 self.help(attr)

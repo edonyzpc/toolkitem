@@ -137,31 +137,6 @@ class KernelClean(object):
         if len(record) > 1:
             self.old_kernel = record[1-record.index(self.kernel)]
             self.record = [item for item in lines if self.old_kernel in item]
-        #with open(self._filebuf) as buf:
-        #    heads = []
-        #    for line in buf.readlines():
-        #        if line.rstrip().endswith(self.kernel):
-        #            heads.append(line.rstrip().split(self.kernel)[0])
-        #    buf.seek(0)
-        #    tmp_check_old_kernel = []
-        #    for line in buf.readlines():
-        #        line = line.rstrip()
-        #        for head in heads:
-        #            if head in line and not line.endswith(self.kernel):
-        #                self.record.append(line)
-        #                if line.startswith(head):
-        #                    tmp_check_old_kernel.append(line.split(head)[1])
-        #    if tmp_check_old_kernel:
-        #        check_item = tmp_check_old_kernel[0]
-        #        counter = 0
-        #        for item in tmp_check_old_kernel:
-        #            if len(item) < len(check_item):
-        #                check_item = item
-        #        for item in tmp_check_old_kernel:
-        #            if check_item == item or item.endswith(check_item):
-        #                counter += 1
-        #        if counter == len(tmp_check_old_kernel):
-        #            self.old_kernel = tmp_check_old_kernel[0]
 
     def to_cleaned_kernel(self):
         """
@@ -171,9 +146,6 @@ class KernelClean(object):
             def addblank(x, y):
                     return x + ' ' + y
             self.kernel_clean = reduce(addblank, self.record)
-            #for tmp in self.record:
-            #    self.kernel_clean += tmp
-            #    self.kernel_clean += ' '
 
     def cleanup(self):
         """
