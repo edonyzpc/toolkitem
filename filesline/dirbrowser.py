@@ -153,8 +153,6 @@ class DirBrowser(object):
 if __name__ == "__main__":
     import time
     import platform
-    #path = '/home/edony/code/github'
-    #path = '/usr'
     if platform.system == "Linux":
         path = "/usr"
     else:
@@ -162,12 +160,6 @@ if __name__ == "__main__":
     db = DirBrowser(path)
     paths = db.path_sub
     speedup = True
-#    start = time.time()
-#    total1 = main(path)
-#    end = time.time()
-#    start1 = time.time()
-#    total2 = main(path, speedup)
-#    end1 = time.time()
     queue = multiprocessing.Queue()
     lock = multiprocessing.Lock()
     start2 = time.time()
@@ -176,29 +168,11 @@ if __name__ == "__main__":
     end2 = time.time()
     for p in processes:
         p.start()
-    #for p in processes:
-    #    p.join()
     results = [queue.get() for p in processes]
     b = []
     [b.extend(item) for item in results]
     print len(set(b))
-#    tmp = DirBrowser(path)
-#    tmp.browser()
-#    print(len(set(tmp.total_dirs)))
-#    tmp.speedup_browser()
-#    tmp1 = DirBrowser(path)
-#    start = time.time()
-#    tmp1.main()
-#    end = time.time()
-#    tmpsp = DirBrowser(path, "s")
-#    start1 = time.time()
-#    tmpsp.main()
-#    end1 = time.time()
-#    print end-start
-#    print end1-start1
     print end2-start2
-#    print len(total1)
-#    print len(total2)
     db1 = DirBrowser(path)
     start3 = time.time()
     db1.parallelprocess()
@@ -211,16 +185,3 @@ if __name__ == "__main__":
     end4 = time.time()
     print len(set(db2.total_dirs))
     print end4-start4
-#    print(len(tmpsp.total_dirs))
-#    all = spget_dirs(tmpsp.path_sub)
-##    a = []
-##    [a.extend(item) for item in all]
-#    print(len(set(all)))
-#
-#    counter = 0
-#    for i in b:
-#        if i in total1:
-#            counter += 1
-#            total1.remove(i)
-#    print len(total1)
-#    print counter, "counter"
