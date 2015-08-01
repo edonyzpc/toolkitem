@@ -93,60 +93,68 @@ class PyColor(object):
 def init(path):
     directions = DirBrowser(path)
     directions.parallelprocess()
-    tasks = set(directions.total_dirs)
+    tasks = list(set(directions.total_dirs))
+    tasks.append(path)
     return tasks
 
-def task(path):
-    global queue,lock
-    lock.acquire()
-    init_tasks = init(path)
-    for direction in init_tasks:
-        queue.put(direction)
-    lock.release()
-
-def find_file(direction):
+def find_file(direction,files):
+    print direction
     dir_list = os.listdir(direction)
+    os.chdir(direction)
     file_list = [file for file in dir_list if os.path.isfile(file)]
-    return file_list
+    files[direction] = file_list
+    print files
 
-def solver(files):
-    global queue,lock1,result,queue1
-    lock1.acquire()
-    while True:
+# create direction to find files tasks into queue
+def task(directions):
+    global queue,lock
+    while directions:
+        lock.acquire()
+        queue.put(directions[0])
+        directions.remove(directions[0])
+        lock.release()
+
+# pick direction from queue and generate the files in it
+def solver(direction, num, files):
+    while True and num >0:
+        global lock,queue,condition,queue1
         if not queue.empty():
+            lock.acquire()
             direction = queue.get()
-            file_list = find_file(direction)
-            files.append(file_list)
-            result[direction] = file_list[:]
-            queue1.put([direction+"/"+file for file in file_list])
-        else:
-            break
-    print "NOT"
-    lock1.release()
+            num -= 1
+            #print "dir",direction
+            find_file(direction,files)
+            #queue1.put([direction+"/"+file for file in file_list])
+            lock.release()
 
-def parallelengine(path, files):
-    global queue,lock,lock1
-    task_process = [multiprocessing.Process(target=task,args=(path,)) for i in range(1)]
+# manager
+def parallelengine(path):
+    global queue,lock,lock1,files
+    files = {}
+    directions = init(path)
+    num = len(directions)/3
+    task_process = [multiprocessing.Process(target=task,args=(directions[i*num:(i+1)*num],)) for i in range(3)]
     for tp in task_process:
         tp.start()
     for tp in task_process:
         tp.join()
-    solver_process = [multiprocessing.Process(target=solver,args=(files,)) for i in range(3)]
+    solver_process = [multiprocessing.Process(target=solver, args=(dir,num*3,files,))]
     for sp in solver_process:
         sp.start()
     for sp in solver_process:
         sp.join()
 
 if __name__ == "__main__":
-    path = "/home/edony/code/github/toolkitem"
-    files = []
-    global queue,lock,lock1,result
+    path = "/home/edony/code/github/toolkitem/filesline"
+    #ddd = {}
+    #find_file(path, ddd)
+    #print ddd
+    global queue,lock,condition,files
     queue = multiprocessing.Queue()
     queue1 = multiprocessing.Queue()
     lock = multiprocessing.Lock()
-    lock1 = multiprocessing.Lock()
-    result = {}
-    parallelengine(path, files)
-    print queue1.qsize()
-    print queue1.get()
-    print files
+    condition = multiprocessing.Condition()
+#    result = {}
+    parallelengine(path)
+    print files.keys()
+    print "main",id(files)
