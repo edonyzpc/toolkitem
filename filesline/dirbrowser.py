@@ -150,38 +150,88 @@ class DirBrowser(object):
         self.total_dirs = []
         [self.total_dirs.extend(item) for item in results]
 
-if __name__ == "__main__":
-    import time
-    import platform
-    if platform.system == "Linux":
-        path = "/usr"
-    else:
-        path = "/usr/local/Cellar/opencv"
+    @property
+    def directions(self):
+        return list(set(self.total_dirs))
+
+def find_files(direction):
+    dir_list = os.listdir(direction)
+    os.chdir(direction)
+    file_list = [file for file in dir_list if os.path.isfile(file)]
+    return file_list
+
+def find_files_directions(directions, queue, lock):
+    files = {}
+    for dir in directions:
+        f_tmp = find_files(dir)
+        files[dir] = f_tmp
+    lock.acquire()
+    queue.put(files)
+    lock.release()
+
+def filebrowser(path,files):
     db = DirBrowser(path)
-    paths = db.path_sub
-    speedup = True
+    db.parallelprocess()
+    length = len(db.directions)
     queue = multiprocessing.Queue()
     lock = multiprocessing.Lock()
-    start2 = time.time()
-    processes = [multiprocessing.Process(target=DirBrowser.speedup_browser, args=(path,queue,lock,))
-                 for path in paths]
-    end2 = time.time()
+    processes = [multiprocessing.Process(target=find_files_directions,
+                 args=(db.directions[i:j],queue,lock,))
+                 for i,j in [(0,length/3),(length/3,2*length/3),(2*length/3,None)]]
     for p in processes:
         p.start()
     results = [queue.get() for p in processes]
-    b = []
-    [b.extend(item) for item in results]
-    print len(set(b))
-    print end2-start2
-    db1 = DirBrowser(path)
-    start3 = time.time()
-    db1.parallelprocess()
-    end3 = time.time()
-    print len(set(db1.total_dirs))
-    print end3-start3
-    db2 = DirBrowser(path)
-    start4 = time.time()
-    db2.poolprocess()
-    end4 = time.time()
-    print len(set(db2.total_dirs))
-    print end4-start4
+    for item in results:
+        files.update(item)
+
+def filebrowser_(path,files):
+    db = DirBrowser(path)
+    db.parallelprocess()
+    for dir in db.directions:
+        files[dir] = find_files(dir)
+
+if __name__ == "__main__":
+    import time
+    path = "/home/edony/code/github/toolkitem"
+    files = {}
+    s1 = time.time()
+    filebrowser(path, files)
+    s2 = time.time()
+    filebrowser_(path, files)
+    s3 = time.time()
+    print s2-s1
+    print s3-s1
+    print len(files.keys())
+    #import platform
+    #if platform.system == "Linux":
+    #    path = "/usr"
+    #else:
+    #    path = "/usr/local/Cellar/opencv"
+    #db = DirBrowser(path)
+    #paths = db.path_sub
+    #speedup = True
+    #queue = multiprocessing.Queue()
+    #lock = multiprocessing.Lock()
+    #start2 = time.time()
+    #processes = [multiprocessing.Process(target=DirBrowser.speedup_browser, args=(path,queue,lock,))
+    #             for path in paths]
+    #end2 = time.time()
+    #for p in processes:
+    #    p.start()
+    #results = [queue.get() for p in processes]
+    #b = []
+    #[b.extend(item) for item in results]
+    #print len(set(b))
+    #print end2-start2
+    #db1 = DirBrowser(path)
+    #start3 = time.time()
+    #db1.parallelprocess()
+    #end3 = time.time()
+    #print len(set(db1.total_dirs))
+    #print end3-start3
+    #db2 = DirBrowser(path)
+    #start4 = time.time()
+    #db2.poolprocess()
+    #end4 = time.time()
+    #print len(set(db2.total_dirs))
+    #print end4-start4
