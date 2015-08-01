@@ -17,9 +17,9 @@ r"""
  #
  # twitter : @edonyzpc
  #
- # Last modified: 2015-08-01 16:54
+ # Last modified: 2015-07-31 13:54
  #
- # Filename: browser.py
+ # Filename: filebroser.py
  #
  # Description: All Rights Are Reserved
  #
@@ -32,10 +32,9 @@ r"""
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
-__author__ = "edony"
-__version__ = 0.2.0
-from dirbrowser import DirBrowser as DB
-from dirbrowser import filebrowser as FB
+import multiprocessing
+import os
+from dirbrowser import DirBrowser
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -90,20 +89,75 @@ class PyColor(object):
         self.warningcolor = ''
         self.endcolor = ''
 
-def getdirections(path):
-    dirbrowser = DB(path,speedup=True)
-    dirbrowser.parallelprocess()
-    return dirbrowser.directions
+class FindFile(object):
+    def __init__(self, direction):
+        self.direction = direction
+        os.chdir(self.direction)
+        self.files = {}
 
-def getfiles(path):
-    files = {}
-    FB(path, files)
-    return files
+    def find_file(self):
+        dir_list = os.listdir(self.direction)
+        file_list = [file for file in dir_list if os.path.isfile(file)]
+        self.files[self.direction] = file_list
 
+class DirProduce(multiprocessing.Process):
+    def __init__(self, direction):
+        multiprocessing.Process.__init__(self)
+        self.direction = direction#dirbrowser.total_dirs
+
+    def run(self):
+        global queue,lock
+        queue.put(self.direction)
+            #lock.notify()
+
+class DirConsume(multiprocessing.Process):
+    def __init__(self, files):
+        multiprocessing.Process.__init__(self)
+        self.files = files
+
+    def run(self):
+        global queue,lock
+        direction = queue.get()
+        tmp = FindFile(direction)
+        tmp.find_file()
+        self.files[direction] = tmp.files[direction]
+        print self.files[direction]
+            #lock.notify()
+
+def process(direction, files):
+    global queue,lock
+    queue = multiprocessing.Queue(50)
+    lock = multiprocessing.Condition()
+    produce = DirProduce(direction)
+    consume = DirConsume(files)
+    produce.start()
+    consume.start()
 
 if __name__ == "__main__":
+    #path = "/home/edony/code/github/toolkitem/filesline"
     path = "/home/edony/code/github/toolkitem"
-    directions = getdirections(path)
-    files = getfiles(path)
-    print directions
-    print files
+    dirbrowser = DirBrowser(path, speedup=True)
+    dirbrowser.parallelprocess()
+    print len(dirbrowser.total_dirs)
+    print len(set(dirbrowser.total_dirs))
+    #tmp = FileBrowser(path)
+    #tmp.process()
+    #global queue, lock
+    #queue = multiprocessing.Queue()
+    #lock = multiprocessing.Condition()
+    file = {}
+    file1 = {}
+    for direction in set(dirbrowser.total_dirs):
+        tmp = FindFile(direction)
+        tmp.find_file()
+        file1[direction] = tmp.files[direction]
+    global queue,lock
+    queue = multiprocessing.Queue(50)
+    lock = multiprocessing.Condition()
+    for direction in dirbrowser.total_dirs:
+        produce = DirProduce(direction)
+    produce.start()
+    while not queue.empty():
+        consume = DirConsume(file)
+        consume.start()
+    print file

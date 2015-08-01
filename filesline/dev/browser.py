@@ -17,7 +17,7 @@ r"""
  #
  # twitter : @edonyzpc
  #
- # Last modified: 2015-08-01 16:54
+ # Last modified: 2015-07-28 17:11
  #
  # Filename: browser.py
  #
@@ -32,10 +32,9 @@ r"""
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
-__author__ = "edony"
-__version__ = 0.2.0
-from dirbrowser import DirBrowser as DB
-from dirbrowser import filebrowser as FB
+import os
+import threading
+import multiprocessing
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -90,20 +89,108 @@ class PyColor(object):
         self.warningcolor = ''
         self.endcolor = ''
 
-def getdirections(path):
-    dirbrowser = DB(path,speedup=True)
-    dirbrowser.parallelprocess()
-    return dirbrowser.directions
 
-def getfiles(path):
-    files = {}
-    FB(path, files)
-    return files
+def find_subdir(path):
+    all_subdir = []
+    for item in os.listdir(path):
+        if os.path.isdir(item) and not os.path.islink(item):
+            all_subdir.append(path + '/' + item)
+    return all_subdir
+def all_dir(path, total_dirs):
+    os.chdir(path)
+    tmp_dir = find_subdir(path)
+    total_dirs.append(path)
+    if len(tmp_dir) == 0:
+        return
+    else:
+        for item in tmp_dir:
+            total_dirs.append(item)
+            all_dir(item, total_dirs)
 
+def find_subdir_p(path):
+    all_subdir = []
+    for item in os.listdir(path):
+        if os.path.isdir(item) and not os.path.islink(item):
+            all_subdir.append(path + '/' + item)
+    return all_subdir
+def all_dir_p(path, total_dirs):
+    os.chdir(path)
+    tmp_dir = find_subdir_p(path)
+    total_dirs.append(path)
+    if len(tmp_dir) == 0:
+        return
+    else:
+        for item in tmp_dir:
+            total_dirs.append(item)
+            all_dir_p(item, total_dirs)
+def all_dir_p_(path):
+    dirs = []
+    all_dir_p(path, dirs)
+    return dirs
 
+def _find_subdir(path):
+    all_subdir = []
+    for item in os.listdir(path):
+        if os.path.isdir(item) and not os.path.islink(item):
+            all_subdir.append(path + '/' + item)
+    return all_subdir
+def _all_dir(path, total_dirs):
+    os.chdir(path)
+    tmp_dir = _find_subdir(path)
+    total_dirs.append(path)
+    if len(tmp_dir) == 0:
+        return
+    else:
+        for item in tmp_dir:
+            total_dirs.append(item)
+            _all_dir(item, total_dirs)
 if __name__ == "__main__":
-    path = "/home/edony/code/github/toolkitem"
-    directions = getdirections(path)
-    files = getfiles(path)
-    print directions
-    print files
+    import time
+    import platform 
+    global lock
+    total = [] 
+    totalp = multiprocessing.Queue() 
+    l = multiprocessing.Lock()
+    lock = threading.Lock()
+    lock.acquire()
+    if platform.system == "Linux":
+        path = "/usr"
+    else:
+        path = "/usr/local/Cellar/opencv"
+    paths = []
+    for i in os.listdir(path):
+        os.chdir(path)
+        if os.path.isdir(i):
+            paths.append(path+"/"+i)
+    ALL = []
+    os.chdir(path)
+    start = time.time()
+    _all_dir(path, ALL)
+    end1 = time.time()
+    for i in paths:
+        os.chdir(i)
+        t=threading.Thread(target=all_dir, args=(i,total))
+        t.setDaemon(True)
+        t.start()
+        t.join()
+    end2 = time.time()
+    p = multiprocessing.Pool(len(paths))
+    tmp = p.map(all_dir_p_, paths)
+    #for i in paths:
+    #    os.chdir(i)
+    #    t=multiprocessing.Process(target=all_dir_p_, args=(i,totalp,l))
+    #    t.start()
+    #    t.join()
+    #a = []
+    #for m in totalp:
+    #    a.extend(m.get())
+    end3 = time.time()
+    print end1-start
+    print end2-end1
+    print end3-end2
+    print len(set(ALL))
+    print len(set(total))
+    a = []
+    for i in tmp:
+        a.extend(i)
+    print len(set(a))
