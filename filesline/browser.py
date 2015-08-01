@@ -33,7 +33,7 @@ r"""
 #from matplotlib import cm
 #import numpy as np
 __author__ = "edony"
-__version__ = 0.2.0
+__version__ = "0.2.0"
 from dirbrowser import DirBrowser as DB
 from dirbrowser import filebrowser as FB
 
@@ -102,7 +102,10 @@ def getfiles(path):
 
 
 if __name__ == "__main__":
+    import platform
     path = "/home/edony/code/github/toolkitem"
+    if platform.system() == "Darwin":
+        path = "/Users/edony/coding/toolkitem"
     directions = getdirections(path)
     files = getfiles(path)
     print directions
