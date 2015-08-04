@@ -42,7 +42,9 @@ from getpass import getpass
 import platform as pf
 import subprocess as sp
 import argparse as ap
-from packages.filesline.getdirections import GetDirections as GD
+#from packages.filesline.getdirections import GetDirections as GD
+from packages.filesline.browser import getdirections as GD
+from packages.filesline.browser import getfiles as GF
 from kernelclean import KernelClean as KC
 
 __version__ = 1.0
@@ -142,8 +144,8 @@ class UpdateSys(object):
         Find the git repositroies in the self.path
         """
         tmp_getdirection = GD(self.path)
-        tmp_getdirection.get_dir()
-        for direction in tmp_getdirection.directions:
+        #tmp_getdirection.get_dir()
+        for direction in tmp_getdirection:
             os.chdir(direction)
             if '.git' in os.listdir(direction) and direction not in self.gitdir:
                 self.gitdir.append(direction)

@@ -25,4 +25,4 @@ from __future__ import absolute_import
 
 from . import filesline
 from . import browser
-#from . import getdirections
+from . import getdirections
