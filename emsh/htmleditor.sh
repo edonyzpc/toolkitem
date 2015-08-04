@@ -9,5 +9,5 @@ then
 fi
 if [ "$sys" == "$sys_m" ]
 then
-    $BROWSER /Users/edony/coding/github/blog/tinyMac.html
+    open $BROWSER /Users/edony/coding/blog/tinyMac.html
 fi
