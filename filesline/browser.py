@@ -32,10 +32,12 @@ r"""
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
+import os
+import multiprocessing
 __author__ = "edony"
 __version__ = "0.2.0"
-from dirbrowser import DirBrowser as DB
-from dirbrowser import filebrowser as FB
+#from dirbrowser import DirBrowser as DB
+#from dirbrowser import filebrowser as FB
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -90,23 +92,119 @@ class PyColor(object):
         self.warningcolor = ''
         self.endcolor = ''
 
+class DirBrowser(object):
+    def __init__(self, path, speedup=None):
+        self.path = path
+        os.chdir(path)
+        self.path_sub = [path+"/"+i for i in os.listdir(path) if os.path.isdir(i)]
+        self.path_sub.append(path)
+        self.total_dirs = []
+        self.speedup = speedup
+
+    @staticmethod
+    def find_subdir(path):
+        all_subdir = []
+        for item in os.listdir(path):
+            if os.path.isdir(item):
+                all_subdir.append(path + '/' + item)
+        return all_subdir
+
+    @staticmethod
+    def all_dir(path, total_dirs):
+        os.chdir(path)
+        tmp_dir = DirBrowser.find_subdir(path)
+        total_dirs.append(path)
+        if tmp_dir:
+            for item in tmp_dir:
+                total_dirs.append(item)
+                DirBrowser.all_dir(item, total_dirs)
+        else:
+            return
+
+    def browser(self):
+        self.all_dir(self.path, self.total_dirs)
+
+    @staticmethod
+    def speedup_browser(path, queue, lock):
+        lock.acquire()
+        dir_process = []
+        DirBrowser.all_dir(path, dir_process)
+        queue.put(dir_process)
+        lock.release()
+
+    def parallelprocess(self):
+        queue = multiprocessing.Queue()
+        lock = multiprocessing.Lock()
+        processes = [multiprocessing.Process(target=DirBrowser.speedup_browser, args=(path,queue,lock,))
+                     for path in self.path_sub]
+        for p in processes:
+            p.start()
+        results = [queue.get() for p in processes]
+        [self.total_dirs.extend(item) for item in results]
+
+    @staticmethod
+    def pool_browser(path):
+        dir_process = []
+        DirBrowser.all_dir(path, dir_process)
+        return dir_process
+
+    def poolprocess(self):
+        pool = multiprocessing.Pool(len(self.path_sub))
+        total = pool.map_async(DirBrowser.pool_browser, self.path_sub)
+        self.total_dirs = []
+        [self.total_dirs.extend(item) for item in results]
+
+    @property
+    def directions(self):
+        return list(set(self.total_dirs))
+
+def find_files(direction):
+    dir_list = os.listdir(direction)
+    os.chdir(direction)
+    file_list = [file for file in dir_list if os.path.isfile(file)]
+    return file_list
+
+def find_files_directions(directions, queue, lock):
+    files = {}
+    for dir in directions:
+        f_tmp = find_files(dir)
+        files[dir] = f_tmp
+    lock.acquire()
+    queue.put(files)
+    lock.release()
+
+def filebrowser(path,files):
+    db = DirBrowser(path)
+    db.parallelprocess()
+    length = len(db.directions)
+    queue = multiprocessing.Queue()
+    lock = multiprocessing.Lock()
+    processes = [multiprocessing.Process(target=find_files_directions,
+                 args=(db.directions[i:j],queue,lock,))
+                 for i,j in [(0,length/3),(length/3,2*length/3),(2*length/3,None)]]
+    for p in processes:
+        p.start()
+    results = [queue.get() for p in processes]
+    for item in results:
+        files.update(item)
+
 def getdirections(path):
-    dirbrowser = DB(path,speedup=True)
+    dirbrowser = DirBrowser(path,speedup=True)
     dirbrowser.parallelprocess()
     return dirbrowser.directions
 
 def getfiles(path):
     files = {}
-    FB(path, files)
+    filebrowser(path, files)
     return files
 
 
 if __name__ == "__main__":
     import platform
-    path = "/home/edony/code/github/toolkitem"
+    path = "/home/edony"
     if platform.system() == "Darwin":
         path = "/Users/edony/coding/toolkitem"
     directions = getdirections(path)
     files = getfiles(path)
-    print directions
-    print files
+    #print directions
+    #print files

@@ -193,14 +193,14 @@ class GetDirections(object):
                 print(" |")
 
 if __name__ == '__main__':
-    TEST = GetDirections('/home/edony/code/github/pyexer')
-#    TEST.get_dir()
-#    TEST.all_files()
+    TEST = GetDirections('/home/edony')
+    TEST.get_dir()
+    TEST.all_files()
 #   for testdir in TEST.directions:
 #       print testdir
 #   for key in TEST.files.keys():
 #       print key
 #       print TEST.files[key]
-    TEST.file_tree()
+#    TEST.file_tree()
 
 
