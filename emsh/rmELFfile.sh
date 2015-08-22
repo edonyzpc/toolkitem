@@ -1,3 +1,6 @@
+#!/bin/bash
+# author: edony
+
 sys=$(uname)
 sys_m="Darwin"
 sys_l="Linux"
