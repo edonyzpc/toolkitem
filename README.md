@@ -31,3 +31,7 @@
 > * boost::python for extending C++ class or function object into python module.  ====>  `emboost`
 
 > * integrate all above into personal interactive app with Tcl/Tk GUI.  ====>  `app`
+
+P.S.
+------
+branch restruct is a restructing repository.
