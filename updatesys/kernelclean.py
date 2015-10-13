@@ -292,9 +292,7 @@ class KernelClean(object):
                 check_cmd = input('Remove the old kernel?(y or n)\n')
                 if check_cmd == 'y':
                     self.cleanup()
-                    """
-                    os.system("rm kernelclean")
-                    """
+                    #os.system("rm kernelclean")
                 else:
                     print('Do Not Remove Old kernel')
             else:
