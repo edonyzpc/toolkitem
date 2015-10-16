@@ -211,7 +211,8 @@ def find_files_directions(directions, queue, lock):
     lock.release()
 
 def filebrowser(path,files):
-    """List All Files With Multi-Process
+    """
+    List All Files With Multi-Process
     """
     db = DirBrowser(path)
     db.parallelprocess()

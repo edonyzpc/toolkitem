@@ -93,7 +93,15 @@ class PyColor(object):
         self.endcolor = ''
 
 class DirBrowser(object):
+    """
+    Class DirBrowser aims to list the all the directories of the given directory.
+    And, to speed up, try the MAP/REDUCE method by using subprocess pool.
+    """
     def __init__(self, path, speedup=None):
+        """Args:
+        path: to listed directory(the given path)
+        speedup: flag to make sure to use fast method list the directory
+        """
         self.path = path
         os.chdir(path)
         self.path_sub = [path+"/"+i for i in os.listdir(path) if os.path.isdir(i)]
@@ -103,6 +111,12 @@ class DirBrowser(object):
 
     @staticmethod
     def find_subdir(path):
+        """Browser All Sub-Directory In Current Path
+        Args:
+            path: the root of the listed directory
+
+        A static method intended to work as interface for external purpose
+        """
         all_subdir = []
         for item in os.listdir(path):
             if os.path.isdir(item):
@@ -111,6 +125,13 @@ class DirBrowser(object):
 
     @staticmethod
     def all_dir(path, total_dirs):
+        """Browser All Sub-Directory Recursivly In Current Path
+        Args:
+            path: the root of the listed directory
+            total_dirs: record all the directories
+
+        A static method intended to work as interface for external purpose
+        """
         os.chdir(path)
         tmp_dir = DirBrowser.find_subdir(path)
         total_dirs.append(path)
@@ -122,10 +143,14 @@ class DirBrowser(object):
             return
 
     def browser(self):
+        """Walk The Path and Get The directories"""
         self.all_dir(self.path, self.total_dirs)
 
     @staticmethod
     def speedup_browser(path, queue, lock):
+        """List The Directories With One Process
+        Multi-Process speedup with queue for data share.
+        """
         lock.acquire()
         dir_process = []
         DirBrowser.all_dir(path, dir_process)
@@ -133,6 +158,8 @@ class DirBrowser(object):
         lock.release()
 
     def parallelprocess(self):
+        """List All Directories With Multi-Process
+        """
         queue = multiprocessing.Queue()
         lock = multiprocessing.Lock()
         processes = [multiprocessing.Process(target=DirBrowser.speedup_browser, args=(path,queue,lock,))
@@ -144,11 +171,16 @@ class DirBrowser(object):
 
     @staticmethod
     def pool_browser(path):
+        """Same Function With DirBrowser.browser(path)
+        """
         dir_process = []
         DirBrowser.all_dir(path, dir_process)
         return dir_process
 
     def poolprocess(self):
+        """
+        Map/Reduce mtheod to speedup the listing
+        """
         pool = multiprocessing.Pool(len(self.path_sub))
         total = pool.map_async(DirBrowser.pool_browser, self.path_sub)
         self.total_dirs = []
@@ -156,15 +188,24 @@ class DirBrowser(object):
 
     @property
     def directions(self):
+        """
+        Private the listed results
+        """
         return list(set(self.total_dirs))
 
 def find_files(direction):
+    """
+    List files in the given directon.
+    """
     dir_list = os.listdir(direction)
     os.chdir(direction)
     file_list = [file for file in dir_list if os.path.isfile(file)]
     return file_list
 
 def find_files_directions(directions, queue, lock):
+    """
+    Find the files with one process.
+    """
     files = {}
     for dir in directions:
         f_tmp = find_files(dir)
@@ -174,6 +215,9 @@ def find_files_directions(directions, queue, lock):
     lock.release()
 
 def filebrowser(path,files):
+    """
+    List All Files With Multi-Process
+    """
     db = DirBrowser(path)
     db.parallelprocess()
     length = len(db.directions)
@@ -189,11 +233,17 @@ def filebrowser(path,files):
         files.update(item)
 
 def getdirections(path):
+    """
+    Interface For Calling To Get Directions Of The Root Directory path
+    """
     dirbrowser = DirBrowser(path,speedup=True)
     dirbrowser.parallelprocess()
     return dirbrowser.directions
 
 def getfiles(path):
+    """
+    Interface For Calling To Get Files Of The Root Directory path
+    """
     files = {}
     filebrowser(path, files)
     return files
