@@ -17,7 +17,11 @@
 
 1. clean up the old kernel in Fedora
 
-## some bugs
+### test directory for script performance analyse
+----
+1. kernelclean.test is result of python3 Profile analysis builtin tool for `kernelclean.py`
+
+### some bugs
 ----
 
 1. BUG#1.1: when clean the kernel in linux, the reboot requirement are repeat
