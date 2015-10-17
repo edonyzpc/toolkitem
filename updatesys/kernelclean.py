@@ -228,24 +228,19 @@ class KernelClean(object):
             print('No Need To Cleanup!')
         """
         if self.old_kernel:
-            print(self.color.tipcolor +\
-                    'Running Kernel ' +\
-                    self.kernel +\
-                    self.color.endcolor)
-            #print(self.color.warningcolor +\
-            #        'To Be Removed Kernel ')
-            #for item in self.old_kernel:
-            #    print(''.join(item),)
-            reboot = input(self.color.endcolor + 'Need to Reboot System?(y or n)\n')
+            reboot = input(self.color.endcolor + 'Do You Need to Reboot System?(y or n)\n')
             if reboot == 'y':
                 os.system('reboot')
             elif reboot == 'n':
-                print(self.color.warningcolor + 'cleanup kernel ...' + self.color.endcolor)
+                print(self.color.warningcolor + 'Cleanup Kernel ...' + self.color.endcolor)
                 pwd_md5 = 'b04c541ed735353c44c52984a1be27f8'
                 pwd = getpass("Enter Your Password: ")
                 if hashlib.md5(pwd.encode('utf-8')).hexdigest() != pwd_md5:
-                    print("Wrong Password\n")
-                    return
+                    print(self.color.warningcolor + "Wrong Password" + self.color.endcolor)
+                    print('\033[0;36m' + "Try Angain" + '\033[0m')
+                    pwd = getpass("Enter Your Password: ")
+                    if hashlib.md5(pwd.encode('utf-8')).hexdigest() != pwd_md5:
+                        return
                 echo = ['echo']
                 echo.append(pwd)
                 if pf.linux_distribution()[1] > '21':
@@ -266,7 +261,7 @@ class KernelClean(object):
                     if isinstance(line, bytes):
                         line = line.decode()
                     print(line)
-                print(self.color.tipcolor + 'end cleanup' + self.color.endcolor)
+                print(self.color.tipcolor + 'End Cleanup!' + self.color.endcolor)
                 print(self.color.warningcolor +\
                         'Your Kernel is Update!' +\
                         self.color.endcolor)
@@ -279,25 +274,20 @@ class KernelClean(object):
         self.find_old_kernel()
         self.to_cleaned_kernel()
         if self.check == 1:
-            #print(self.color.warningcolor +\
-            #        'Your Using Kernel is ' +\
-            #        self.kernel +\
-            #        self.color.endcolor)
             if self.old_kernel:
-                print(self.color.tipcolor + 'Your Old Kernel is ')
+                print(self.color.tipcolor + 'Your Old Kernel: ')
                 for item in self.old_kernel:
                     print(''.join(item))
-                print(self.color.endcolor + 'To Be Removed Kernel Packages ')
-                print(self.kernel_clean)
+                print(self.color.warningcolor + 'In Using Kernel: ')
+                print(self.kernel + self.color.endcolor)
                 check_cmd = input('Remove the old kernel?(y or n)\n')
                 if check_cmd == 'y':
                     self.cleanup()
-                    #os.system("rm kernelclean")
                 else:
-                    print('Do Not Remove Old kernel')
+                    print('\033[36m' + 'Do Not Remove Old kernel' + '\033[0m')
             else:
                 print(self.color.tipcolor +\
-                        'Your System Has No Old Kernel' +\
+                        'Your System Has No Old Kernel To Cleanup!' +\
                         self.color.endcolor)
 
 if __name__ == '__main__':
