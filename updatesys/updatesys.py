@@ -208,7 +208,7 @@ class UpdateSys(object):
         """
         Manage Linux builtin tools.
         """
-        print(self.pcolor.warningcolor + 'yum updating...' + self.pcolor.endcolor)
+        print(self.pcolor.warningcolor + 'Packages Updating ...' + self.pcolor.endcolor)
         password = self.getpassword()
         echo = ['echo']
         echo.append(password)
@@ -219,7 +219,7 @@ class UpdateSys(object):
         pipein = sp.Popen(echo, stdout=sp.PIPE)
         pipeout = sp.Popen(cmd.split(), stdin=pipein.stdout, stdout=sp.PIPE)
         self.__outstatus(pipeout.stdout)
-        print(self.pcolor.tipcolor + 'end yum update' + self.pcolor.endcolor)
+        print(self.pcolor.tipcolor + 'End Packages Update' + self.pcolor.endcolor)
 
     def updategit(self, gitpath=None):
         """
@@ -235,8 +235,8 @@ class UpdateSys(object):
                 self.path = '/home/edony/code/github'
 
         self.__gitrepos()
-        print(self.pcolor.tipcolor + 'updating git...' + self.pcolor.endcolor)
-        print('>> to update git repositories path: %s'%self.path)
+        print(self.warningcolor.tipcolor + 'Updating GitHub Repository ...' + self.pcolor.endcolor)
+        print('>> to update GitHub repositories path: %s'%self.path)
         print('>> to update %d repositroies'%len(self.gitdir))
         for direction in self.gitdir:
             os.chdir(direction)
@@ -253,8 +253,8 @@ class UpdateSys(object):
         if hgpath:
             self.path = hgpath
         self.__gitrepos()
-        print(self.pcolor.tipcolor + 'updating hg...' + self.pcolor.endcolor)
-        print('>> to update hg repositories path: %s'%self.path)
+        print(self.pcolor.tipcolor + 'Updating Bitbucket ...' + self.pcolor.endcolor)
+        print('>> to update Bitbucket repositories path: %s'%self.path)
         print('>> to update %d repositroies'%len(self.hgdir))
         for direction in self.hgdir:
             os.chdir(direction)
