@@ -32,6 +32,8 @@
 
 > * integrate all above into personal interactive app with Tcl/Tk GUI.  ====>  `app`
 
+> * personal defined text handler for text process.  ====>  `texthandler`
+
 P.S.
 ------
 branch restruct is a restructing repository.
