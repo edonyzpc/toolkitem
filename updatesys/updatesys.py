@@ -235,7 +235,7 @@ class UpdateSys(object):
                 self.path = '/home/edony/code/github'
 
         self.__gitrepos()
-        print(self.warningcolor.tipcolor + 'Updating GitHub Repository ...' + self.pcolor.endcolor)
+        print(self.pcolor.warningcolor + 'Updating GitHub Repository ...' + self.pcolor.endcolor)
         print('>> to update GitHub repositories path: %s'%self.path)
         print('>> to update %d repositroies'%len(self.gitdir))
         for direction in self.gitdir:
