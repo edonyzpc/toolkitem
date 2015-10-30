@@ -88,26 +88,55 @@ class PyColor(object):
         self.endcolor = ''
 
 def ReadCSV(filename):
-    filebuf = open(filename)
-    csvreader = csv.reader(filebuf)
-    #for i, row in enumerate(csvreader):
-    #    if i == 0:
-    #        print(row)
-    return [item for item in csvreader]
+    with open(filename) as filebuf:
+        csvreader = csv.reader(filebuf)
+        return [item for item in csvreader]
 
 def Date2Digit(date_str):
-    return [int(item) for item in date_str.split('/') if item]
+    if '/' in date_str:
+        return [int(item) for item in date_str.split('/') if item]
+    if '-' in date_str:
+        return [int(item) for item in date_str.split('-') if item]
 
-def CustomizedCSV(csv_ls):
+def CustomizedDateCSV(csv_ls):
     data = {}
     for item in csv_ls:
         temp = [Date2Digit(d) for d in item[1:]]
         data[item[0]] = temp
-    return data
+    if len(csv_ls) == len(data.keys()):
+        return data
+    else:
+        print('Wrong input file for contains repeated keys!')
+
+#def prePriceCSV(csv_ls):
+#    return [[item[1],item[0],item[2]] for item in csv_ls]
+
+def PriceCSV(csv_ls):
+    price = [[Date2Digit(item[0]), item[1], float(item[2])] for item in csv_ls]
+    price.sort(key=lambda x:x[0])
+    hashprice = {}
+    [hashprice[item[1]].append([item[0],item[2]]) for item in price]
+    return price, hashprice
+
+def matchDP(id, price):
+    matched = {}
+    for key in id.keys(): #股票代码
+        for d in id[key]: #日期
+            mems = hashprice[key]
+            mems.sort(key=lambda x:x[0])
+            matched[key].append(mems[mems.index(d)+1])
+    return matched
+
 
 if __name__ == '__main__':
     date = ReadCSV('./CodeDate.csv')
-    dig_date = CustomizedCSV(date)
+    dig_date = CustomizedDateCSV(date)
     print(len(dig_date.keys()))
+    price = ReadCSV('./PriceLimit.csv')
+    #price_ = prePriceCSV(price)
+    dig_price, hashprice = PriceCSV(price)
+    #print(hashprice['000030'])
+    #print(dig_price[0:1000])
+    #print(price[0])
     #date.sort()
     #print(set(date))
