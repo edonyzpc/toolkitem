@@ -115,26 +115,44 @@ def PriceCSV(csv_ls):
     price = [[Date2Digit(item[0]), item[1], float(item[2])] for item in csv_ls]
     price.sort(key=lambda x:x[0])
     hashprice = {}
-    [hashprice[item[1]].append([item[0],item[2]]) for item in price]
-    return price, hashprice
+    #[hashprice[item[1]].append([item[0],item[1]]) for item in price]
+    for item in price:
+        hashprice[item[1]] = []
+        hashprice[item[1]].append([item[0],item[2]])
+    return hashprice
 
 def matchDP(id, price):
     matched = {}
     for key in id.keys(): #股票代码
+        tmp = []
         for d in id[key]: #日期
-            mems = hashprice[key]
+            mems = price[key]
             mems.sort(key=lambda x:x[0])
-            matched[key].append(mems[mems.index(d)+1])
+            for item in mems:
+                if item[1] <= 0.0995:
+                    if item[0] <= d:
+                        continue
+                    else:
+                        tmp.append(item[0])
+        matched[key] = tmp
     return matched
 
-
+def WriteCSV(ls):
+    lines = [ls[key] for key in ls.keys() if not ls[key].insert(0, key)]
+    with open("./test.csv",'w+') as filebuf:
+        writer = csv.writer(filebuf)
+        for line in lines:
+            writer.writerow(line)
 if __name__ == '__main__':
     date = ReadCSV('./CodeDate.csv')
     dig_date = CustomizedDateCSV(date)
-    print(len(dig_date.keys()))
+    #print(len(dig_date.keys()))
     price = ReadCSV('./PriceLimit.csv')
     #price_ = prePriceCSV(price)
-    dig_price, hashprice = PriceCSV(price)
+    hashprice = PriceCSV(price)
+    ls = matchDP(dig_date, hashprice)
+    WriteCSV(ls)
+    #WriteCSV(hashprice)
     #print(hashprice['000030'])
     #print(dig_price[0:1000])
     #print(price[0])
