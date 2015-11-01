@@ -121,19 +121,21 @@ def PriceCSV(csv_ls):
         hashprice[item[1]].append([item[0],item[2]])
     return hashprice
 
-def matchDP(id, price):
+def matchDP(id, hashprice):
     matched = {}
     for key in id.keys(): #股票代码
         tmp = []
         for d in id[key]: #日期
-            mems = price[key]
-            mems.sort(key=lambda x:x[0])
-            for item in mems:
-                if item[1] <= 0.0995:
-                    if item[0] <= d:
-                        continue
-                    else:
-                        tmp.append(item[0])
+            if d:
+                mems = hashprice[key]
+                mems.sort(key=lambda x:x[0])
+                for item in mems:
+                    if item[1] <= 0.0995:
+                        if item[0] <= d or item[0] in tmp:
+                            continue
+                        else:
+                            tmp.append(item[0])
+                            break
         matched[key] = tmp
     return matched
 
@@ -143,6 +145,7 @@ def WriteCSV(ls):
         writer = csv.writer(filebuf)
         for line in lines:
             writer.writerow(line)
+
 if __name__ == '__main__':
     date = ReadCSV('./CodeDate.csv')
     dig_date = CustomizedDateCSV(date)
@@ -150,6 +153,11 @@ if __name__ == '__main__':
     price = ReadCSV('./PriceLimit.csv')
     #price_ = prePriceCSV(price)
     hashprice = PriceCSV(price)
+    for i, key in enumerate(hashprice.keys()):
+        if i == 0:
+            hashprice[key]
+        else:
+            break
     ls = matchDP(dig_date, hashprice)
     WriteCSV(ls)
     #WriteCSV(hashprice)
