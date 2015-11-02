@@ -87,6 +87,10 @@ class PyColor(object):
         self.warningcolor = ''
         self.endcolor = ''
 
+__description__ = """
+                  This is the rough idea about abstracting the matched date of stocks id.
+                  """
+# TODO(edony): this script takes lots of memory to query the matched item, it needs to optimize.
 def ReadCSV(filename):
     with open(filename) as filebuf:
         csvreader = csv.reader(filebuf)
