@@ -34,6 +34,8 @@
 
 > * personal defined text handler for text process.  ====>  `texthandler`
 
+> * some awsome useful python script for daily working.  ====>  `pyscript`
+
 P.S.
 ------
 branch restruct is a restructing repository.
