@@ -117,8 +117,10 @@ def PriceCSV(csv_ls):
     hashprice = {}
     #[hashprice[item[1]].append([item[0],item[1]]) for item in price]
     for item in price:
-        hashprice[item[1]] = []
-        hashprice[item[1]].append([item[0],item[2]])
+        if not item[1] in hashprice.keys():
+            hashprice[item[1]] = []
+        if item[2] <= 0.0995:
+            hashprice[item[1]].append([item[0],item[2]])
     return hashprice
 
 def matchDP(id, hashprice):
@@ -129,13 +131,15 @@ def matchDP(id, hashprice):
             if d:
                 mems = hashprice[key]
                 mems.sort(key=lambda x:x[0])
+                if key == '300092':
+                    print(mems)
                 for item in mems:
-                    if item[1] <= 0.0995:
-                        if item[0] <= d or item[0] in tmp:
-                            continue
-                        else:
-                            tmp.append(item[0])
-                            break
+                    if item[0] <= d:
+                        continue
+                    elif item[0] in tmp:
+                        continue
+                    else:
+                        tmp.append(item[0])
         matched[key] = tmp
     return matched
 
