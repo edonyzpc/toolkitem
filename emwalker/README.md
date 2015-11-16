@@ -10,3 +10,8 @@
 2. Parser the html and write into file
 
 3. Do some analyse and update the database for recording
+
+------------
+***TODO***
+
+Make Sure About The Purpose of My Walker.(Try XMind Analyse)
