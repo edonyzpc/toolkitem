@@ -14,4 +14,6 @@
 ------------
 ***TODO***
 
-Make Sure About The Purpose of My Walker.(Try XMind Analyse)
+> Make Sure About The Purpose of My Walker.(Try XMind Analyse)<br>
+> Learn About The Basic Knowledge of Crawler.<br>
+> Range My Walker For Its Purpose.<br>
