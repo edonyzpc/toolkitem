@@ -44,7 +44,7 @@ import subprocess as sp
 import argparse as ap
 #from packages.filesline.getdirections import GetDirections as GD
 from packages.filesline.browser import getdirections as GD
-from packages.filesline.browser import getfiles as GF
+#from packages.filesline.browser import getfiles as GF
 from kernelclean import KernelClean as KC
 
 __version__ = 1.0
@@ -133,7 +133,8 @@ class UpdateSys(object):
         self.hgdir = []
         self.pcolor = PyColor()
         self.parser = ap.ArgumentParser()
-        self.pwd_md5 = 'b04c541ed735353c44c52984a1be27f8'
+        self.pwd_sha512 = 'a071944ce3ecfc42ea3e17cd666afb66bfd32b14f0bb03b61\
+4665f66b888b62b9a4308268baa522804572cff30b816c299d73b1a97fc3a017f2bc94fa9adb1fc'
         if path:
             self.path = path
         else:
@@ -156,12 +157,13 @@ class UpdateSys(object):
         """
         Print highlight the executed cmd results.
         """
-        for line in outstatus_file.readlines():
-            if isinstance(line, bytes):
-                line = line.decode()
-            if line == '':
-                break
-            print(line.rstrip())
+        if self:
+            for line in outstatus_file.readlines():
+                if line == '':
+                    break
+                if isinstance(line, bytes):
+                    line = line.decode()
+                    print(line.rstrip())
 
     def __updatebrew(self):
         """
@@ -172,19 +174,19 @@ class UpdateSys(object):
         self.__outstatus(brewstatus)
         print(self.pcolor.tipcolor + 'end brew update' + self.pcolor.endcolor)
 
-    @property
-    def pwd(self):
-        """
-        Protected Password
-        """
-        return self.pwd_md5
+    #@property
+    #def pwd(self):
+    #    """
+    #    Protected Password
+    #    """
+    #    return self.pwd_md5
 
-    @pwd.setter
-    def pwd(self, password):
-        """
-        Change the Protected Password
-        """
-        self.pwd_md5 = hashlib.md5(password.encode('utf-8')).hexdigest()
+    #@pwd.setter
+    #def pwd(self, password):
+    #    """
+    #    Change the Protected Password
+    #    """
+    #    self.pwd_md5 = hashlib.md5(password.encode('utf-8')).hexdigest()
 
     def getpassword(self):
         """
@@ -193,14 +195,15 @@ class UpdateSys(object):
         password = getpass("Enter your password: ")
         counter = 1
         while counter < 3:
-            if self.pwd_md5 != hashlib.md5(password.encode('utf-8')).hexdigest():
+            #if self.pwd_md5 != hashlib.md5(password.encode('utf-8')).hexdigest():
+            if isrightpwd(password, self.pwd_sha512):
+                return password
+            else:
                 print(self.pcolor.warningcolor +\
                         "Wrong Password!" +\
                         self.pcolor.endcolor)
                 password = getpass("Try again: ")
                 counter += 1
-            else:
-                return password
         if counter >= 3:
             raise ValueError("Wrong Password!")
 
@@ -372,6 +375,16 @@ class UpdateSys(object):
                 self.help(attr)
         else:
             self.default()
+
+def isrightpwd(pwd, encrypted_pwd):
+    """
+    Make Sure The Password(pwd) Is The Right One.
+    Judge By The SHA512 Encrypted Password(encrypted_pwd).
+    """
+    if hashlib.sha512(pwd.encode('utf-8')).hexdigest() == encrypted_pwd:
+        return True
+    else:
+        return False
 
 if __name__ == '__main__':
     import sys
