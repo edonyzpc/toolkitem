@@ -354,6 +354,9 @@ def SHWeather():
     query.query()
     query.printday(0)
 
+def cityfromip(ipadd=None):
+    pass
+
 if __name__ == "__main__":
     main()
     HZWeather()
