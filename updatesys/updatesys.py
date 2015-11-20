@@ -46,6 +46,7 @@ import argparse as ap
 from packages.filesline.browser import getdirections as GD
 #from packages.filesline.browser import getfiles as GF
 from kernelclean import KernelClean as KC
+from weather import HZWeather as HZW
 
 __version__ = 1.0
 __author__ = 'edony'
@@ -159,11 +160,9 @@ class UpdateSys(object):
         """
         if self:
             for line in outstatus_file.readlines():
-                if line == '':
-                    break
                 if isinstance(line, bytes):
                     line = line.decode()
-                    print(line.rstrip())
+                print(line.rstrip())
 
     def __updatebrew(self):
         """
@@ -391,4 +390,5 @@ if __name__ == '__main__':
     UPDATE = UpdateSys()
     UPDATE.pcolor.new = '\033[0;36m'
     print(UPDATE.pcolor.new, sys.version, UPDATE.pcolor.endcolor)
+    HZW()
     UPDATE.main()
