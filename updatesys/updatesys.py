@@ -46,7 +46,7 @@ import argparse as ap
 from packages.filesline.browser import getdirections as GD
 #from packages.filesline.browser import getfiles as GF
 from kernelclean import KernelClean as KC
-from weather import HZWeather as HZW
+from weather import autoweather as autoweat
 
 __version__ = 1.0
 __author__ = 'edony'
@@ -390,5 +390,5 @@ if __name__ == '__main__':
     UPDATE = UpdateSys()
     UPDATE.pcolor.new = '\033[0;36m'
     print(UPDATE.pcolor.new, sys.version, UPDATE.pcolor.endcolor)
-    HZW()
+    autoweat(1)
     UPDATE.main()

@@ -8,6 +8,7 @@ else:
     from urllib import urlopen
 import json
 from datetime import datetime, timedelta
+from matchIPwithPOS import IP2Pos as ip2pos
 
 base_url = "http://api.worldweatheronline.com/free/v2/weather.ashx"
 codes = {'113': 'iconSunny',
@@ -354,7 +355,21 @@ def SHWeather():
     query.printday(0)
 
 def cityfromip(ipadd=None):
-    pass
+    ip2add = ip2pos()
+    ip2add.match_ipapi()
+    print(ip2add.data['IA']['city'].lower())
+    return ip2add.data['IA']['city'].lower()
+
+def autoweather(days):
+    if days > 3:
+        days = 3
+    if days < 0:
+        days = 0
+    city = cityfromip()
+    for i in range(days):
+        query = Query(i, city)
+        query.query()
+        query.printday(i)
 
 if __name__ == "__main__":
     main()
