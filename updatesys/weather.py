@@ -262,22 +262,21 @@ class Query(object):
         #        if len(self.hourly['lang_zh'][0]['value']) <= 12\
         #        else '│' + icons[codes[self.weatherCode]][0] +\
         #        self.hourly['lang_zh'][0]['value'] + '\t\t'
-        l1 += '│' + icons[codes[self.weatherCode]][0] + '\t\t'
-        l2 += '│' + icons[codes[self.weatherCode]][1] + temp_color(self.tempC) + "°C"+'\t'
-        l3 += '│' + icons[codes[self.weatherCode]][2] +\
-                windDir[self.winddir16Point]+" "+\
-                wind_color(self.windspeedKmph) + "km/h" + '\t'
-        l4 += '│' + icons[codes[self.weatherCode]][3] +\
-                "降水:" + str(self.chanceofwater) + "%" + '\t'
-        l5 += '│' + icons[codes[self.weatherCode]][4] +\
-                "湿度:" + str(self.humidity) + "%" + '\t'
-        l6 += '│' + '\033[0;34m' +\
-                self.hourly['lang_zh'][0]['value'].center(\
-                23-len(self.hourly['lang_zh'][0]['value'])) +\
-                '\033[0m'
-        l7 = "├───────────────────────┼──────────────────\
-                ─────┼───────────────────────┼───────────────────────┤"
-
+            l1 += '│' + icons[codes[self.weatherCode]][0] + '\t\t'
+            l2 += '│' + icons[codes[self.weatherCode]][1] + temp_color(self.tempC) + "°C"+'\t'
+            l3 += '│' + icons[codes[self.weatherCode]][2] +\
+                    windDir[self.winddir16Point]+" "+\
+                    wind_color(self.windspeedKmph) + "km/h" + '\t'
+            l4 += '│' + icons[codes[self.weatherCode]][3] +\
+                    "降水:" + str(self.chanceofwater) + "%" + '\t'
+            l5 += '│' + icons[codes[self.weatherCode]][4] +\
+                    "湿度:" + str(self.humidity) + "%" + '\t'
+            l6 += '│' + '\033[0;34m' +\
+                    self.hourly['lang_zh'][0]['value'].center(\
+                    23-len(self.hourly['lang_zh'][0]['value'])) +\
+                    '\033[0m'
+            l7 = "├───────────────────────┼─────────────────" +\
+                    "──────┼───────────────────────┼───────────────────────┤"
         print(l6+"│")
         print(l7)
         print(l1+"│")
@@ -290,14 +289,14 @@ class Query(object):
         date_time = datetime.strftime(datetime.today() + timedelta(days=delta), "%Y-%m-%d")
         tmp = '\033[0;31m' + '{0:{fill}13}'.format(self.city.upper(), fill='^') + '\033[0m'
         line1 = "                                         ┌%s┐" % tmp
-        line2 = "┌───────────────────────┬──────────────────%s\
-                ───────────────────┬───────────────────────┐" % date_time
-        line3 = "│       Morning         │         Noon   \
-                └──────┬──────┘  Evening       │        Night          │"
-        line4 = "├───────────────────────┼───────────────────\
-                ────┼───────────────────────┼───────────────────────┤"
-        endline = "└───────────────────────┴────────────────────\
-                ───┴───────────────────────┴───────────────────────┘"
+        line2 = "┌───────────────────────┬──────────────────%s───"% date_time +\
+                "────────────────┬───────────────────────┐"
+        line3 = "│       Morning         │         Noon   └──────" +\
+                "┬──────┘  Evening       │        Night          │"
+        line4 = "├───────────────────────┼───────────────────────┼─" +\
+                "──────────────────────┼───────────────────────┤"
+        endline = "└───────────────────────┴───────────────────────┴─" +\
+                "──────────────────────┴───────────────────────┘"
         print(line1)
         print(line2)
         print(line3)
