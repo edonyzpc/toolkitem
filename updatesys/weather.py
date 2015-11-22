@@ -357,14 +357,16 @@ def SHWeather():
 def cityfromip(ipadd=None):
     ip2add = ip2pos()
     ip2add.match_ipapi()
-    print(ip2add.data['IA']['city'].lower())
+    print("You are Located in " + "\033[31m" +\
+            ip2add.data['IA']['city'].upper() +\
+            "\033[0m")
     return ip2add.data['IA']['city'].lower()
 
-def autoweather(days):
-    if days > 3:
+def autoweather(days=None):
+    if not days or days < 0:
+        days = 1
+    elif days > 3:
         days = 3
-    if days < 0:
-        days = 0
     city = cityfromip()
     for i in range(days):
         query = Query(i, city)
@@ -376,5 +378,3 @@ if __name__ == "__main__":
     HZWeather()
     NJWeather()
     SHWeather()
-
-

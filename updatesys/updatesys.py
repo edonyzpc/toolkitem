@@ -48,7 +48,7 @@ from packages.filesline.browser import getdirections as GD
 from kernelclean import KernelClean as KC
 from weather import autoweather as autoweat
 
-__version__ = 1.0
+__version__ = '1.0.3'
 __author__ = 'edony'
 
 class PyColor(object):
@@ -321,59 +321,142 @@ class UpdateSys(object):
         -g      : Update projects in default diection or given path
         -c      : Cleanup the old kernel in Fedora system or cleanup Mac brew pkg
         -p      : Specific the Path to Manage
-        -a   : Get Details in Document of Attributes
+        -a      : Get Details in Document of Attributes
+        -v      : Tool and System Information
+        -w      : Get Local Weather In 24 Hours
         """
         self.parser.add_argument('-l', '--linux',
-                                 action='store_true',
+                                 action=lExecAction, nargs=0,
                                  help='Manage and Update Linux Builtin Tools')
         self.parser.add_argument('-m', '--mac',
-                                 action='store_true',
+                                 action=mExecAction, nargs=0,
                                  help='Manage and Update Mac Brewed Tools')
         self.parser.add_argument('-g', '--git',
-                                 action='store_true',
+                                 action=gExecAction, nargs='*',
                                  help='Update Git Repositories in Default Path')
         self.parser.add_argument('-H', '--hg',
-                                 action='store_true',
+                                 action=hgExecAction, nargs='*',
                                  help='Update HG Repositories in Default Path')
         self.parser.add_argument('-c', '--cleanup',
-                                 dest='c',
-                                 action='store_true',
+                                 action=cExecAction, nargs=0,
                                  help='Cleanup All Repositories Cache and Old Kernel in System')
         self.parser.add_argument('-p', '--path',
-                                 nargs='*',
+                                 action=pExecAction, nargs='+',
                                  help='Repository Path Where to Management')
         self.parser.add_argument('-a', '--attribute',
-                                 nargs='+',
+                                 action=attrExecAction, nargs='+',
                                  help='Help for Details On Component')
+        self.parser.add_argument('-v', '--version',
+                                 action='version', 
+                                 version="\033[32mTool Version:" +\
+                                         __version__ + ", " +\
+                                         pf.system() + ":" + pf.uname().release + ", " +\
+                                         "Python:" + sys.version.split('(')[0] + "\033[0m",
+                                 help='Tool and System Information')
+        self.parser.add_argument('-w', '--weather', nargs=0,
+                                 action=wExecAction,
+                                 help='Get Local Weather In 24 Hours')
 
     def main(self):
         """
         Updatesys management main pipe to execution.
         """
         self.cmd_parser()
-        if self.parser.parse_args().linux:
-            self.__updateyum()
-        elif self.parser.parse_args().mac:
-            self.__updatebrew()
-        elif self.parser.parse_args().git:
-            print("system info: " + pf.system())
-            self.updategit()
-        elif self.parser.parse_args().hg:
-            print("system info: " + pf.system())
-            self.updatehg()
-        elif self.parser.parse_args().path:
-            print("system info: " + pf.system())
-            for path in self.parser.parse_args().path:
-                self.updategit(path)
-            for path in self.parser.parse_args().path:
-                self.updatehg(path)
-        elif self.parser.parse_args().c:
-            UpdateSys.cleanup()
-        elif self.parser.parse_args().attribute:
-            for attr in self.parser.parse_args().attribute:
-                self.help(attr)
-        else:
+        if len(sys.argv) < 2:
             self.default()
+        else:
+            self.parser.parse_args()
+        #if self.parser.parse_args().linux:
+        #    self.__updateyum()
+        #elif self.parser.parse_args().mac:
+        #    self.__updatebrew()
+        #elif self.parser.parse_args().git:
+        #    print("system info: " + pf.system())
+        #    self.updategit()
+        #elif self.parser.parse_args().hg:
+        #    print("system info: " + pf.system())
+        #    self.updatehg()
+        #elif self.parser.parse_args().path:
+        #    print("system info: " + pf.system())
+        #    for path in self.parser.parse_args().path:
+        #        self.updategit(path)
+        #    for path in self.parser.parse_args().path:
+        #        self.updatehg(path)
+        #elif self.parser.parse_args().c:
+        #    UpdateSys.cleanup()
+        #elif self.parser.parse_args().attribute:
+        #    for attr in self.parser.parse_args().attribute:
+        #        self.help(attr)
+        #else:
+        #    self.default()
+
+class wExecAction(ap.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        val = autoweat()
+        setattr(namespace, self.dest, val)
+
+class lExecAction(ap.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        update = UpdateSys()
+        val = update._UpdateSys__updateyum()
+        setattr(namespace, self.dest, val)
+
+class mExecAction(ap.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        print(self.namespace)
+        update = UpdateSys()
+        val = update._UpdateSys__updatebrew()
+        setattr(namespace, self.dest, val)
+
+class gExecAction(ap.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        print("system info: " + pf.system())
+        update = UpdateSys()
+        if len(sys.argv) > 2:
+            for path in sys.argv[2:]:
+                val = update.updategit(path)
+        else:
+            val = update.updategit()
+        setattr(namespace, self.dest, val)
+
+class hgExecAction(ap.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        print("system info: " + pf.system())
+        update = UpdateSys()
+        if len(sys.argv) > 2:
+            for path in sys.argv[2:]:
+                val = update.updatehg(path)
+        else:
+            val = update.updatehg()
+        setattr(namespace, self.dest, val)
+
+class pExecAction(ap.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        print("system info: " + pf.system())
+        update = UpdateSys()
+        if len(sys.argv) > 2:
+            for path in sys.argv[2:]:
+                val = update.updategit(path)
+                val = update.updatehg(path)
+        else:
+            val = update.updategit()
+            val = update.updatehg()
+        setattr(namespace, self.dest, val)
+
+class cExecAction(ap.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        update = UpdateSys()
+        val = update.cleanup()
+        setattr(namespace, self.dest, val)
+
+class attrExecAction(ap.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        update = UpdateSys()
+        if len(sys.argv) > 2:
+            for attr in sys.argv[2:]:
+                print("UpdateSys Class Method <{}> DOC:".format(attr))
+                val = update.help(attr)
+            setattr(namespace, self.dest, val)
 
 def isrightpwd(pwd, encrypted_pwd):
     """
@@ -388,7 +471,7 @@ def isrightpwd(pwd, encrypted_pwd):
 if __name__ == '__main__':
     import sys
     UPDATE = UpdateSys()
-    UPDATE.pcolor.new = '\033[0;36m'
-    print(UPDATE.pcolor.new, sys.version, UPDATE.pcolor.endcolor)
-    autoweat(1)
+    #UPDATE.pcolor.new = '\033[0;36m'
+    #print(UPDATE.pcolor.new, sys.version, UPDATE.pcolor.endcolor)
+    #autoweat(1)
     UPDATE.main()
