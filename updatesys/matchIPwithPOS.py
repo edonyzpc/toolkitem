@@ -34,7 +34,7 @@ r"""
 #import numpy as np
 import sys
 import json
-import chardet
+#import chardet
 if sys.version.startswith('3.'):
     from urllib.request import urlopen
 else:
