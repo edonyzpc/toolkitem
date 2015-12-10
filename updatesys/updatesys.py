@@ -173,6 +173,12 @@ class UpdateSys(object):
         self.__outstatus(brewstatus)
         print(self.pcolor.tipcolor + 'end brew update' + self.pcolor.endcolor)
 
+    def upbrew(self):
+        """
+        Protected Function For MacOS Builtin Manage Tools.
+        """
+        self.__updatebrew()
+
     #@property
     #def pwd(self):
     #    """
@@ -222,6 +228,12 @@ class UpdateSys(object):
         pipeout = sp.Popen(cmd.split(), stdin=pipein.stdout, stdout=sp.PIPE)
         self.__outstatus(pipeout.stdout)
         print(self.pcolor.tipcolor + 'End Packages Update' + self.pcolor.endcolor)
+
+    def uplinux(self):
+        """
+        Protected Function For Linux Builtin Manage Tool
+        """
+        self.__updateyum()
 
     def updategit(self, gitpath=None):
         """
@@ -326,35 +338,35 @@ class UpdateSys(object):
         -w      : Get Local Weather In 24 Hours
         """
         self.parser.add_argument('-l', '--linux',
-                                 action=lExecAction, nargs=0,
+                                 action=LinuxExecAction, nargs=0,
                                  help='Manage and Update Linux Builtin Tools')
         self.parser.add_argument('-m', '--mac',
-                                 action=mExecAction, nargs=0,
+                                 action=MacExecAction, nargs=0,
                                  help='Manage and Update Mac Brewed Tools')
         self.parser.add_argument('-g', '--git',
-                                 action=gExecAction, nargs='*',
+                                 action=GitExecAction, nargs='*',
                                  help='Update Git Repositories in Default Path')
         self.parser.add_argument('-H', '--hg',
-                                 action=hgExecAction, nargs='*',
+                                 action=HgExecAction, nargs='*',
                                  help='Update HG Repositories in Default Path')
         self.parser.add_argument('-c', '--cleanup',
-                                 action=cExecAction, nargs=0,
+                                 action=CleanupExecAction, nargs=0,
                                  help='Cleanup All Repositories Cache and Old Kernel in System')
         self.parser.add_argument('-p', '--path',
-                                 action=pExecAction, nargs='+',
+                                 action=PathExecAction, nargs='+',
                                  help='Repository Path Where to Management')
         self.parser.add_argument('-a', '--attribute',
-                                 action=attrExecAction, nargs='+',
+                                 action=AttrExecAction, nargs='+',
                                  help='Help for Details On Component')
         self.parser.add_argument('-v', '--version',
-                                 action='version', 
+                                 action='version',
                                  version="\033[32mTool Version:" +\
                                          __version__ + ", " +\
                                          pf.system() + ":" + pf.uname().release + ", " +\
                                          "Python:" + sys.version.split('(')[0] + "\033[0m",
                                  help='Tool and System Information')
         self.parser.add_argument('-w', '--weather', nargs=0,
-                                 action=wExecAction,
+                                 action=WeatherExecAction,
                                  help='Get Local Weather In 24 Hours')
 
     def main(self):
@@ -390,73 +402,162 @@ class UpdateSys(object):
         #else:
         #    self.default()
 
-class wExecAction(ap.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        val = autoweat()
-        setattr(namespace, self.dest, val)
+class WeatherExecAction(ap.Action):
+    """
+    Action of Getting Weather Information In 24h.
+    """
+    def info(self):
+        self.__doc__ += "Action of Getting Weather Information In 24h."
 
-class lExecAction(ap.Action):
+    def action(self):
+        self.info()
+        autoweat()
+
     def __call__(self, parser, namespace, values, option_string=None):
+        self.action()
+        setattr(namespace, self.dest, autoweat)
+
+class LinuxExecAction(ap.Action):
+    """
+    Action of Linux Builtin Packages Management.
+    """
+    def info(self):
+        self.__doc__ += "Action of Linux Builtin Packages Management."
+
+    def action(self):
+        self.info()
         update = UpdateSys()
-        val = update._UpdateSys__updateyum()
+        return update.uplinux()
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        val = self.action()
         setattr(namespace, self.dest, val)
 
-class mExecAction(ap.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        print(self.namespace)
+class MacExecAction(ap.Action):
+    """
+    Action of MacOS Builtin Packages Management.
+    """
+    def info(self):
+        self.__doc__ += "Action of MacOS Builtin Packages Management."
+
+    def action(self):
+        self.info()
         update = UpdateSys()
-        val = update._UpdateSys__updatebrew()
+        return update.upbrew()
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        #print(self.namespace)
+        val = self.action()
         setattr(namespace, self.dest, val)
 
-class gExecAction(ap.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
+class GitExecAction(ap.Action):
+    """
+    Action of Git Repositories Management.
+    """
+    def info(self):
+        self.__doc__ += "Action of Git Repositories Management."
+
+    def action(self):
+        self.info()
         print("system info: " + pf.system())
         update = UpdateSys()
         if len(sys.argv) > 2:
+            result = []
             for path in sys.argv[2:]:
-                val = update.updategit(path)
+                result.append(update.updategit(path))
+            return result
         else:
-            val = update.updategit()
+            return update.updategit()
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        val = self.action()
         setattr(namespace, self.dest, val)
 
-class hgExecAction(ap.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
+class HgExecAction(ap.Action):
+    """
+    Action of Hg Repositories Management.
+    """
+    def info(self):
+        self.__doc__ += "Action of Hg Repositories Management."
+
+    def action(self):
+        self.info()
         print("system info: " + pf.system())
         update = UpdateSys()
         if len(sys.argv) > 2:
+            result = []
             for path in sys.argv[2:]:
-                val = update.updatehg(path)
+                result.append(update.updatehg(path))
+            return result
         else:
-            val = update.updatehg()
+            return update.updatehg()
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        val = self.action()
         setattr(namespace, self.dest, val)
 
-class pExecAction(ap.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
+class PathExecAction(ap.Action):
+    """
+    Action of Identified Path Including Git And Hg Repositories Management.
+    """
+    def info(self):
+        self.__doc__ += "Action of Identified Path Including \
+                             Git And Hg Repositories Management."
+
+    def action(self):
+        self.info()
         print("system info: " + pf.system())
         update = UpdateSys()
+        result = []
         if len(sys.argv) > 2:
             for path in sys.argv[2:]:
-                val = update.updategit(path)
-                val = update.updatehg(path)
+                result.append(update.updategit(path))
+                result.append(update.updatehg(path))
         else:
-            val = update.updategit()
-            val = update.updatehg()
+            result.append(update.updategit())
+            result.append(update.updatehg())
+        return result
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        val = self.action()
         setattr(namespace, self.dest, val)
 
-class cExecAction(ap.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
+class CleanupExecAction(ap.Action):
+    """
+    Action of OS Cleanup.
+    """
+    def info(self):
+        self.__doc__ += "Action of OS Cleanup."
+
+    def action(self):
+        self.info()
         update = UpdateSys()
-        val = update.cleanup()
-        setattr(namespace, self.dest, val)
+        update.cleanup()
 
-class attrExecAction(ap.Action):
     def __call__(self, parser, namespace, values, option_string=None):
+        self.action()
+        setattr(namespace, self.dest, self.action)
+
+class AttrExecAction(ap.Action):
+    """
+    Action of Getting UpdateSys Attributes Informations.
+    """
+    def info(self):
+        self.__doc__ += "Action of Getting UpdateSys Attributes Informations."
+
+    def action(self):
+        self.info()
         update = UpdateSys()
         if len(sys.argv) > 2:
+            result = []
             for attr in sys.argv[2:]:
                 print("UpdateSys Class Method <{}> DOC:".format(attr))
-                val = update.help(attr)
-            setattr(namespace, self.dest, val)
+                result.append(update.help(attr))
+            return result
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        val = self.action()
+        setattr(namespace, self.dest, val)
 
 def isrightpwd(pwd, encrypted_pwd):
     """
