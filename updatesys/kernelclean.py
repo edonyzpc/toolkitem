@@ -117,8 +117,8 @@ class KernelClean(object):
         """
         RPM query about the kernel existing in the system => self._filebuf
         Get the version of running kernel => self.kernel
-        """
-        """  ***rewrite the using kernel finding***
+
+        ***rewrite the using kernel finding***
         command_rpm_kernel = 'rpm -qa | grep "^kernel-" > '
         command_rpm_kernel += self._filebuf
         os.system(command_rpm_kernel)
@@ -134,37 +134,18 @@ class KernelClean(object):
             ls = ls.rstrip().decode('utf-8')
             if re.match(pattern, ls):
                 self.exist_kernels.append(ls)
-        #print(self.exist_kernels)
 
     def find_old_kernel(self):
         """
         Find the old kernel in system => self.old_kernel
         """
-        """  ***rewrite the old kernels finding***
-        pattern = "^kernel-[a-zA-Z-]*([0-9.-]*)([a-zA-Z]+)(.*)"
-        filebuf = open(self._filebuf)
-        lines = [line.rstrip() for line in filebuf.readlines()]
-        kernel_record = [re.match(pattern, line).groups() for line in lines]
-        kernel_record = [tmp[0]+tmp[1]+tmp[2] for tmp in kernel_record]
-        record = list(set(kernel_record))
-        if len(record) > 1:
-            self.old_kernel = record[1-record.index(self.kernel)]
-            self.record = [item for item in lines if self.old_kernel in item]
-        """
         pattern = "^kernel-[a-zA-Z-]*([0-9.-]*)([a-zA-Z]+)(.*)"
         self.record = set([re.match(pattern, item).groups() for item in self.exist_kernels])
         self.old_kernel = [item for item in self.record if item[0] not in self.kernel]
-        #print(self.record)
 
     def to_cleaned_kernel(self):
         """
         Ensure the to be cleaned kernel in queried list => self.kernelclean
-        """
-        """  ***rewrite the old kernels finding***
-        if self.record:
-            def addblank(x, y):
-                    return x + ' ' + y
-            self.kernel_clean = reduce(addblank, self.record)
         """
         if self.old_kernel:
             kernel_clean_id = []
@@ -175,57 +156,6 @@ class KernelClean(object):
     def cleanup(self):
         """
         Cleanup the old kernel
-        """
-        """  ***rewrite the old kernels finding***
-        if self.old_kernel:
-            if self.old_kernel > self.kernel:
-                print('Running Kernel ' +\
-                        self.kernel +\
-                        self.color.warningcolor +\
-                        ' < ' +\
-                        self.color.endcolor +\
-                        'To Be Removed Kernel ' +\
-                        self.old_kernel)
-                reboot = input('You Need to Reboot System!(y or n)\n')
-                if reboot == 'y':
-                    os.system('reboot')
-                else:
-                    print('Not A Running On Newer Kernel!')
-                    print('Cleanup Abort!')
-            else:
-                print(self.color.warningcolor + 'cleanup kernel' + self.color.endcolor)
-                pwd_md5 = 'b04c541ed735353c44c52984a1be27f8'
-                pwd = getpass("Enter Your Password: ")
-                if hashlib.md5(pwd.encode('utf-8')).hexdigest() != pwd_md5:
-                    print("Wrong Password\n")
-                    return
-                echo = ['echo']
-                echo.append(pwd)
-                if pf.linux_distribution()[1] > '21':
-                    command = 'sudo -S dnf -y remove '
-                    command += self.kernel_clean
-                else:
-                    command = 'sudo -S yum -y remove '
-                    command += self.kernel_clean
-                pipein = sp.Popen(echo, stdout=sp.PIPE)
-                pipeout = sp.Popen(command.split(), stdin=pipein.stdout, stdout=sp.PIPE)
-                for line in pipeout.stdout.readlines():
-                    if line == '':
-                        break
-                    if isinstance(line, bytes):
-                        line = line.decode()
-                    print(line)
-                print(self.color.tipcolor + 'end cleanup' + self.color.endcolor)
-                print(self.color.warningcolor +\
-                        'Your Kernel is Update!' +\
-                        self.color.endcolor)
-            reboot = input('You Need to Reboot System!(y or n)\n')
-            if reboot == 'y':
-                os.system('reboot')
-            else:
-                print('Not Reboot Now!')
-        else:
-            print('No Need To Cleanup!')
         """
         if self.old_kernel:
             reboot = input(self.color.endcolor + 'Do You Need to Reboot System?(y or n)\n')
@@ -295,8 +225,3 @@ if __name__ == '__main__':
     TEST.in_using_kernel()
     TEST.find_old_kernel()
     TEST.to_cleaned_kernel()
-    #print TEST.old_kernel
-    #print TEST.kernel
-    #TEST.main()
-    #EXT = Extractor(TEST.old_kernel, 'kernelclean')
-    #EXT.parser()

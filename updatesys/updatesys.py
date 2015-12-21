@@ -179,20 +179,6 @@ class UpdateSys(object):
         """
         self.__updatebrew()
 
-    #@property
-    #def pwd(self):
-    #    """
-    #    Protected Password
-    #    """
-    #    return self.pwd_md5
-
-    #@pwd.setter
-    #def pwd(self, password):
-    #    """
-    #    Change the Protected Password
-    #    """
-    #    self.pwd_md5 = hashlib.md5(password.encode('utf-8')).hexdigest()
-
     def getpassword(self):
         """
         Access to the administor with enter password
@@ -200,7 +186,6 @@ class UpdateSys(object):
         password = getpass("Enter your password: ")
         counter = 1
         while counter < 3:
-            #if self.pwd_md5 != hashlib.md5(password.encode('utf-8')).hexdigest():
             if isrightpwd(password, self.pwd_sha512):
                 return password
             else:
@@ -378,29 +363,6 @@ class UpdateSys(object):
             self.default()
         else:
             self.parser.parse_args()
-        #if self.parser.parse_args().linux:
-        #    self.__updateyum()
-        #elif self.parser.parse_args().mac:
-        #    self.__updatebrew()
-        #elif self.parser.parse_args().git:
-        #    print("system info: " + pf.system())
-        #    self.updategit()
-        #elif self.parser.parse_args().hg:
-        #    print("system info: " + pf.system())
-        #    self.updatehg()
-        #elif self.parser.parse_args().path:
-        #    print("system info: " + pf.system())
-        #    for path in self.parser.parse_args().path:
-        #        self.updategit(path)
-        #    for path in self.parser.parse_args().path:
-        #        self.updatehg(path)
-        #elif self.parser.parse_args().c:
-        #    UpdateSys.cleanup()
-        #elif self.parser.parse_args().attribute:
-        #    for attr in self.parser.parse_args().attribute:
-        #        self.help(attr)
-        #else:
-        #    self.default()
 
 class WeatherExecAction(ap.Action):
     """
@@ -572,7 +534,4 @@ def isrightpwd(pwd, encrypted_pwd):
 if __name__ == '__main__':
     import sys
     UPDATE = UpdateSys()
-    #UPDATE.pcolor.new = '\033[0;36m'
-    #print(UPDATE.pcolor.new, sys.version, UPDATE.pcolor.endcolor)
-    #autoweat(1)
     UPDATE.main()

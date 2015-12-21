@@ -102,14 +102,13 @@ class IP2Pos(object):
         self.ip_api_url = "http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip="
         self.ip = ipadd
         self.data = {}
-    
+
     def matchip2pos(self):
         if self.ip:
             response = urlopen(self.ip_api_url + self.ip)
         else:
             response = urlopen(self.ip_api_url.split('?')[0])
         json_string = str(response.read(), encoding='utf-8')
-        #coding = chardet.detect(json_string)['encoding'] if chardet.detect(json_string)['encoding'] != 'ascii' else 'utf-8'
         result_data = json.loads(json_string, encoding='utf-8')
         return result_data
 
