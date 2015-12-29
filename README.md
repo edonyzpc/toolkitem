@@ -17,7 +17,7 @@ At the last but not least, my big project <font style="background-color:cyan;" f
 >> * File management GUI with Tcl/Tk.  ====> `emgui`
 >> * personal defined text handler for text process.  ====>  `texthandler`
 >
->> <font color='red'><strong>PERSONAL LIBRARY</strong></font>
+> <font color='red'><strong>PERSONAL LIBRARY</strong></font>
 >> * c/c++ interface calling python scripts  ====>  `pycall`
 >> * boost::python for embeding python script into C++ project.  ====>  `emboost`
 >> * boost::python for extending C++ class or function object into python module.  ====>  `emboost`
@@ -29,6 +29,7 @@ At the last but not least, my big project <font style="background-color:cyan;" f
 >> * filter for files or directions search.  ====>  `fuzzyfinder`
 >> * personal Linux automatic management and efficient tools with Shell script.  ====> `emsh`
 >> * some awsome useful python script for daily working.  ====>  `pyscript`
+>> * resource of operation system monitor.  ====> `rosmonitor`
 >
 > <font color='red'><strong>WEB CRAWLER FOR CUSTOMIZED PURPOSE</strong></font>
 >> * personal crawler for information accumulation about ZJU Career.  ====>  `emwalker`
