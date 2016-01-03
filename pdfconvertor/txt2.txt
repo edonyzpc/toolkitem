@@ -1,3 +1,0 @@
-main(int *argc, char *argv[]) {
-just testting
-}

@@ -1,7 +1,0 @@
-FILE f1.txt
-5+test{}
-5+test{
-6+
-6+cout<<"test..."<<endl;
-7+
-7+}
