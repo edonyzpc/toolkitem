@@ -103,11 +103,9 @@ def weather():
 
 def login_sched(sysinput, path=None):
     jobs = [update_linux, update_path, update_git, weather]
-    kwargs = {update_linux.__name__:None, update_path.__name__:path, update_git.__name__:None, weather.__name__:None}
-    #jobs = [update_linux, update_git, weather]
-    #kwargs = {update_linux.__name__:None, update_git.__name__:None, weather.__name__:None}
+    kwargs = {update_linux.__name__:None, update_path.__name__:[path], update_git.__name__:None, weather.__name__:None}
     sched_tasks(jobs, timestr=sysinput, **kwargs)
 
 if __name__ == '__main__':
-    #login_sched(sys.argv[1], path='~/.vim/bundle/')
+    login_sched(sys.argv[1], path='~/.vim/bundle/')
 

@@ -129,6 +129,7 @@ def sched_tasks(jobs, timestr=None, **kwargs):
         print("Be Activated")
     else:
         for job in jobs:
+            #print(kwargs[job.__name__])
             sched.add_job(job, 'cron', kwargs[job.__name__], year=y,\
                     month=m, day=d, hour=h, minute=min, second=sec+3, id=job.__name__)
         try:
