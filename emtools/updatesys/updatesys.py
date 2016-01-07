@@ -34,6 +34,8 @@ from __future__ import absolute_import
 #from mpl_toolkits.mplot3d import Axes3D as Ax3
 #from scipy import stats as st
 #from matplotlib import cm
+#from packages.filesline.browser import getfiles as GF
+#from packages.filesline.getdirections import GetDirections as GD
 
 import os
 import re
@@ -42,13 +44,11 @@ from getpass import getpass
 import platform as pf
 import subprocess as sp
 import argparse as ap
-#from packages.filesline.getdirections import GetDirections as GD
 from packages.filesline.browser import getdirections as GD
-#from packages.filesline.browser import getfiles as GF
 from kernelclean import KernelClean as KC
 from weather import autoweather as autoweat
 
-__version__ = '1.0.3'
+__version__ = '2.0.0'
 __author__ = 'edony'
 
 class PyColor(object):
@@ -226,13 +226,16 @@ class UpdateSys(object):
         If gitpath is given, Update project in the given path.
         """
         if gitpath:
-            self.path = gitpath
+            # Input Check For Avoiding `self.path` equals `/home/edony/.vim/bundle//nerdtree`
+            if gitpath.endswith('/'):
+                self.path = gitpath[:-1]
+            else:
+                self.path = gitpath
         else:
             if pf.system() == 'Darwin':
                 self.path = '/Users/edony/coding'
             if pf.system() == 'Linux':
                 self.path = '/home/edony/code/github'
-
         self.__gitrepos()
         print(self.pcolor.warningcolor + 'Updating GitHub Repository ...' + self.pcolor.endcolor)
         print('>> to update GitHub repositories path: %s'%self.path)
@@ -250,7 +253,11 @@ class UpdateSys(object):
         If hgpath is given, Update project in the given path.
         """
         if hgpath:
-            self.path = hgpath
+            # Input Check For Avoiding `self.path` equals `/home/edony/.vim/bundle//vim-19`
+            if hgpath.endswith('/'):
+                self.path = hgpath[:-1]
+            else:
+                self.path = hgpath
         self.__gitrepos()
         print(self.pcolor.tipcolor + 'Updating Bitbucket ...' + self.pcolor.endcolor)
         print('>> to update Bitbucket repositories path: %s'%self.path)
