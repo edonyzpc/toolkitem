@@ -25,9 +25,9 @@ r"""
  #
 """
 import sys
-if sys.version.startswith("2.7."):
-    import Tkinter as tkinter 
-elif sys.version.startswith("3.4."):
+if sys.version.startswith("2."):
+    import Tkinter as tkinter
+elif sys.version.startswith("3."):
     import tkinter
 from PIL import Image
 from PIL import ImageTk
