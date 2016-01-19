@@ -37,6 +37,7 @@ from time import localtime as lt
 import os
 import sys
 import pickle as cP
+import platform as plf
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -96,6 +97,12 @@ def job_trigger(job, *kargs):
     job(kargs)
 
 def sched_tasks(jobs, timestr=None, **kwargs):
+    linuxpath='/home/edony/code/github/toolkitem/emtools'
+    macpath='/Users/edony/coding/toolkitem/emtools'
+    if plf.system() == "Darwin":
+        path = macpath
+    elif plf.system() == "Linux":
+        path = linuxpath
     sched = bs(daemonic=True)
     if timestr:
         timels = timestr.split('-') # input time string with cmd `$(date +%Y/%m/%d/%H/%M/%S)`
@@ -113,15 +120,15 @@ def sched_tasks(jobs, timestr=None, **kwargs):
         min = lt().tm_min
         sec = lt().tm_sec
     time_ls = [y, m, d, h, min, sec]
-    if 'timstring.pickle' in os.listdir('/home/edony/code/github/toolkitem/emtools'):
-        with open('/home/edony/code/github/toolkitem/emtools/timstring.pickle','rb') as filebuf:
+    if 'timstring.pickle' in os.listdir(path):
+        with open(path+'/timstring.pickle','rb') as filebuf:
             ls_tmp = cP.load(filebuf)
             tick = [y - ls_tmp[0], m - ls_tmp[1], d - ls_tmp[2],\
                     h - ls_tmp[3], min - ls_tmp[4], sec - ls_tmp[5]]
             #convert all time(Y.M.D.H.Min.Sec) to seconds
             timeticking = 60*(60*(24*(30*(365*tick[0]+tick[1])+tick[2])+tick[3])+tick[4])+tick[5]
     else:
-        with open('timstring.pickle', 'wb') as filebuf:
+        with open(path+'/timstring.pickle', 'wb') as filebuf:
             cP.dump(time_ls, filebuf, cP.HIGHEST_PROTOCOL)
             timeticking = 0
 
