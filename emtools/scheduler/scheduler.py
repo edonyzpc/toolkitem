@@ -126,7 +126,8 @@ def sched_tasks(jobs, timestr=None, **kwargs):
             timeticking = 0
 
     if timeticking > 0:
-        print("Be Activated")
+        color = PyColor()
+        print(color.warningcolor + "Be Activated" + color.endcolor)
     else:
         for job in jobs:
             #print(kwargs[job.__name__])
