@@ -106,12 +106,16 @@ def update_mac():
     os.system('update -m')
 
 def login_sched(sysinput, path=None):
-    jobs = [update_linux, update_path, update_git, weather]
-    kwargs = {update_linux.__name__:None, update_path.__name__:[path],\
+    #jobs = [update_linux, update_path, update_git, weather]
+    jobs = [update_path, update_git, weather]
+    kwargs = {update_path.__name__:[path],\
             update_git.__name__:None, weather.__name__:None}
     if pf.system() == 'Darwin':
         jobs.append(update_mac)
         kwargs[update_mac.__name__] = None
+    if pf.system() == 'Linux':
+        jobs.append(update_linux)
+        kwargs[update_linux.__name__] = None
     sched_tasks(jobs, timestr=sysinput, **kwargs)
 
 if __name__ == '__main__':
