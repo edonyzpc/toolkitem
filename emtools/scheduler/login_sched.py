@@ -91,22 +91,29 @@ class PyColor(object):
         self.endcolor = ''
 
 def update_linux():
+    "CDM `update -l` for updating Linux Packages."
     os.system('update -l')
 
 def update_path(path):
+    "CMD `update -p $path` for update repositories in $path."
     os.system('update -p ' + path)
 
 def update_git():
+    "CMD `update -g` for update repositories in default path."
     os.system('update -g')
 
 def weather():
+    "CMD `update -w` for checking the weather info in 24h."
     os.system('update -w')
 
 def update_mac():
+    "CMD `update -g` for update repositories in Mac default path."
     os.system('update -m')
 
 def login_sched(sysinput, path=None):
-    #jobs = [update_linux, update_path, update_git, weather]
+    """
+    Login default scheduler actions.
+    """
     jobs = [update_path, update_git, weather]
     kwargs = {update_path.__name__:[path],\
             update_git.__name__:None, weather.__name__:None}
@@ -119,5 +126,6 @@ def login_sched(sysinput, path=None):
     sched_tasks(jobs, timestr=sysinput, **kwargs)
 
 if __name__ == '__main__':
-    login_sched(sys.argv[1], path='~/.vim/bundle/')
+    # default login action
+    login_sched(os.system('date +%Y-%m-%d-%H-%M-%S'), path='~/.vim/bundle/')
 

@@ -97,6 +97,11 @@ def job_trigger(job, *kargs):
     job(kargs)
 
 def sched_tasks(jobs, timestr=None, **kwargs):
+    """
+    Scheduler for Jobs.
+    """
+    sched = bs(daemonic=True)
+    color = PyColor()
     linuxpath='/home/edony/code/github/toolkitem/emtools'
     macpath='/Users/edony/coding/toolkitem/emtools'
     if plf.system() == "Darwin":
@@ -106,46 +111,21 @@ def sched_tasks(jobs, timestr=None, **kwargs):
     sched = bs(daemonic=True)
     if timestr:
         timels = timestr.split('-') # input time string with cmd `$(date +%Y/%m/%d/%H/%M/%S)`
-        y = int(timels[0])
-        m = int(timels[1])
-        d = int(timels[2])
-        h = int(timels[3])
-        min = int(timels[4])
-        sec = int(timels[5])
+        y, m, d, h, min, sec = int(timels[0]), int(timels[1]),\
+                int(timels[2]), int(timels[3]), int(timels[4]), int(timels[5])
     else:
-        y = lt().tm_year
-        m = lt().tm_mon
-        d = lt().tm_mday
-        h = lt().tm_hour
-        min = lt().tm_min
-        sec = lt().tm_sec
-    time_ls = [y, m, d, h, min, sec]
-    if 'timstring.pickle' in os.listdir(path):
-        with open(path+'/timstring.pickle','rb') as filebuf:
-            ls_tmp = cP.load(filebuf)
-            tick = [y - ls_tmp[0], m - ls_tmp[1], d - ls_tmp[2],\
-                    h - ls_tmp[3], min - ls_tmp[4], sec - ls_tmp[5]]
-            #convert all time(Y.M.D.H.Min.Sec) to seconds
-            timeticking = 60*(60*(24*(30*(365*tick[0]+tick[1])+tick[2])+tick[3])+tick[4])+tick[5]
-    else:
-        with open(path+'/timstring.pickle', 'wb') as filebuf:
-            cP.dump(time_ls, filebuf, cP.HIGHEST_PROTOCOL)
-            timeticking = 0
-
-    if timeticking > 0:
-        color = PyColor()
+        y, m, d, h, min, sec = lt().tm_year, lt().tm_mon,\
+                lt().tm_mday, lt().tm_hour, lt().tm_min, lt().tm_sec
+    for job in jobs:
+        #print(kwargs[job.__name__])
+        sched.add_job(job, 'cron', kwargs[job.__name__], year=y,\
+                month=m, day=d, hour=h, minute=min, second=sec+3, id=job.__name__)
+    try:
+        print("\033[0;36mHi Edony, Anthelion's Pulling The Trigger")
+        sched.start()
+    except(KeyboardInterrupt, SystemExit):
         print(color.warningcolor + "Be Activated" + color.endcolor)
-    else:
-        for job in jobs:
-            #print(kwargs[job.__name__])
-            sched.add_job(job, 'cron', kwargs[job.__name__], year=y,\
-                    month=m, day=d, hour=h, minute=min, second=sec+3, id=job.__name__)
-        try:
-            print("Hi Edony, Anthelion's Pulling The Trigger")
-            sched.start()
-        except(KeyboardInterrupt, SystemExit):
-            sched.shutdown()
-
+        sched.shutdown()
 
 if __name__ == '__main__':
     #sched_tasks(('edony'))
