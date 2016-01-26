@@ -32,8 +32,13 @@ r"""
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
+import sys
+import os
 from getpass import getpass
 import poplib
+from progressive.bar import Bar
+from time import sleep
+import tkinter as tk
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -90,17 +95,17 @@ class PyColor(object):
 
 class mail(object):
     def __init__(self, host='pop3.163.com', username='edonyzpc@163.com', pwd=None):
+        # connect to the mail server
         self.host = host # 'pop3.163.com'
         self.username = username # 'edonyzpc@163.com'
         self.pwd = getpass("Email password: ")
         # create pop3 object and connect the server
         self.connect_server = poplib.POP3(self.host)
         # set the debug module to get the interactive info
-        self.connect_server.set_debuglevel(1)
+        #self.connect_server.set_debuglevel(1) # this is optional
         # send the user name
         self.connect_server.user(self.username)
         # send the password
-        print(self.pwd)
         self.connect_server.pass_(self.pwd)
 
     def mails_info(self):
@@ -123,12 +128,57 @@ class mail(object):
         if download[0]:
             print(download[1])
 
-    def quit():
+    def quit(self):
         # stop the connection
         self.connect_server.quit()
 
-if __name__ == '__main__':
-    mail = mail()
-    print(mail.mails_info())
-    print(mail.mail_list())
+class warn_gui(tk.Frame):
+    def __init__(self, root):
+        tk.Frame.__init__(self, root)
+        self.root = root
+        self.lbl = tk.Label(self.root, text="\aYou Got New Mails\nPlease Check It!\a")
+        self.btn = tk.Button(self.root, text="Ok", relief=tk.SUNKEN, activebackground='green', command=self.root.destroy)
+        self.lbl.pack()
+        self.btn.pack()
+def playsound(file="./3.wav"):
+    if sys.platform == "darwin":
+        os.system("open /Applications/iTunes.app ./3.wav")
+    elif sys.platform == "linux":
+        pass
 
+def check_mail(step=30): # check emails per `step` minutes
+    pymail = mail()
+    info = pymail.mails_info()
+    sleep_time = step*60/100
+    #sleep_time = 0.02 # for test
+    try:
+        while 1:
+            bar = Bar(max_value=100, fallback=True, filled_color=1, title='Check Emails...')
+            bar.cursor.clear_lines(2)
+            bar.cursor.save()
+            for i in range(101):
+                sleep(sleep_time)
+                # We restore the cursor to saved position before writing
+                bar.cursor.restore()
+                # Now we draw the bar
+                bar.draw(value=i)
+            if pymail.mails_info()[0] >= info[0]:
+                info = pymail.mails_info()
+                win = tk.Tk()
+                win.title("Mail Checking")
+                win.resizable(False, False)
+                win.update()
+                scrn_width, scrn_height = win.maxsize()
+                win.geometry('200x70+%d+%d'%((scrn_width-200)/2,(scrn_height-65)/2))
+                warn = warn_gui(win)
+                playsound()
+                win.mainloop()
+            print('\033[0;32mChecked...\033[0m')
+    except(KeyboardInterrupt, SystemExit):
+        pymail.quit()
+
+if __name__ == '__main__':
+    #mail = mail()
+    #print(mail.mails_info())
+    #print(mail.mail_list())
+    check_mail()
