@@ -140,23 +140,24 @@ class warn_gui(tk.Frame):
         self.btn = tk.Button(self.root, text="Ok", relief=tk.SUNKEN, activebackground='green', command=self.root.destroy)
         self.lbl.pack()
         self.btn.pack()
+
 def playsound(file="./3.wav"):
     if sys.platform == "darwin":
         os.system("open /Applications/iTunes.app ./3.wav")
     elif sys.platform == "linux":
         pass
 
-def check_mail(step=30): # check emails per `step` minutes
+def check_mail(step=3): # check emails per `step` minutes
     pymail = mail()
     info = pymail.mails_info()
-    sleep_time = step*60/100
+    sleep_time = step/100
     #sleep_time = 0.02 # for test
     try:
         while 1:
-            bar = Bar(max_value=100, fallback=True, filled_color=1, title='Check Emails...')
+            bar = Bar(max_value=10, fallback=True, filled_color=1, title='Check Emails...')
             bar.cursor.clear_lines(2)
             bar.cursor.save()
-            for i in range(101):
+            for i in range(11):
                 sleep(sleep_time)
                 # We restore the cursor to saved position before writing
                 bar.cursor.restore()
@@ -170,10 +171,12 @@ def check_mail(step=30): # check emails per `step` minutes
                 win.update()
                 scrn_width, scrn_height = win.maxsize()
                 win.geometry('200x70+%d+%d'%((scrn_width-200)/2,(scrn_height-65)/2))
-                warn = warn_gui(win)
+                warn_gui(win)
                 playsound()
                 win.mainloop()
-            print('\033[0;32mChecked...\033[0m')
+                print('\033[0;32mChecked...\033[0m')
+                pymail.quit()
+                return
     except(KeyboardInterrupt, SystemExit):
         pymail.quit()
 
