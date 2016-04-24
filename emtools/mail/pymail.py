@@ -136,7 +136,7 @@ class warn_gui(tk.Frame):
     def __init__(self, root):
         tk.Frame.__init__(self, root)
         self.root = root
-        self.lbl = tk.Label(self.root, text="\aYou Got New Mails\nPlease Check It!\a")
+        self.lbl = tk.Label(self.root, text="You Got New Mails\nPlease Check It!")
         self.btn = tk.Button(self.root, text="Ok", relief=tk.SUNKEN, activebackground='green', command=self.root.destroy)
         self.lbl.pack()
         self.btn.pack()
@@ -144,7 +144,11 @@ class warn_gui(tk.Frame):
 def playsound(file="./3.wav"):
     if sys.platform == "darwin":
         os.system("open /Applications/iTunes.app ./3.wav")
+        # TODO
+        # Driver development for MacOS
     elif sys.platform == "linux":
+        # TODO
+        # Driver development for Linux
         pass
 
 def check_mail(step=3): # check emails per `step` minutes
