@@ -34,10 +34,10 @@ r"""
 #import numpy as np
 import os
 import sys
-if sys.version.startswith('3.4'):
+if sys.version.startswith('3.'):
     import tkinter
     from tkinter import messagebox as tkMessageBox
-elif sys.version.startswith('2.7'):
+elif sys.version.startswith('2.'):
     import Tkinter as tkinter
     import tkMessageBox
 import shutil
