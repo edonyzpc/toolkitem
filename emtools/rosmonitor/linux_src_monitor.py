@@ -87,4 +87,17 @@ class PyColor(object):
         self.warningcolor = ''
         self.endcolor = ''
 
+# free -h
+# uptime
+# mount | column -t
+# fdisk -l
+# /proc/cpuinfo
+# netstat -lntp
+# netstat -antp
+# netstat -s
+# df -h
+# du -sh $HOME
 
+cmds = ['free -h', 'uptime', 'mount | colunm -t', 'fdisk -l',\
+        'cat /proc/cpuinfo', 'netstat -lntp', 'netstat -antp',\
+        'netstat -s', 'df -h', 'du -sh $HOME']
