@@ -3,9 +3,9 @@
 
 > * Python Matplotlib Wrapper For Easy Data Plotting
 >
-> * Tools For OS Monitor:`CPU`, `Memory`, `NetWord`
+> * Tools For OS Monitor:`CPU`, `Memory`, `NetWork`
 >
->
+> * 
 >
 >
 >
