@@ -151,8 +151,8 @@ def playsound(file="./3.wav"):
         # Driver development for Linux
         pass
 
-def check_mail(step=3): # check emails per `step` minutes
-    pymail = mail()
+def check_mail(step=3, host=None, username=None): # check emails per `step` minutes
+    pymail = mail(host=host, username=username)
     info = pymail.mails_info()
     sleep_time = step/100
     #sleep_time = 0.02 # for test
@@ -188,4 +188,4 @@ if __name__ == '__main__':
     #mail = mail()
     #print(mail.mails_info())
     #print(mail.mail_list())
-    check_mail()
+    check_mail(host='pop.mail.yahoo.com', username='edonyzpc@yahoo.com')
