@@ -7,3 +7,6 @@ Monitor about `Windows` and `Linux` with Python.
 
 **Linux**
 > None
+
+-------
+P.S. Customize the monitor items acordding to needs
