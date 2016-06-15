@@ -33,6 +33,8 @@ r"""
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
+import os
+import sys
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -98,6 +100,14 @@ class PyColor(object):
 # df -h
 # du -sh $HOME
 
-cmds = ['free -h', 'uptime', 'mount | colunm -t', 'fdisk -l',\
-        'cat /proc/cpuinfo', 'netstat -lntp', 'netstat -antp',\
-        'netstat -s', 'df -h', 'du -sh $HOME']
+if __name__ == "__main__":
+    print("WARNING:Some info can noly be monitored by root!")
+    cmds = ['free -h', 'uptime', 'mount | column -t', 'fdisk -l',\
+            'cat /proc/cpuinfo', 'netstat -lntp', 'netstat -antp',\
+            'netstat -s', 'df -h', 'du -sh $HOME']
+    if os.path.isfile('/tmp/monitor.log'):
+        os.system('rm -rf /tmp/monitor.log')
+    for cmd in cmds:
+        os.system(cmd + ' >> /tmp/monitor.log')
+
+
