@@ -47,6 +47,7 @@ import argparse as ap
 from packages.filesline.browser import getdirections as GD
 from kernelclean import KernelClean as KC
 from weather import autoweather as autoweat
+#import pdb
 
 __version__ = '2.0.0'
 __author__ = 'edony'
@@ -104,6 +105,16 @@ class PyColor(object):
         """
         self.warningcolor = ''
         self.endcolor = ''
+
+class ArgError(Exception):
+    """
+    Handle the Argument Parse Exception.
+    """
+    def __init__(self, ErrMSG):
+        self.message = ErrMSG
+
+    def __str__(self):
+        return self.message
 
 class UpdateSys(object):
     """
@@ -240,12 +251,15 @@ class UpdateSys(object):
         print(self.pcolor.warningcolor + 'Updating GitHub Repository ...' + self.pcolor.endcolor)
         print('>> to update GitHub repositories path: %s'%self.path)
         print('>> to update %d repositroies'%len(self.gitdir))
-        for direction in self.gitdir:
-            os.chdir(direction)
-            status = os.popen('git pull')
-            print(self.pcolor.warningcolor + direction + self.pcolor.endcolor)
-            self.__outstatus(status)
-        print(self.pcolor.tipcolor + 'update git repositroies finished' + self.pcolor.endcolor)
+        if len(self.gitdir) is 0:
+            print(self.pcolor.tipcolor + 'no update git repositroies' + self.pcolor.endcolor)
+        else:
+            for direction in self.gitdir:
+                os.chdir(direction)
+                status = os.popen('git pull')
+                print(self.pcolor.warningcolor + direction + self.pcolor.endcolor)
+                self.__outstatus(status)
+            print(self.pcolor.tipcolor + 'update git repositroies finished' + self.pcolor.endcolor)
 
     def updatehg(self, hgpath=None):
         """
@@ -262,12 +276,15 @@ class UpdateSys(object):
         print(self.pcolor.tipcolor + 'Updating Bitbucket ...' + self.pcolor.endcolor)
         print('>> to update Bitbucket repositories path: %s'%self.path)
         print('>> to update %d repositroies'%len(self.hgdir))
-        for direction in self.hgdir:
-            os.chdir(direction)
-            status = os.popen('hg update')
-            print(self.pcolor.warningcolor + direction + self.pcolor.endcolor)
-            self.__outstatus(status)
-        print(self.pcolor.tipcolor + 'update hg repositroies finished' + self.pcolor.endcolor)
+        if len(self.hgdir) is 0:
+            print(self.pcolor.tipcolor + 'no update hg repositroies' + self.pcolor.endcolor)
+        else:
+            for direction in self.hgdir:
+                os.chdir(direction)
+                status = os.popen('hg update')
+                print(self.pcolor.warningcolor + direction + self.pcolor.endcolor)
+                self.__outstatus(status)
+            print(self.pcolor.tipcolor + 'update hg repositroies finished' + self.pcolor.endcolor)
 
     @staticmethod
     def cleanup():
@@ -365,6 +382,12 @@ class UpdateSys(object):
         """
         Updatesys management main pipe to execution.
         """
+        for item in sys.argv:
+            if item.startswith('-') and\
+                    item not in ['-l', '--linux', '-m', '--mac', '-g', '--git', '-H', '--hg',\
+                                 '-w', '--weather', '-v', '--version', '-a', '--attribute', '-c',\
+                                 '--cleanup', '-p', '--path']:
+                raise(ArgError("oops! Bad argument and try again ===> "+str(sys.argv)))
         self.cmd_parser()
         if len(sys.argv) < 2:
             self.default()
