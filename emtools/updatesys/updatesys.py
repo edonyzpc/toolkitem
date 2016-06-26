@@ -17,9 +17,9 @@ r"""
  #
  # twitter : @edonyzpc
  #
- # Last modified: 2015-05-07 20:57
+ # Last modified:	2016-06-26 21:17
  #
- # Filename: updategit.py
+ # Filename:		updatesys.py
  #
  # Description: All Rights Are Reserved
  #
@@ -49,7 +49,7 @@ from kernelclean import KernelClean as KC
 from weather import autoweather as autoweat
 #import pdb
 
-__version__ = '2.0.0'
+__version__ = '2.0.1'
 __author__ = 'edony'
 
 class PyColor(object):
