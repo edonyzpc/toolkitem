@@ -56,7 +56,8 @@
  * [including the GNU Public Licence.]
  */
 
-#include <openssl/blowfish.h>
+//#include <openssl/blowfish.h>
+#include "blowfish.h"
 #include "bf_locl.h"
 
 /*

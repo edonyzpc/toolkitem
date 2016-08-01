@@ -32,7 +32,8 @@ void GetTSC(unsigned long& tsc)
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <openssl/blowfish.h>
+//#include <openssl/blowfish.h>
+#include "blowfish.h"
 
 void main(int argc,char *argv[])
 	{

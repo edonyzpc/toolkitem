@@ -56,6 +56,7 @@
  * [including the GNU Public Licence.]
  */
 
+#include "blowfish.h"
 static const BF_KEY bf_init = {
     {
      0x243f6a88L, 0x85a308d3L, 0x13198a2eL, 0x03707344L,

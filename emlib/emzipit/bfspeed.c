@@ -65,7 +65,8 @@
 
 #include <stdio.h>
 
-#include <openssl/e_os2.h>
+//#include <openssl/e_os2.h>
+#include "e_os2.h"
 #include OPENSSL_UNISTD_IO
 OPENSSL_DECLARE_EXIT
 #ifndef OPENSSL_SYS_NETWARE
@@ -95,7 +96,8 @@ OPENSSL_DECLARE_EXIT
 # include <limits.h>
 # include <sys/param.h>
 #endif
-#include <openssl/blowfish.h>
+//#include <openssl/blowfish.h>
+#include "blowfish.h"
 /* The following if from times(3) man page.  It may need to be changed */
 #ifndef HZ
 # ifndef CLK_TCK
