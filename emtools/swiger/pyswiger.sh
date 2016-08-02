@@ -1,5 +1,9 @@
 #!/bin/sh
 # -*- encoding:utf-8 -*-
+###################################################################
+# Tools for wrapping C/C++ into python module                     #
+# take C source file as input of this tool `interface`            #
+###################################################################
 
 if [ $# -lt 1 ];then
     echo "Please check your swig interface file"
