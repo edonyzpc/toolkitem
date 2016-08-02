@@ -7,8 +7,6 @@ At the last but not least, my big project <font style="background-color:cyan;" f
 
 ----
 
-![Structure Of The Project](./pro_structure.png)
-
 > <font color='red'><strong>FILE PROCESS TOOLS</strong></font>
 >> * count number of lines in direction files  ====>  `filesline`
 >> * mark up the files different lines(if they have) and write them into buffer  ====>  `mergefile`
