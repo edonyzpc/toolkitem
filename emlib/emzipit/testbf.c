@@ -1,74 +1,28 @@
-/* crypto/bf/bftest.c */
-/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
- * All rights reserved.
- *
- * This package is an SSL implementation written
- * by Eric Young (eay@cryptsoft.com).
- * The implementation was written so as to conform with Netscapes SSL.
- *
- * This library is free for commercial and non-commercial use as long as
- * the following conditions are aheared to.  The following conditions
- * apply to all code found in this distribution, be it the RC4, RSA,
- * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
- * included with this distribution is covered by the same copyright terms
- * except that the holder is Tim Hudson (tjh@cryptsoft.com).
- *
- * Copyright remains Eric Young's, and as such any Copyright notices in
- * the code are not to be removed.
- * If this package is used in a product, Eric Young should be given attribution
- * as the author of the parts of the library used.
- * This can be in the form of a textual message at program startup or
- * in documentation (online or textual) provided with the package.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *    "This product includes cryptographic software written by
- *     Eric Young (eay@cryptsoft.com)"
- *    The word 'cryptographic' can be left out if the rouines from the library
- *    being used are not cryptographic related :-).
- * 4. If you include any Windows specific code (or a derivative thereof) from
- *    the apps directory (application code) you must include an acknowledgement:
- *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"
- *
- * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- * The licence and distribution terms for any publically available version or
- * derivative of this code cannot be changed.  i.e. this code cannot simply be
- * copied and put under another distribution licence
- * [including the GNU Public Licence.]
- */
+//
+//  main.c
+//  zipit
+//
+//  Created by edony murphy on 8/3/16.
+//  Copyright © 2016 edony murphy. All rights reserved.
+//
 
-/*
- * This has been a quickly hacked 'ideatest.c'.  When I add tests for other
- * RC2 modes, more of the code will be uncommented.
- */
+//#include <stdio.h>
+#include "blowfish.h"
+
+/*int main(int argc, const char * argv[]) {
+    // insert code here...
+    printf("Hello, World!\n");
+    return 0;
+}*/
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 //#include <openssl/opensslconf.h> /* To see if OPENSSL_NO_BF is defined */
-#include "opensslconf.h" /* To see if OPENSSL_NO_BF is defined */
+//#include "opensslconf.h" /* To see if OPENSSL_NO_BF is defined */
 
 //#include "../e_os.h"
-#include "e_os.h"
+//#include "e_os.h"
 
 #ifdef OPENSSL_NO_BF
 int main(int argc, char *argv[])
@@ -221,7 +175,7 @@ static unsigned char cbc_key[16] = {
     0xf0, 0xe1, 0xd2, 0xc3, 0xb4, 0xa5, 0x96, 0x87
 };
 static unsigned char cbc_iv[8] =
-    { 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10 };
+{ 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10 };
 static char cbc_data[40] = "7654321 Now is the time for ";
 static unsigned char cbc_ok[32] = {
     0x6B, 0x77, 0xB4, 0xD6, 0x30, 0x06, 0xDE, 0xE6,
@@ -253,7 +207,7 @@ static unsigned char key_test[KEY_TEST_NUM] = {
 };
 
 static unsigned char key_data[8] =
-    { 0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 };
+{ 0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 };
 
 static unsigned char key_out[KEY_TEST_NUM][8] = {
     {0xF9, 0xAD, 0x59, 0x7C, 0x49, 0xDB, 0x00, 0x5E},
@@ -287,24 +241,24 @@ static int print_test_data(void);
 int main(int argc, char *argv[])
 {
     int ret;
-
-    if (argc > 1)
+    
+    //if (argc > 1)
         ret = print_test_data();
-    else
+    //else
         ret = test();
-
+    
 # ifdef OPENSSL_SYS_NETWARE
     if (ret)
         printf("ERROR: %d\n", ret);
 # endif
-    EXIT(ret);
+    exit(ret);
     return (0);
 }
 
 static int print_test_data(void)
 {
     unsigned int i, j;
-
+    
     printf("ecb test data\n");
     printf("key bytes\t\tclear bytes\t\tcipher bytes\n");
     for (i = 0; i < NUM_TESTS; i++) {
@@ -318,7 +272,7 @@ static int print_test_data(void)
             printf("%02X", cipher_data[i][j]);
         printf("\n");
     }
-
+    
     printf("set_key test data\n");
     printf("data[8]= ");
     for (j = 0; j < 8; j++)
@@ -333,7 +287,7 @@ static int print_test_data(void)
             printf("%02X", key_test[j]);
         printf("\n");
     }
-
+    
     printf("\nchaining mode test data\n");
     printf("key[16]   = ");
     for (j = 0; j < 16; j++)
@@ -351,13 +305,13 @@ static int print_test_data(void)
     for (j = 0; j < 32; j++)
         printf("%02X", cbc_ok[j]);
     printf("\n");
-
+    
     printf("cfb64 cipher text\n");
     printf("cipher[%d]= ", (int)strlen(cbc_data) + 1);
     for (j = 0; j < strlen(cbc_data) + 1; j++)
         printf("%02X", cfb64_ok[j]);
     printf("\n");
-
+    
     printf("ofb64 cipher text\n");
     printf("cipher[%d]= ", (int)strlen(cbc_data) + 1);
     for (j = 0; j < strlen(cbc_data) + 1; j++)
@@ -374,18 +328,18 @@ static int test(void)
     BF_LONG data[2];
     unsigned char out[8];
     BF_LONG len;
-
+    
 # ifdef CHARSET_EBCDIC
     ebcdic2ascii(cbc_data, cbc_data, strlen(cbc_data));
 # endif
-
+    
     printf("testing blowfish in raw ecb mode\n");
     for (n = 0; n < 2; n++) {
 # ifdef CHARSET_EBCDIC
         ebcdic2ascii(bf_key[n], bf_key[n], strlen(bf_key[n]));
 # endif
         BF_set_key(&key, strlen(bf_key[n]), (unsigned char *)bf_key[n]);
-
+        
         data[0] = bf_plain[n][0];
         data[1] = bf_plain[n][1];
         BF_encrypt(data, &key);
@@ -401,7 +355,7 @@ static int test(void)
             err = 1;
             printf("\n");
         }
-
+        
         BF_decrypt(&(data[0]), &key);
         if (memcmp(&(bf_plain[n][0]), &(data[0]), 8) != 0) {
             printf("BF_encrypt error decrypting\n");
@@ -416,12 +370,12 @@ static int test(void)
             err = 1;
         }
     }
-
+    
     printf("testing blowfish in ecb mode\n");
-
+    
     for (n = 0; n < NUM_TESTS; n++) {
         BF_set_key(&key, 8, ecb_data[n]);
-
+        
         BF_ecb_encrypt(&(plain_data[n][0]), out, &key, BF_ENCRYPT);
         if (memcmp(&(cipher_data[n][0]), out, 8) != 0) {
             printf("BF_ecb_encrypt blowfish error encrypting\n");
@@ -435,7 +389,7 @@ static int test(void)
             err = 1;
             printf("\n");
         }
-
+        
         BF_ecb_encrypt(out, out, &key, BF_DECRYPT);
         if (memcmp(&(plain_data[n][0]), out, 8) != 0) {
             printf("BF_ecb_encrypt error decrypting\n");
@@ -450,7 +404,7 @@ static int test(void)
             err = 1;
         }
     }
-
+    
     printf("testing blowfish set_key\n");
     for (n = 1; n < KEY_TEST_NUM; n++) {
         BF_set_key(&key, n, key_test);
@@ -461,10 +415,10 @@ static int test(void)
             err = 1;
         }
     }
-
+    
     printf("testing blowfish in cbc mode\n");
     len = strlen(cbc_data) + 1;
-
+    
     BF_set_key(&key, 16, cbc_key);
     memset(cbc_in, 0, sizeof cbc_in);
     memset(cbc_out, 0, sizeof cbc_out);
@@ -483,9 +437,9 @@ static int test(void)
         printf("BF_cbc_encrypt decrypt error\n");
         err = 1;
     }
-
+    
     printf("testing blowfish in cfb64 mode\n");
-
+    
     BF_set_key(&key, 16, cbc_key);
     memset(cbc_in, 0, 40);
     memset(cbc_out, 0, 40);
@@ -510,9 +464,9 @@ static int test(void)
         printf("BF_cfb64_encrypt decrypt error\n");
         err = 1;
     }
-
+    
     printf("testing blowfish in ofb64\n");
-
+    
     BF_set_key(&key, 16, cbc_key);
     memset(cbc_in, 0, 40);
     memset(cbc_out, 0, 40);
@@ -536,7 +490,7 @@ static int test(void)
         printf("BF_ofb64_encrypt decrypt error\n");
         err = 1;
     }
-
+    
     return (err);
 }
 #endif
