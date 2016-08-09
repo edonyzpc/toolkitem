@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-r"""
+"""
  #        .---.         .-----------
  #       /     \  __  /    ------
  #      / /     \(  )/    -----   (`-')  _ _(`-')              <-. (`-')_
@@ -40,7 +40,7 @@ class PyColor(object):
     "F3" call Addpy() function to add this class which is defined
     in the .vimrc for vim Editor."""
     def __init__(self):
-        self.self_doc = r"""
+        self.self_doc = """
         STYLE: \033['display model';'foreground';'background'm
         DETAILS:
         FOREGROUND        BACKGOUND       COLOR
@@ -122,6 +122,7 @@ P.S.
 def add_time(filename):
     #timestamp = time.localtime()
     current_time = time.strftime("%Y/%m/%d %H:%M:%S")
+    current_time = ' ' + current_time
     front_matter_ls = front_matter.split('\n')
     front_matter_ls[2] += current_time
     front_matter_ls[1] += current_time
@@ -133,6 +134,7 @@ def add_time(filename):
 def update(filename):
     #timestamp = time.localtime()
     current_time = time.strftime("%Y/%m/%d %H:%M:%S")
+    current_time = ' ' + current_time
     with open(filename, 'r+') as filebuf:
         buf = filebuf.readlines()
         if buf[2].startswith('updated:'):
