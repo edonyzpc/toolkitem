@@ -34,6 +34,7 @@
 #import numpy as np
 import time
 import sys
+import os
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -120,7 +121,6 @@ P.S.
 """
 
 def add_time(filename):
-    #timestamp = time.localtime()
     current_time = time.strftime("%Y/%m/%d %H:%M:%S")
     current_time = ' ' + current_time
     front_matter_ls = front_matter.split('\n')
@@ -132,7 +132,6 @@ def add_time(filename):
         filebuf.write(strbuf)
 
 def update(filename):
-    #timestamp = time.localtime()
     current_time = time.strftime("%Y/%m/%d %H:%M:%S")
     current_time = ' ' + current_time
     with open(filename, 'r+') as filebuf:
@@ -142,10 +141,35 @@ def update(filename):
             filebuf.seek(0)
             filebuf.writelines(buf)
 
+def isnew(filename):
+    with open(filename, 'r') as filebuf:
+        line_date = filebuf.readline(1)
+        line_update = filebuf.readline(2)
+        if line_date.endswith(':') and line_update.endswith(':'):
+            return True
+        else:
+            return False
+
+def main(filename):
+    try:
+        os.path.isfile(filename)
+        if isnew(filename):
+            print('new')
+            add_time(filename)
+        else:
+            print('old')
+            update(filename)
+    except:
+        print('no this file')
+        create = input("Create this file in current path? ")
+        if create == 'yes' or create == 'Yes' or create == 'y' or create == 'Y':
+            os.system('touch ' + filename)
+            print('new')
+            add_time(filename)
+        else:
+            print("check the file")
+
 if __name__ == "__main__":
     #add_time('./test')
     #time.sleep(15)
-    if sys.argv[1] == '-u':
-        update(sys.argv[2])
-    elif sys.argv[1] == '-a':
-        add_time(sys.argv[2])
+    main(sys.argv[1])
