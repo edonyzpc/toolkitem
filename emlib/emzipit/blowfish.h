@@ -51,6 +51,11 @@ typedef struct bf_key_st {
 //# ifdef OPENSSL_FIPS
 //void private_BF_set_key(BF_KEY *key, int len, const unsigned char *data);
 //# endif
+unsigned char* BF_zipit(char *data, int data_len, char *key, int key_len,
+                        int encrypt, int level);
+
+void BF_random_ivec_init(unsigned char *ivec, unsigned int len);
+void BF_convert(char *in, unsigned int len, unsigned char *out);
 void BF_set_key(BF_KEY *key, int len, const unsigned char *data);
 
 void BF_encrypt(BF_LONG *data, const BF_KEY *key);

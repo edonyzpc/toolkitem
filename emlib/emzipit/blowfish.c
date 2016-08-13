@@ -1,5 +1,8 @@
 /* blowfish.c */
 #include <string.h>
+#include <stdlib.h>
+#include <time.h>
+#include <stdio.h>
 #include "blowfish.h"
 #include "bf_locl.h"
 
@@ -530,44 +533,63 @@ static const BF_KEY bf_init = {
         }
 };
 
+void BF_random_ivec_init(unsigned char *ivec, unsigned int len) {
+    /*unsigned int bits = 8;
+    if (len > bits) bits = len;*/
+    if (!ivec) return;
+    unsigned int counter = 0;
+    for (; counter < len; counter++) {
+        srand((unsigned)time(NULL)+counter);
+        ivec[counter] = (unsigned char)(rand()%128);
+    }
+}
+
+void BF_convert(char *in, unsigned int len, unsigned char *out) {
+    if ((!in) || (!out)) return;
+
+    int counter = 0;
+    for (; counter < len; counter++) {
+        out[counter] = (unsigned char)in[counter];
+    }
+}
 
 void BF_set_key(BF_KEY *key, int len, const unsigned char *data)
 {
     int i;
     BF_LONG *p, ri, in[2];
     const unsigned char *d, *end;
-    
+
     memcpy(key, &bf_init, sizeof(BF_KEY));
     p = key->P;
-    
+
     if (len > ((BF_ROUNDS + 2) * 4))
         len = (BF_ROUNDS + 2) * 4;
-    
+
     d = data;
     end = &(data[len]);
     for (i = 0; i < (BF_ROUNDS + 2); i++) {
         ri = *(d++);
         if (d >= end)
             d = data;
-        
+
         ri <<= 8;
         ri |= *(d++);
         if (d >= end)
             d = data;
-        
+
         ri <<= 8;
         ri |= *(d++);
         if (d >= end)
             d = data;
-        
+
         ri <<= 8;
         ri |= *(d++);
         if (d >= end)
             d = data;
-        
+
         p[i] ^= ri;
     }
-    
+
     in[0] = 0L;
     in[1] = 0L;
     for (i = 0; i < (BF_ROUNDS + 2); i += 2) {
@@ -575,7 +597,7 @@ void BF_set_key(BF_KEY *key, int len, const unsigned char *data)
         p[i] = in[0];
         p[i + 1] = in[1];
     }
-    
+
     p = key->S;
     for (i = 0; i < 4 * 256; i += 2) {
         BF_encrypt(in, key);
@@ -813,7 +835,7 @@ void BF_ecb_encrypt(const unsigned char *in, unsigned char *out,
                     const BF_KEY *key, int encrypt)
 {
     BF_LONG l, d[2];
-    
+
     n2l(in, l);
     d[0] = l;
     n2l(in, l);
@@ -838,7 +860,7 @@ void BF_cfb64_encrypt(const unsigned char *in, unsigned char *out,
     register long l = length;
     BF_LONG ti[2];
     unsigned char *iv, c, cc;
-    
+
     iv = (unsigned char *)ivec;
     if (encrypt) {
         while (l--) {
@@ -897,7 +919,7 @@ void BF_ofb64_encrypt(const unsigned char *in, unsigned char *out,
     BF_LONG ti[2];
     unsigned char *iv;
     int save = 0;
-    
+
     iv = (unsigned char *)ivec;
     n2l(iv, v0);
     n2l(iv, v1);
@@ -928,4 +950,66 @@ void BF_ofb64_encrypt(const unsigned char *in, unsigned char *out,
     }
     t = v0 = v1 = ti[0] = ti[1] = 0;
     *num = n;
+}
+
+unsigned char* BF_zipit(char *data, int data_len, char *key, int key_len, int encrypt,
+              int level) {
+    if (!data) return NULL;
+
+    printf("data: %s\n", data);
+    printf("key: %s\n", key);
+
+    BF_KEY *bf_key = (BF_KEY*)malloc(sizeof(BF_KEY));
+    unsigned char *u_key = (unsigned char*)malloc(key_len);
+    BF_convert(key, key_len, u_key);
+
+    BF_set_key(bf_key, key_len, u_key);
+
+    unsigned char *u_ivec = (unsigned char*)malloc(16);
+    //BF_convert(ivec, 16, u_ivec);
+    BF_random_ivec_init(u_ivec, 16);
+
+    unsigned char *u_data = (unsigned char*)malloc(data_len);
+    unsigned char *out_data = (unsigned char*)malloc(data_len);
+    BF_convert(data, data_len, u_data);
+
+    printf("unsigned data: %s\n", u_data);
+    printf("unsigned key: %s\n", u_key);
+    printf("unsigned salt: %s\n", u_ivec);
+    switch (level) {
+        case 1:
+        BF_ecb_encrypt(u_data, out_data, bf_key, encrypt);
+        break;
+        case 2:
+        BF_cbc_encrypt(u_data, out_data, data_len, bf_key, u_ivec, encrypt);
+        break;
+        case 3: {
+            int n = 0;
+            BF_cfb64_encrypt(u_data, out_data, data_len, bf_key, u_ivec, &n, encrypt);
+            break;
+        }
+        case 4: {
+            int m = 0;
+            BF_ofb64_encrypt(u_data, out_data, data_len, bf_key, u_ivec, &m);
+            break;
+        }
+        default:
+        BF_cbc_encrypt(u_data, out_data, data_len, bf_key, u_ivec, encrypt);
+    }
+    printf("out_data: %s\n", out_data);
+    //printf("salt: %s\n", u_ivec);
+    FILE *out = fopen("./out", "wr");
+    if (out) {
+        fprintf(out, "%s", out_data);
+    }
+    FILE *salt = fopen("./salt", "wr");
+    if (salt) {
+        fprintf(salt, "%s", u_ivec);
+    }
+
+    free(u_key);
+    free(bf_key);
+    free(u_ivec);
+    free(u_data);
+    return out_data;
 }

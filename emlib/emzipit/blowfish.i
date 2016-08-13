@@ -1,4 +1,6 @@
 %module blowfish
+%apply (char *STRING, int LENGTH, char *STRING, int LENGTH) {(char *data, int data_len, char *key, int key_len)};
+%newobject BF_zipit;
 %{
 #include "blowfish.h"
 extern void BF_set_key(BF_KEY *key, int len, const unsigned char *data);
@@ -16,6 +18,8 @@ extern void BF_cfb64_encrypt(const unsigned char *in, unsigned char *out,
 extern void BF_ofb64_encrypt(const unsigned char *in, unsigned char *out,
                       long length, const BF_KEY *schedule,
                       unsigned char *ivec, int *num);
+extern unsigned char* BF_zipit(char *data, int data_len, char *key, int key_len,
+                               int encrypt, int level);
 %}
 
 extern void BF_set_key(BF_KEY *key, int len, const unsigned char *data);
@@ -33,3 +37,5 @@ extern void BF_cfb64_encrypt(const unsigned char *in, unsigned char *out,
 extern void BF_ofb64_encrypt(const unsigned char *in, unsigned char *out,
                       long length, const BF_KEY *schedule,
                       unsigned char *ivec, int *num);
+extern unsigned char* BF_zipit(char *data, int data_len, char *key, int key_len,
+                               int encrypt, int level);
