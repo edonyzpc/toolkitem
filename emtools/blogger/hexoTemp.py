@@ -94,9 +94,11 @@ date:
 updated:
 title:
 tags:
--
+  -
 keywords:
+  -
 categories:
+  -
 clearReading: true
 autoThumbnailImage: yes
 thumbnailImage:
@@ -107,12 +109,14 @@ coverSize: //[partial|full]
 coverCaption:
 coverMeta: //[in|out]
 gallery:
--
+  -
 comments:
 """
 end_matter = """
 ---
-
+<!-- toc -->
+---
+<!-- more -->
 ---
 P.S.
 {% img http://7xwwfs.com1.z0.glb.clouddn.com/8bit-dynamiclist_%28reversed%29.gif 32 32 "END" %}
