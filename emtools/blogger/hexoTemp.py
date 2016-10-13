@@ -130,6 +130,7 @@ def add_time(filename):
     front_matter_ls = front_matter.split('\n')
     front_matter_ls[2] += current_time
     front_matter_ls[1] += current_time
+    front_matter_ls[3] += ' ' + filename
     strbuf = '\n'.join(front_matter_ls)
     strbuf += end_matter
     with open(filename, 'w') as filebuf:
@@ -142,6 +143,7 @@ def update(filename):
         buf = filebuf.readlines()
         if buf[2].startswith('updated:'):
             buf[2] = 'updated: ' + current_time + '\n'
+            #buf[3] = 'title: ' + filename + '\n'
             filebuf.seek(0)
             filebuf.writelines(buf)
 
@@ -157,6 +159,7 @@ def isnew(filename):
 def main(filename):
     try:
         os.path.isfile(filename)
+        print(os.getcwd())
         if isnew(filename):
             print('new')
             add_time(filename)
@@ -167,8 +170,8 @@ def main(filename):
         print('no this file')
         create = input("Create this file in current path? ")
         if create == 'yes' or create == 'Yes' or create == 'y' or create == 'Y':
+            print('new file ' + os.getcwd() + '/' + filename)
             os.system('touch ' + filename)
-            print('new')
             add_time(filename)
         else:
             print("check the file")
