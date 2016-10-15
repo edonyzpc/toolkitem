@@ -19,6 +19,8 @@ Start from the root directory that is given by the caller and crawl the director
 
 * ADT for engieering purpose
 
+![dirlist node](https://github.com/edonyM/toolkitem/blob/master/fileprocess/dirlist/dir_node.png)
+
 ## API
 
 ## Descriptions
