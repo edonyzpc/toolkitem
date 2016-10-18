@@ -7,9 +7,9 @@
  #     //////    '\/ `   ---      ( OO).-/( (OO ).->     .->      \( OO) )     .->
  #    //// / //  :   : ---      (,------. \    .'_ (`-')----. ,--./ ,--/  ,--.'  ,-.
  #   // /   /  / `\/ '--         |  .---' '`'-..__)( OO).-. ' |   \ |  | (`-')'.'  /
- #  //          //..\\          (|  '--.  |  |  ' |( _) | | | |  . '|  |)(OO \    /
+ #  //          //..\\\\          (|  '--.  |  |  ' |( _) | | | |  . '|  |)(OO \    /
  # ============UU====UU====      |  .--'  |  |  / : \|  |)| | |  |\    |  |  /   /)
- #             '//||\\`          |  `---. |  '-'  /  '  '-' ' |  | \   |  `-/   /`
+ #             '//||\\\\`          |  `---. |  '-'  /  '  '-' ' |  | \   |  `-/   /`
  #               ''``            `------' `------'    `-----' `--'  `--'    `--'
  # ######################################################################################
  #
@@ -110,7 +110,7 @@ coverCaption:
 coverMeta: //[in|out]
 gallery:
   -
-comments:
+comments: false
 """
 end_matter = """
 ---
@@ -125,18 +125,24 @@ P.S.
 """
 
 def add_time(filename):
+    """
+    Add created time, update time and title into the front-matter.
+    """
     current_time = time.strftime("%Y/%m/%d %H:%M:%S")
     current_time = ' ' + current_time
     front_matter_ls = front_matter.split('\n')
-    front_matter_ls[2] += current_time
     front_matter_ls[1] += current_time
-    front_matter_ls[3] += ' ' + filename
+    front_matter_ls[2] += current_time
+    front_matter_ls[3] += ' ' + filename.split('.')[0]
     strbuf = '\n'.join(front_matter_ls)
     strbuf += end_matter
     with open(filename, 'w') as filebuf:
         filebuf.write(strbuf)
 
 def update(filename):
+    """
+    Update the file updated time information.
+    """
     current_time = time.strftime("%Y/%m/%d %H:%M:%S")
     current_time = ' ' + current_time
     with open(filename, 'r+') as filebuf:
@@ -148,27 +154,33 @@ def update(filename):
             filebuf.writelines(buf)
 
 def isnew(filename):
+    """
+    Check if the file is newly created.
+    """
     with open(filename, 'r') as filebuf:
-        line_date = filebuf.readline(1)
-        line_update = filebuf.readline(2)
+        line_date = filebuf.readline(1).rstrip()
+        line_update = filebuf.readline(2).rstrip()
         if line_date.endswith(':') and line_update.endswith(':'):
             return True
         else:
             return False
 
 def main(filename):
+    """
+    Create the blog file(*.md) according to the template.
+    """
     try:
         os.path.isfile(filename)
-        print(os.getcwd())
+        #print(os.getcwd())
         if isnew(filename):
-            print('new')
+            print('new creat file')
             add_time(filename)
         else:
-            print('old')
+            print('old file to update')
             update(filename)
     except:
-        print('no this file')
-        create = input("Create this file in current path? ")
+        print('There is no file named %s' % filename)
+        create = raw_input("Create this file in current path? ")
         if create == 'yes' or create == 'Yes' or create == 'y' or create == 'Y':
             print('new file ' + os.getcwd() + '/' + filename)
             os.system('touch ' + filename)
@@ -179,4 +191,8 @@ def main(filename):
 if __name__ == "__main__":
     #add_time('./test')
     #time.sleep(15)
-    main(sys.argv[1])
+    try:
+        len(sys.argv) > 2
+    	main(sys.argv[1])
+    except:
+	print('please check if enter the file name!')
