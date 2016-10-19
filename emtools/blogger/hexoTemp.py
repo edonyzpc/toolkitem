@@ -35,6 +35,10 @@
 import time
 import sys
 import os
+if sys.version.startswith('3.'):
+    cin = input
+else:
+    cin = raw_input
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -113,10 +117,15 @@ gallery:
 comments: false
 """
 end_matter = """
+
 ---
+
 <!-- toc -->
+
 ---
+
 <!-- more -->
+
 ---
 P.S.
 {% img http://7xwwfs.com1.z0.glb.clouddn.com/8bit-dynamiclist_%28reversed%29.gif 32 32 "END" %}
@@ -180,7 +189,7 @@ def main(filename):
             update(filename)
     except:
         print('There is no file named %s' % filename)
-        create = raw_input("Create this file in current path? ")
+        create = cin("Create this file in current path? ")
         if create == 'yes' or create == 'Yes' or create == 'y' or create == 'Y':
             print('new file ' + os.getcwd() + '/' + filename)
             os.system('touch ' + filename)
@@ -192,7 +201,7 @@ if __name__ == "__main__":
     #add_time('./test')
     #time.sleep(15)
     try:
-        len(sys.argv) > 2
-    	main(sys.argv[1])
+        len(sys.argv) > 1
+        main(sys.argv[1])
     except:
-	print('please check if enter the file name!')
+        print('please check if enter the file name!')
