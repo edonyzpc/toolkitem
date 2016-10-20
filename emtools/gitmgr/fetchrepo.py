@@ -88,6 +88,7 @@ class PyColor(object):
 
 from urllib.request import urlopen
 import subprocess as sp
+import os
 
 def get_repo_url(repo_path):
     cmd = 'cd ' + repo_path + ';git remote -v'
@@ -105,7 +106,7 @@ def get_repo_url(repo_path):
             return None
 
 
-def repo_web(url_addr):
+def fork_repo_url(url_addr):
     buf = urlopen(url_addr).readlines()
     for line in buf:
         if line.decode('utf-8').find('forked from') > -1:
@@ -116,11 +117,43 @@ def repo_web(url_addr):
     if web_buf is None:
         return None
     else:
-        return 'https://github.com/' + web_buf.split('"')[3]
+        return 'https://github.com' + web_buf.split('"')[3]
+
+
+def fetch_branch(repo_path):
+    os.chdir(repo_path)
+    url = get_repo_url(repo_path)
+    fork_url = fork_repo_url(url)
+    remote_branch_cmd = 'git remote -v'
+    status, output = sp.getstatusoutput(remote_branch_cmd)
+    if status > -1:
+        ls_remote = output.split()
+        if fork_url in ls_remote:
+            inx = ls_remote.index(fork_url)
+        else:
+            inx = None
+
+        if inx > 0:
+            fetch_cmd = 'git fetch ' + ls_remote[inx - 1]
+            add_remote_cmd = None
+        else:
+            add_remote_cmd = 'git remote add ' + fork_url.split('/')[-1]\
+                             + ' ' + fork_url
+            fetch_cmd = 'git fetch ' + fork_url.split('/')[-1]
+
+        if add_remote_cmd is not None:
+            pass
+
+        merge_cmd = 'git merge ' + fork_url.split('/')[-1] + '/master'
+        push_cmd = 'git push origin master'
+
+    else:
+        return None
 
 
 if __name__ == "__main__":
-    furl = repo_web(get_repo_url('~/coding/script-utility'))
-    print(furl)
-    furl1 = repo_web(get_repo_url('./'))
-    print(furl1)
+    #furl = repo_web(get_repo_url('~/coding/script-utility'))
+    #print(furl)
+    #furl1 = repo_web(get_repo_url('./'))
+    #print(furl1)
+    fetch_branch('/Users/edony/coding/script-utility')
