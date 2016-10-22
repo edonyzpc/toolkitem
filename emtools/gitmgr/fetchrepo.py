@@ -106,7 +106,7 @@ def get_repo_url(repo_path):
             return None
 
 
-def fork_repo_url(url_addr):
+def get_forkedrepo_url(url_addr):
     buf = urlopen(url_addr).readlines()
     for line in buf:
         if line.decode('utf-8').find('forked from') > -1:
@@ -120,10 +120,10 @@ def fork_repo_url(url_addr):
         return 'https://github.com' + web_buf.split('"')[3]
 
 
-def fetch_branch(repo_path):
+def gen_fetch_cmds(repo_path):
     os.chdir(repo_path)
     url = get_repo_url(repo_path)
-    fork_url = fork_repo_url(url)
+    fork_url = get_forkedrepo_url(url)
     remote_branch_cmd = 'git remote -v'
     status, output = sp.getstatusoutput(remote_branch_cmd)
     if status > -1:
@@ -141,19 +141,45 @@ def fetch_branch(repo_path):
                              + ' ' + fork_url
             fetch_cmd = 'git fetch ' + fork_url.split('/')[-1]
 
-        if add_remote_cmd is not None:
-            pass
-
         merge_cmd = 'git merge ' + fork_url.split('/')[-1] + '/master'
         push_cmd = 'git push origin master'
 
+        if add_remote_cmd is not None:
+            cmds = [add_remote_cmd, fetch_cmd, merge_cmd, push_cmd]
+        else:
+            cmds = [fetch_cmd, merge_cmd, push_cmd]
+
+        return cmds
     else:
         return None
 
+def config_sh(cmds):
+    sh_template = """
+    #!/usr/bin/sh
+    if [ ! -x "./update_fork.sh" ]; then
+    do
+        touch "./update_fork.sh"
+        chmod 777 ./update_fork.sh
+    done
+    """
+    judge_cmd = "if [ $? -eq 0 ]; then do exit "
+    exit_code = -1
+    file_buf = sh_template
+
+    for cmd in cmds:
+        new_lines = "\n" + cmd + "\n" + judge_cmd + str(exit_code) + " done\n"
+        file_buf += new_lines
+        exit_code -= 1
+
+    with open("./update_fork.sh", "w+") as sh_file:
+        sh_file.write(file_buf)
+
+def update_fork_branch(repo_paht):
+    pass
 
 if __name__ == "__main__":
     #furl = repo_web(get_repo_url('~/coding/script-utility'))
     #print(furl)
     #furl1 = repo_web(get_repo_url('./'))
     #print(furl1)
-    fetch_branch('/Users/edony/coding/script-utility')
+    gen_fetch_cmds('/Users/edony/coding/script-utility')
