@@ -121,6 +121,7 @@ def get_forkedrepo_url(url_addr):
 
 
 def gen_fetch_cmds(repo_path):
+    #cur_dir = os.getcwd()
     os.chdir(repo_path)
     url = get_repo_url(repo_path)
     fork_url = get_forkedrepo_url(url)
@@ -149,29 +150,28 @@ def gen_fetch_cmds(repo_path):
         else:
             cmds = [fetch_cmd, merge_cmd, push_cmd]
 
+        #os.chdir(cur_dir)
         return cmds
     else:
+        #os.chdir(cur_dir)
         return None
 
-def config_sh(cmds):
-    sh_template = """
-    #!/usr/bin/sh
-    if [ ! -x "./update_fork.sh" ]; then
-    do
-        touch "./update_fork.sh"
-        chmod 777 ./update_fork.sh
-    done
-    """
-    judge_cmd = "if [ $? -eq 0 ]; then do exit "
+def gen_sh(cmds):
+    _, sh_dir = sp.getstatusoutput("which sh")
+    sh_template = "#!" + sh_dir + "\n\nif [ ! -x update_fork.sh ]; then\n"\
+                  + "touch update_fork.sh\nchmod 777 update_fork.sh\n"\
+                  + "./update_fork.sh\nexit 0\nfi\n"
+    judge_cmd = "if [ $? -eq 0 ]; then\n"
     exit_code = -1
     file_buf = sh_template
 
     for cmd in cmds:
-        new_lines = "\n" + cmd + "\n" + judge_cmd + str(exit_code) + " done\n"
+        new_lines = "\n" + cmd + "\n" + judge_cmd + "echo \"" + cmd\
+                    + " done\"\nelse\nexit " + str(exit_code) + "\nfi\n"
         file_buf += new_lines
         exit_code -= 1
 
-    with open("./update_fork.sh", "w+") as sh_file:
+    with open("update_fork.sh", "w") as sh_file:
         sh_file.write(file_buf)
 
 def update_fork_branch(repo_paht):
@@ -182,4 +182,5 @@ if __name__ == "__main__":
     #print(furl)
     #furl1 = repo_web(get_repo_url('./'))
     #print(furl1)
-    gen_fetch_cmds('/Users/edony/coding/script-utility')
+    cmds = gen_fetch_cmds('/Users/edony/coding/script-utility')
+    gen_sh(cmds)
