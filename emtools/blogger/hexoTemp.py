@@ -129,6 +129,7 @@ end_matter = """
 ---
 P.S.
 {% img http://7xwwfs.com1.z0.glb.clouddn.com/8bit-dynamiclist_%28reversed%29.gif 32 32 "END" %}
+{% img http://7xwwfs.com1.z0.glb.clouddn.com/picture-28397-1406891613.gif 100 100 "END" %}
 
 ---
 """
