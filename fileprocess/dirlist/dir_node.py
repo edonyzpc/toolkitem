@@ -32,6 +32,7 @@
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
+import os
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -86,14 +87,43 @@ class PyColor(object):
         self.warningcolor = ''
         self.endcolor = ''
 
+def dfs_myDir(path, printDir = None, printFile = None):
+    stack = []
+    ret = []
+    stack.append(path)
+    while len(stack) > 0:
+        tmp = stack.pop(len(stack) - 1)
+        if(os.path.isdir(tmp)):
+            ret.append(tmp)
+            for item in os.listdir(tmp):
+                stack.append(os.path.join(tmp, item))
+            if printDir:
+                printDir(tmp)
+        elif(os.path.isfile(tmp)):
+            ret.append(tmp)
+            if printFile:
+                printFile(tmp)
+    return ret
+
+def printDir(path):
+    print "dir: " + path
+
+def printFile(path):
+    print "file: " + path
+
+
+
 class dir_node(object):
     """
-    Encapsulate the attributes of directory into this class.
+    Encapsulate the attributes of directory recursively into this class.
     Type: directory, file, link
     Path: full path of directory node
     """
     def __init__(self, root_path):
-        pass
+        self.root_path = root_path
+        self.dir = []
+        self.file = []
+        self.link = []
 
     def _list_member(self):
         """
@@ -118,3 +148,21 @@ class dir_node(object):
 
     def _sub_dir(self):
         pass
+
+    def _dfs(self, printDir = None, printFile = None):
+        stack = []
+        ret = []
+        stack.append(path)
+        while len(stack) > 0:
+            tmp = stack.pop(len(stack) - 1)
+            if(os.path.isdir(tmp)):
+                ret.append(tmp)
+                for item in os.listdir(tmp):
+                    stack.append(os.path.join(tmp, item))
+                if printDir:
+                    printDir(tmp)
+            elif(os.path.isfile(tmp)):
+                ret.append(tmp)
+                if printFile:
+                    printFile(tmp)
+        return ret
