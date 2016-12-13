@@ -35,6 +35,8 @@
 import time
 import sys
 import os
+from subprocess import getstatusoutput
+import re
 if sys.version.startswith('3.'):
     cin = input
 else:
@@ -175,11 +177,36 @@ def isnew(filename):
         else:
             return False
 
+def sortedtag(filename):
+    """
+    Add the sorted tag string into the file name.
+    e.g.
+    file name:                      xxxx.md
+    added sorted tag file name:     0x0001-xxxx.md
+    """
+    cmd_check = "ls ./ | grep " + filename
+    status, output = getstatusoutput(cmd_check)
+    if status == 0:
+        return output
+    else:
+        cmd_addtag = 'ls ./ | grep -E "^0x[0-9]{4}.*.md$"'
+        status_add, output_add = getstatusoutput(cmd_addtag)
+        file_list = output_add.split('\n')
+        tags = []
+        for item in file_list:
+            tag = re.match("(0x[0-9]{4}).*.md", item).groups()[0]
+            tags.append(int(tag[2:]))
+        addtag = "0x{:0>4}".format(str(max(tags) + 1))
+        return addtag + '-' + filename
+
+
+
 def main(filename):
     """
     Create the blog file(*.md) according to the template.
     """
     try:
+        filename = sortedtag(filename)
         os.path.isfile(filename)
         #print(os.getcwd())
         if isnew(filename):
@@ -205,4 +232,5 @@ if __name__ == "__main__":
         len(sys.argv) > 1
         main(sys.argv[1])
     except:
+        print(sys.argv)
         print('please check if enter the file name!')
