@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
+r"""
  #        .---.         .-----------
  #       /     \  __  /    ------
  #      / /     \(  )/    -----   (`-')  _ _(`-')              <-. (`-')_
@@ -35,11 +35,12 @@
 import time
 import sys
 import os
-from subprocess import getstatusoutput
 import re
 if sys.version.startswith('3.'):
+    from subprocess import getstatusoutput
     cin = input
 else:
+    from commands import getstatusoutput
     cin = raw_input
 
 class PyColor(object):
@@ -191,15 +192,16 @@ def sortedtag(filename):
     else:
         cmd_addtag = 'ls ./ | grep -E "^0x[0-9]{4}.*.md$"'
         status_add, output_add = getstatusoutput(cmd_addtag)
-        file_list = output_add.split('\n')
-        tags = []
-        for item in file_list:
-            tag = re.match("(0x[0-9]{4}).*.md", item).groups()[0]
-            tags.append(int(tag[2:]))
-        addtag = "0x{:0>4}".format(str(max(tags) + 1))
-        return addtag + '-' + filename
-
-
+        if status_add == 0:
+            file_list = output_add.split('\n')
+            tags = []
+            for item in file_list:
+                tag = re.match("(0x[0-9]{4}).*.md", item).groups()[0]
+                tags.append(int(tag[2:]))
+            addtag = "0x{:0>4}".format(str(max(tags) + 1))
+            return addtag + '-' + filename
+        else:
+            return "0x0001-" + filename
 
 def main(filename):
     """
