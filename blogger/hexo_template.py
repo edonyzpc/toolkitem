@@ -36,12 +36,12 @@ import time
 import sys
 import os
 import re
-if sys.version.startswith('3.'):
+try:
     from subprocess import getstatusoutput
-    cin = input
-else:
+    CIN = input
+except ImportError:
     from commands import getstatusoutput
-    cin = raw_input
+    CIN = raw_input
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -96,7 +96,7 @@ class PyColor(object):
         self.warningcolor = ''
         self.endcolor = ''
 
-front_matter = """
+FRONT_MATTER = """
 date:
 updated:
 title:
@@ -119,7 +119,7 @@ gallery:
   -
 comments: false
 """
-end_matter = """
+END_MATTER = """
 
 ---
 
@@ -143,12 +143,12 @@ def add_time(filename):
     """
     current_time = time.strftime("%Y/%m/%d %H:%M:%S")
     current_time = ' ' + current_time
-    front_matter_ls = front_matter.split('\n')
+    front_matter_ls = FRONT_MATTER.split('\n')
     front_matter_ls[1] += current_time
     front_matter_ls[2] += current_time
     front_matter_ls[3] += ' ' + filename.split('.')[0]
     strbuf = '\n'.join(front_matter_ls)
-    strbuf += end_matter
+    strbuf += END_MATTER
     with open(filename, 'w') as filebuf:
         filebuf.write(strbuf)
 
@@ -173,10 +173,7 @@ def isnew(filename):
     with open(filename, 'r') as filebuf:
         line_date = filebuf.readline(1).rstrip()
         line_update = filebuf.readline(2).rstrip()
-        if line_date.endswith(':') and line_update.endswith(':'):
-            return True
-        else:
-            return False
+        return bool(line_date.endswith(':') and line_update.endswith(':'))
 
 def sortedtag(filename):
     """
@@ -207,9 +204,8 @@ def main(filename):
     """
     Create the blog file(*.md) according to the template.
     """
-    try:
-        filename = sortedtag(filename)
-        os.path.isfile(filename)
+    filename = sortedtag(filename)
+    if os.path.isfile(filename):
         #print(os.getcwd())
         if isnew(filename):
             print('new creat file')
@@ -217,9 +213,9 @@ def main(filename):
         else:
             print('old file to update')
             update(filename)
-    except:
+    else:
         print('There is no file named %s' % filename)
-        create = cin("Create this file in current path? ")
+        create = CIN("Create this file in current path? ")
         if create == 'yes' or create == 'Yes' or create == 'y' or create == 'Y':
             print('new file ' + os.getcwd() + '/' + filename)
             os.system('touch ' + filename)
@@ -230,9 +226,8 @@ def main(filename):
 if __name__ == "__main__":
     #add_time('./test')
     #time.sleep(15)
-    try:
-        len(sys.argv) > 1
+    if len(sys.argv) > 1:
         main(sys.argv[1])
-    except:
+    else:
         print(sys.argv)
         print('please check if enter the file name!')
