@@ -386,7 +386,7 @@ class UpdateSys(object):
             if item.startswith('-') and\
                     item not in ['-l', '--linux', '-m', '--mac', '-g', '--git', '-H', '--hg',\
                                  '-w', '--weather', '-v', '--version', '-a', '--attribute', '-c',\
-                                 '--cleanup', '-p', '--path']:
+                                 '--cleanup', '-p', '--path', '-h', '--help']:
                 raise(ArgError("oops! Bad argument and try again ===> "+str(sys.argv)))
         self.cmd_parser()
         if len(sys.argv) < 2:

@@ -23,6 +23,10 @@ Start from the root directory that is given by the caller and crawl the director
 
 ## API
 
+* DFS algorithm scan the directory
+
+* Data Abstract Type of directory
+
 ## Descriptions
 
 ## Other
