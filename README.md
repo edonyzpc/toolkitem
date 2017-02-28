@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=master)](https://travis-ci.org/edonyM/toolkitem)
+
 # toolkitem
 
 ----
