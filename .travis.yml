@@ -8,4 +8,4 @@ install:
   - pip install Pillow
 # command to run tests
 script:
-  - pytest -q test_tmp.py
+  - pytest -q ./tests/test_tmp.py
