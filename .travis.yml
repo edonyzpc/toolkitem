@@ -6,6 +6,7 @@ python:
 # command to install dependencies
 install:
   - pip install Pillow
+  - pip install pytest
 # command to run tests
 script:
   - pytest -q ./tests/test_tmp.py
