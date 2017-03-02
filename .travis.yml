@@ -4,7 +4,11 @@ python:
   - "3.5"
   - "3.6"
 # command to install dependencies
+before_install:
+  - pip install -U pytest
+
 install:
   - pip install Pillow
+
 # command to run tests
 script: pytest
