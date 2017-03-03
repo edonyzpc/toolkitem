@@ -244,7 +244,7 @@ class GUI(tkinter.Frame):
             def mvfile():
                 if self.path:
                     event = enter_add_file.get()
-                    print event
+                    print(event)
                     filename = event[event.rfind("/"):]
                     shutil.move(event, self.path+"/"+filename)
                     self.get_files()
@@ -334,5 +334,5 @@ if __name__ == "__main__":
     WIN.mainloop()
     STL = GUI.stl_file
     IGS = GUI.igs_file
-    print(STL)
-    print(IGS)
+    #print(STL)
+    #print(IGS)

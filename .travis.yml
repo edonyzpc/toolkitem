@@ -5,21 +5,13 @@ python:
   - "3.5"
   - "3.6"
 
-addons:
-    code_climate:
-        repo_token: aa4621de83586c7198608ed9e1f445b67a8df4357b06e3ce5ff52b411042085f
-
 # command to install dependencies
 before_install:
   - pip install -U pytest
-  - pip install -U pytest-cov
 
 install:
   - pip install Pillow
 
 # command to run tests
 script:
-  - pytest --cov=updatesys tests/
-
-after_sucess:
-  - CODECLIMATE_REPO_TOKEN=aa4621de83586c7198608ed9e1f445b67a8df4357b06e3ce5ff52b411042085f codeclimate-test-reporter
+  - pytest tests/
