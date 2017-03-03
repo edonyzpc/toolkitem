@@ -18,3 +18,6 @@ install:
 
 # command to run tests
 script: pytest
+
+after_sucess:
+  - CODECLIMATE_REPO_TOKEN=7e5e83d9b17bd5574a8ffb7c17c42442afe9ead5 codeclimate-test-reporter
