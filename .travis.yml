@@ -20,4 +20,4 @@ install:
 script: pytest
 
 after_sucess:
-  - CODECLIMATE_REPO_TOKEN=7e5e83d9b17bd5574a8ffb7c17c42442afe9ead5 codeclimate-test-reporter
+  - CODECLIMATE_REPO_TOKEN=aa4621de83586c7198608ed9e1f445b67a8df4357b06e3ce5ff52b411042085f codeclimate-test-reporter
