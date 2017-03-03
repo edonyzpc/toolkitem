@@ -1,4 +1,7 @@
 [![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=master)](https://travis-ci.org/edonyM/toolkitem)
+[![Code Climate](https://codeclimate.com/github/edonyM/toolkitem/badges/gpa.svg)](https://codeclimate.com/github/edonyM/toolkitem)
+[![Test Coverage](https://codeclimate.com/github/edonyM/toolkitem/badges/coverage.svg)](https://codeclimate.com/github/edonyM/toolkitem/coverage)
+[![Issue Count](https://codeclimate.com/github/edonyM/toolkitem/badges/issue_count.svg)](https://codeclimate.com/github/edonyM/toolkitem)
 
 # toolkitem
 

@@ -1,8 +1,14 @@
 language: python
+
 python:
   - "2.7"
   - "3.5"
   - "3.6"
+
+addons:
+    code_climate:
+        repo_token: aa4621de83586c7198608ed9e1f445b67a8df4357b06e3ce5ff52b411042085f
+
 # command to install dependencies
 before_install:
   - pip install -U pytest
