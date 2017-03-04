@@ -16,3 +16,4 @@ install:
 # command to run tests
 script:
   - pytest --cov=./
+  - bash <(curl -s https://codecov.io/bash) -cF python
