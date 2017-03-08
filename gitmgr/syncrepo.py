@@ -34,6 +34,12 @@
 #from scipy import stats as st
 #from matplotlib import cm
 #import numpy as np
+import os
+import sys
+import subprocess as sp
+
+color = PyColor()
+color.new = '\033[0;36m'
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -88,54 +94,52 @@ class PyColor(object):
         self.warningcolor = ''
         self.endcolor = ''
 
-import os
-import sys
-import subprocess as sp
 
 def print_cmd_result(cmd, status, output):
-    color = PyColor()
     if status != 0:
-        raise Exception(color.warningcolor + cmd_fetch + ' executed in {} failed\n'.formate(os.getcwd()))
-    print(color.tipcolor)
-    for item in output.split():
-        print(item)
-    print(color.endcolor)
+        raise Exception(color.warningcolor + cmd_fetch + \
+                        ' executed in {} failed\n'.formate(os.getcwd()))
+    print(color.tipcolor + output + color.endcolor)
+
+
+def exec_cmd(cmd):
+    (status, output) = sp.getstatusoutput(cmd)
+    print_cmd_result(cmd, status, output)
+    return (status, output)
+
 
 def has_local_upstream():
     cmd = 'git remote -v'
-    (status, output) = sp.getstatusoutput(cmd)
-    #if status != 0:
-    #    raise Exception("`git remote -v` executed in {} failed\n".format(os.getcwd()))
-    print_cmd_result(cmd, status, output)
+    status, output = exec_cmd(cmd)
     if 'upstream' not in output.split():
         return False
     else:
         return True
 
+
 def add_upstream(upstream_url):
     cmd = 'git add upstream ' + upstream_url
-    (status, output) = sp.getstatusoutput(cmd)
-    print_cmd_result(cmd, status, output)
-    #if status != 0:
-    #    raise Exception(cmd + ' executed in {} failed\n'.formate(os.getcwd()))
-    #for item in output.split():
-    #    print(item)
+    exec_cmd(cmd)
+
 
 def sync_up2master():
     cmd_fetch = 'git fetch upstream'
     cmd_merge = 'git checkout master\ngit merge upstream/master --no-ff'
     cmd_push = 'git push origin master'
-    (status_fetch, output_fetch) = sp.getstatusoutput(cmd_fetch)
-    print_cmd_result(cmd_fetch, status_fetch, output_fetch)
-    (status_merge, output_merge) = sp.getstatusoutput(cmd_merge)
-    print_cmd_result(cmd_merge, status_merge, output_merge)
-    (status_push, output_push) = sp.getstatusoutput(cmd_push)
-    print_cmd_result(cmd_push, status_push, output_push)
+    fetch_stat, fetch_output = sp.getstatusoutput(cmd_fetch)
+    if len(fetch_output) <=0:
+        print(color.new + 'Repo already update!' + color.endcolor)
+        return
+    merge_stat, merge_output = exec_cmd(cmd_merge)
+    push_stat, push_output = exec_cmd(cmd_push)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and has_local_upstream():
-        add_upstream(sys.argv[1])
-    sync_up2master()
-
-
+    if not has_local_upstream():
+        if len(sys.argv) > 1:
+            add_upstream(sys.argv[1])
+        else:
+            raise Exception(color.warningcolor +\
+                            'upstream url needed' + color.endcolor)
+    else:
+        sync_up2master()
