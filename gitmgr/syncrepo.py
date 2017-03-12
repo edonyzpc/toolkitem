@@ -38,9 +38,6 @@ import os
 import sys
 import subprocess as sp
 
-color = PyColor()
-color.new = '\033[0;36m'
-
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
     "F3" call Addpy() function to add this class which is defined
@@ -94,6 +91,9 @@ class PyColor(object):
         self.warningcolor = ''
         self.endcolor = ''
 
+
+color = PyColor()
+color.new = '\033[0;36m'
 
 def print_cmd_result(cmd, status, output):
     if status != 0:
