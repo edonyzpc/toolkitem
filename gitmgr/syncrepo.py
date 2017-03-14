@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
+r"""
  #        .---.         .-----------
  #       /     \  __  /    ------
  #      / /     \(  )/    -----   (`-')  _ _(`-')              <-. (`-')_
@@ -37,9 +37,6 @@
 import os
 import sys
 import subprocess as sp
-
-color = PyColor()
-color.new = '\033[0;36m'
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -95,10 +92,13 @@ class PyColor(object):
         self.endcolor = ''
 
 
+color = PyColor()
+color.new = '\033[0;36m'
+
 def print_cmd_result(cmd, status, output):
     if status != 0:
-        raise Exception(color.warningcolor + cmd_fetch + \
-                        ' executed in {} failed\n'.formate(os.getcwd()))
+        raise Exception(color.warningcolor + cmd + \
+                        ' executed in {} failed\n'.format(os.getcwd()))
     print(color.tipcolor + output + color.endcolor)
 
 
@@ -111,10 +111,14 @@ def exec_cmd(cmd):
 def has_local_upstream():
     cmd = 'git remote -v'
     status, output = exec_cmd(cmd)
-    if 'upstream' not in output.split():
+    if status != 0:
+        print_cmd_result(cmd, status, output)
         return False
     else:
-        return True
+        if 'upstream' not in output.split():
+            return False
+        else:
+            return True
 
 
 def add_upstream(upstream_url):
@@ -127,11 +131,12 @@ def sync_up2master():
     cmd_merge = 'git checkout master\ngit merge upstream/master --no-ff'
     cmd_push = 'git push origin master'
     fetch_stat, fetch_output = sp.getstatusoutput(cmd_fetch)
-    if len(fetch_output) <=0:
+    if len(fetch_output) <= 0:
         print(color.new + 'Repo already update!' + color.endcolor)
         return
     merge_stat, merge_output = exec_cmd(cmd_merge)
     push_stat, push_output = exec_cmd(cmd_push)
+    return [(fetch_stat, fetch_output), (merge_stat, merge_output), (push_stat, push_output)]
 
 
 if __name__ == "__main__":
