@@ -36,7 +36,10 @@ r"""
 #import numpy as np
 import os
 import sys
-import subprocess as sp
+try:
+    from subprocess import getstatusoutput
+except ImportError:
+    from commands import getstatusoutput
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -103,7 +106,7 @@ def print_cmd_result(cmd, status, output):
 
 
 def exec_cmd(cmd):
-    (status, output) = sp.getstatusoutput(cmd)
+    (status, output) = getstatusoutput(cmd)
     print_cmd_result(cmd, status, output)
     return (status, output)
 
@@ -122,7 +125,7 @@ def has_local_upstream():
 
 
 def add_upstream(upstream_url):
-    cmd = 'git add upstream ' + upstream_url
+    cmd = 'git remote add upstream ' + upstream_url
     exec_cmd(cmd)
 
 
@@ -130,7 +133,7 @@ def sync_up2master():
     cmd_fetch = 'git fetch upstream'
     cmd_merge = 'git checkout master\ngit merge upstream/master --no-ff'
     cmd_push = 'git push origin master'
-    fetch_stat, fetch_output = sp.getstatusoutput(cmd_fetch)
+    fetch_stat, fetch_output = getstatusoutput(cmd_fetch)
     if len(fetch_output) <= 0:
         print(color.new + 'Repo already update!' + color.endcolor)
         return
@@ -146,5 +149,4 @@ if __name__ == "__main__":
         else:
             raise Exception(color.warningcolor +\
                             'upstream url needed' + color.endcolor)
-    else:
-        sync_up2master()
+    sync_up2master()
