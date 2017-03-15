@@ -125,7 +125,7 @@ def has_local_upstream():
 
 
 def add_upstream(upstream_url):
-    cmd = 'git add upstream ' + upstream_url
+    cmd = 'git remote add upstream ' + upstream_url
     exec_cmd(cmd)
 
 
@@ -149,5 +149,4 @@ if __name__ == "__main__":
         else:
             raise Exception(color.warningcolor +\
                             'upstream url needed' + color.endcolor)
-    else:
-        sync_up2master()
+    sync_up2master()
