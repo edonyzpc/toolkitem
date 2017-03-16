@@ -1,3 +1,6 @@
 develop branch work:
-* integrated CI
-* apply git branch management module
+* ~~integrated CI~~
+* ~~add code coverage check with codecov.io~~
+* ~~integrate git commands into one file to auto-sync forked repository in Github.~~
+* rearrange the source code into module
+* walking the directory and get its file list and directory list
