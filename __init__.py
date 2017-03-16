@@ -4,4 +4,6 @@ __all__ = ['gitmgr',
            'mail',
            'scheduler',
            'rosmonitor',
-           'updatesys']
+           'updatesys',
+           'planner',
+           'other']
