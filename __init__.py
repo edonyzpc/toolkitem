@@ -1,1 +1,7 @@
-__all__ = ['gitmgr', 'fileprocess']
+__all__ = ['gitmgr',
+           'fileprocess',
+           'blogger',
+           'mail',
+           'scheduler',
+           'rosmonitor',
+           'updatesys']
