@@ -1,11 +1,12 @@
 # Toolkit for day calculate
 -------
 
-When you arange your plan, you want a quick calculator help you.<br>
+When you arange your plan, you want a quick calculator help you.
 
 ------
 
-#### INPUT<br>
+#### INPUT
+
 * plan list
 
 * day_start
@@ -14,11 +15,13 @@ When you arange your plan, you want a quick calculator help you.<br>
 
 * year_start
 
-#### OUTPUT<br>
+#### OUTPUT
+
 * plan end list (***year_end***;***month_end***;***day_end***)
 
 
-#### ATTRIBUTES<br>
+#### ATTRIBUTES
+
 ```py
   ['monthls','calend','displayplan']
 ```
