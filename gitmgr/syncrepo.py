@@ -113,9 +113,8 @@ def exec_cmd(cmd):
 
 def has_local_upstream():
     cmd = 'git remote -v'
-    status, output = exec_cmd(cmd)
+    status, output = getstatusoutput(cmd)
     if status != 0:
-        print_cmd_result(cmd, status, output)
         return False
     else:
         if 'upstream' not in output.split():
