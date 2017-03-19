@@ -1,5 +1,8 @@
-[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=master)](https://travis-ci.org/edonyM/toolkitem)
+**master:** [![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=master)](https://travis-ci.org/edonyM/toolkitem)
 [![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/master/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)
+
+**develop:** [![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=develop)](https://travis-ci.org/edonyM/toolkitem)
+[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)
 
 # toolkitem
 
@@ -45,3 +48,4 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
 
 P.S.
 ------
+[Develop Path](./DEVELOP.md)
