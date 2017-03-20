@@ -1,8 +1,8 @@
-### [master]
+#### [master]
 [![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=master)](https://travis-ci.org/edonyM/toolkitem)
 [![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/master/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)
 
-### [develop]
+#### [develop]
 [![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=develop)](https://travis-ci.org/edonyM/toolkitem)
 [![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)
 
@@ -10,7 +10,7 @@
 
 ----
 
-## ***personal toolkits for daily code***
+### ***personal toolkits for daily code***
 
 This is a toolkit project for speedup my daily life. It will be restructed into a GUI application if this project begins to take shape.
 According to daily requirements, it is splitted into different modules according to its functionality.
@@ -48,6 +48,6 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
     - [ ] auto reminder tools for checking new emails. ====> `mail`
 
 
-P.S.
+### P.S.
 ------
 [Develop Path](./DEVELOP.md)
