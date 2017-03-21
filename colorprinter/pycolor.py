@@ -63,22 +63,30 @@ class PyColor(object):
         \033[1;31;40m   <!--1-highlight;31-foreground red;40-background black-->
         \033[0m         <!--set all into default-->
         """
-        self.warningcolor = '\033[0;31m'
-        self.tipcolor = '\033[0;32m'
-        self.endcolor = '\033[0m'
-        self._newcolor = ''
+        self.magic = '\033['
+        self.mod = '0;'                         # display model: [0, 1, 4, 5, 7, 8]
+        self.fg_color = '37;'                   # foreground color: [30, 31, 32, 33, 34, 35, 36, 37]
+        self.bg_color = '40m;'                  # background color: [40m, 41m, 42m, 43m, 44m, 45m, 46m, 47m]
+        self._format = self.magic + \           # output format string
+                         self.mod + \
+                         self.fg_color + \
+                         self.bg_color
+    def __call__(self, *args, **kwargs):
+        # for decrator implement
+        pass
+
     @property
-    def new(self):
+    def format(self):
         """
         Customized Python Print Color.
         """
-        return self._newcolor
+        return self._format
     @new.setter
-    def new(self, color_str):
+    def format(self, color_str):
         """
         New Color.
         """
-        self._newcolor = color_str
+        self._format = color_str
     def disable(self):
         """
         Disable Color Print.
