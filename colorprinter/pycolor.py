@@ -67,14 +67,14 @@ class PyColor(object):
         self.magic = '\033['
         self.color = format
         self.__formats = {'red':(0, 31, 40), 'green':(0, 32, 40), 'cyan':(0, 36, 40),
-                         'purple':(0, 35, 40), 'yellow':(0, 33, 40), 'white':(0, 37, 40),
-                         'ured':(4, 31, 40), 'ugreen':(4, 32, 40), 'ucyan':(4, 36, 40),
-                         'upurple':(4, 35, 40), 'uyellow':(4, 33, 40), 'uwhite':(4, 37, 40),
-                         'fred':(5, 31, 40), 'fgreen':(5, 32, 40), 'fcyan':(5, 36, 40),
-                         'fpurple':(5, 35, 40), 'fyellow':(5, 33, 40), 'fwhite':(5, 37, 40),
-                         'nred':(5, 31, 40), 'ngreen':(5, 32, 40), 'ncyan':(5, 36, 40),
-                         'npurple':(5, 35, 40), 'nyellow':(5, 33, 40), 'nwhite':(5, 37, 40)
-                        }
+                          'purple':(0, 35, 40), 'yellow':(0, 33, 40), 'white':(0, 37, 40),
+                          'ured':(4, 31, 40), 'ugreen':(4, 32, 40), 'ucyan':(4, 36, 40),
+                          'upurple':(4, 35, 40), 'uyellow':(4, 33, 40), 'uwhite':(4, 37, 40),
+                          'fred':(5, 31, 40), 'fgreen':(5, 32, 40), 'fcyan':(5, 36, 40),
+                          'fpurple':(5, 35, 40), 'fyellow':(5, 33, 40), 'fwhite':(5, 37, 40),
+                          'nred':(5, 31, 40), 'ngreen':(5, 32, 40), 'ncyan':(5, 36, 40),
+                          'npurple':(5, 35, 40), 'nyellow':(5, 33, 40), 'nwhite':(5, 37, 40)
+                         }
         if format in self.__formats.keys():
             fmt = self.__formats[format]
             self._mod = str(fmt[0]) + ';'                       # display model: [0, 1, 4, 5, 7, 8]
@@ -110,7 +110,9 @@ class PyColor(object):
         New Color.
         """
         self.color = color_str
-        self._format = self.__formats[color_str]
+        self._format = self.magic +\
+                       ';'.join(list(map(str, self.__formats[color_str]))) +\
+                       'm'
 
     def disable(self):
         """
