@@ -7,6 +7,7 @@
 # Algorithm reference from https://sourceforge.net/p/linux-ima/wiki/Home/#ima-measurements
 """
 
+from __future__ import print_function
 import os
 try:
     from commands import getstatusoutput
@@ -17,7 +18,8 @@ from hashlib import sha256
 import binascii
 
 
-__version__ = '1.0'
+__version__ = '1.1'
+__author__ = 'z00369817'
 
 class PyColor(object):
     """Colorful print for terminal
@@ -242,9 +244,10 @@ def check_boot_aggregate(logged_bootaggregate_hash):
     boot_hash = boot_aggregate_hash()
     if boot_hash != logged_bootaggregate_hash:
         boot_flag += 1
-        raise Exception('boot_aggregate hash not identical\n')
+        raise Exception(COLOR.warningcolor + 'boot_aggregate hash not identical\n' +
+                        'check boot aggregate. (failed)' + COLOR.endcolor)
     else:
-        pass
+        print(COLOR.tipcolor + '    boot_aggregate value check (passed).' + COLOR.endcolor)
     return boot_flag
 
 
@@ -264,8 +267,7 @@ def check_filedata_hash(file_hint, filedata_logged_hash):
             #print(color.tipcolor + '    {} (pass)'.format(filename) + color.endcolor)
             pass
     if file_flag == 0:
-        print(COLOR.tipcolor + '    All file data hash value check passed.' \
-              + COLOR.endcolor)
+        print(COLOR.tipcolor + '    All file data hash value check. (passed)' + COLOR.endcolor)
     return file_flag
 
 
@@ -299,7 +301,8 @@ def check_pcr10_value(pcr10):
 
     if pcr10 != gen_pcr10():
         pcr_flag += 1
-        raise Exception('PCR10 not identical, and IMA log has been modified!')
+        raise Exception(COLOR.warningcolor + 'PCR10 not identical, and IMA log has been modified!\n' + 
+                        'check pcr10 value. (failed)' + COLOR.endcolor)
     else:
         print("\033[0;36m    PCR_10: {}".format(pcr10) + COLOR.endcolor)
         print(COLOR.tipcolor +
@@ -307,6 +310,23 @@ def check_pcr10_value(pcr10):
               COLOR.endcolor)
 
     return pcr_flag
+
+
+@printer('INFO')
+def check_hash_alg(ima_log):
+    """Check the IMA Measurement with sha256.
+    """
+    hash_alg_flag = 0
+    filedata_hash_alg = sum([1 for item in ima_log if len(item[1]) == 64])
+    template_hash_alg = sum([1 for item in ima_log if len(item[0]) == 64])
+    if filedata_hash_alg == len(ima_log) and template_hash_alg == len(ima_log):
+        print(COLOR.tipcolor +
+              '    check IMA Measurement hash algorithm is sha256. (passed)' +
+              COLOR.endcolor)
+    else:
+        hash_alg_flag += 1
+        raise Exception(COLOR.warningcolor + 'check IMA Measurement hash algorithm is sha256. (failed)' +
+	                COLOR.endcolor)
 
 
 @printer('INFO')
@@ -334,23 +354,22 @@ def check_ima_measurement(ima_log, pcr10):
     filedata_logged_hash = [item[1] for item in ima_log]
     file_hint = [item[2] for item in ima_log]
 
+    # check hash algorithm is sha256
+    hash_alg_flag = check_hash_alg(ima_log)
+
     # check file data hash
     ## boot_aggregate hash checking
     boot_flag = check_boot_aggregate(filedata_logged_hash[0])
-
     ## IMA policy file data hash checking
     filedata_flag = check_filedata_hash(file_hint, filedata_logged_hash)
-
     ## check template_hash
     template_flag = check_template_hash(template_logged_hash,
                                         filedata_logged_hash,
                                         file_hint)
-
     ## check PCR_10 value
     pcr10_flag = check_pcr10_value(pcr10)
-
     ## check integrity of IMA measurement
-    if boot_flag > 0 or template_flag > 0 or pcr10_flag > 0:
+    if hash_alg_flag > 0 or boot_flag > 0 or template_flag > 0 or pcr10_flag > 0:
         print_check_log()
         return False
     else:
@@ -367,9 +386,11 @@ def main():
     if check_ima_measurement(hashlog, pcr):
         print("[INFO]: result of IMA Measurement checking")
         print("    IMA Integrity Measurement \033[4;32mSucceeded" + COLOR.endcolor)
+	return 0
     else:
         print("[ERROR]: IMA Measurement Result")
         print("    IMA Integrity Measurement \033[4;31m Failed" + COLOR.endcolor)
+	return 127
 
 
 if __name__ == "__main__":
