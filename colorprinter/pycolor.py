@@ -123,7 +123,8 @@ class PyColor(object):
         """
         Convert description of format into format number
         """
-        return self.__formats[color_str]
+        self.color = color_str
+        self.format = self.__formats[color_str]
 
     def colorstr(self, string, color=None):
         """Contert string to colorful format string
