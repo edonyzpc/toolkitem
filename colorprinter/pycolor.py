@@ -132,7 +132,7 @@ class PyColor(object):
         if color is None:
             return self._format + string + self.reset
         else:
-            self._str2fmts(color)
+            self.__str2fmts(color)
             return self._format + string + self.reset
 
 def cprint(color, out_str):
