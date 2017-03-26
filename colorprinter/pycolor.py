@@ -35,9 +35,8 @@
 from __future__ import print_function
 
 class PyColor(object):
-    """ This class is for colored print in the python interpreter!
-    "F3" call Addpy() function to add this class which is defined
-    in the .vimrc for vim Editor."""
+    """Colorful format string in Linux terminal stdout.
+    """
     def __init__(self, format=None):
         self.self_doc = """
         STYLE: \033['display model';'foreground';'background'm
