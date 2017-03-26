@@ -36,9 +36,7 @@ from __future__ import print_function
 
 class PyColor(object):
     """Colorful format string in Linux terminal stdout.
-    """
-    def __init__(self, format=None):
-        self.self_doc = """
+       ------
         STYLE: \033['display model';'foreground';'background'm
         DETAILS:
         FOREGROUND        BACKGOUND       COLOR
@@ -62,9 +60,10 @@ class PyColor(object):
         e.g:
         \033[1;31;40m   <!--1-highlight;31-foreground red;40-background black-->
         \033[0m         <!--set all into default-->
-        """
+    """
+    def __init__(self, fmt=None):
         self.magic = '\033['
-        self.color = format
+        self.color = fmt
         self.__formats = {'red':(0, 31, 40), 'green':(0, 32, 40), 'cyan':(0, 36, 40),
                           'purple':(0, 35, 40), 'yellow':(0, 33, 40), 'white':(0, 37, 40),
                           'ured':(4, 31, 40), 'ugreen':(4, 32, 40), 'ucyan':(4, 36, 40),
@@ -74,11 +73,14 @@ class PyColor(object):
                           'nred':(5, 31, 40), 'ngreen':(5, 32, 40), 'ncyan':(5, 36, 40),
                           'npurple':(5, 35, 40), 'nyellow':(5, 33, 40), 'nwhite':(5, 37, 40)
                          }
-        if format in self.__formats.keys():
+        if fmt in self.__formats.keys():
             fmt = self.__formats[format]
-            self._mod = str(fmt[0]) + ';'                       # display model: [0, 1, 4, 5, 7, 8]
-            self._fg_color = str(fmt[1]) + ';'                  # foreground color: [30, 31, 32, 33, 34, 35, 36, 37]
-            self._bg_color = str(fmt[2]) + 'm'                  # background color: [40m, 41m, 42m, 43m, 44m, 45m, 46m, 47m]
+            # display model: [0, 1, 4, 5, 7, 8]
+            self._mod = str(fmt[0]) + ';'
+            # foreground color: [30, 31, 32, 33, 34, 35, 36, 37]
+            self._fg_color = str(fmt[1]) + ';'
+            # background color: [40m, 41m, 42m, 43m, 44m, 45m, 46m, 47m]
+            self._bg_color = str(fmt[2]) + 'm'
         else:
             self._mod = '0;'
             self._fg_color = '37;'
@@ -92,7 +94,11 @@ class PyColor(object):
         self.reset = '\033[0m'
 
     def __call__(self, func):
+        """decorator for colorful the printed string in terminal
+        """
         def wrapper(fmt_str):
+            """convert printed string into formated colorful string
+            """
             func(self.colorstr(fmt_str))
         return wrapper
 
@@ -140,6 +146,8 @@ def cprint(color, out_str):
     """
     @PyColor(color)
     def printer(out_str):
+        """inner function of standard print wrapper
+        """
         print(out_str)
 
     printer(out_str)
