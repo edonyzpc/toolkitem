@@ -74,13 +74,13 @@ class PyColor(object):
                           'npurple':(5, 35, 40), 'nyellow':(5, 33, 40), 'nwhite':(5, 37, 40)
                          }
         if fmt in self.__formats.keys():
-            fmt = self.__formats[format]
+            fmt_tmp = self.__formats[fmt]
             # display model: [0, 1, 4, 5, 7, 8]
-            self._mod = str(fmt[0]) + ';'
+            self._mod = str(fmt_tmp[0]) + ';'
             # foreground color: [30, 31, 32, 33, 34, 35, 36, 37]
-            self._fg_color = str(fmt[1]) + ';'
+            self._fg_color = str(fmt_tmp[1]) + ';'
             # background color: [40m, 41m, 42m, 43m, 44m, 45m, 46m, 47m]
-            self._bg_color = str(fmt[2]) + 'm'
+            self._bg_color = str(fmt_tmp[2]) + 'm'
         else:
             self._mod = '0;'
             self._fg_color = '37;'
