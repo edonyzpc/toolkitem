@@ -26,17 +26,6 @@ r"""
  # This module is a tool for managing system.
 """
 from __future__ import absolute_import
-#import numpy as np
-#import scipy as sp
-#import math as m
-#import matplotlib as mpl
-#import matplotlib.pyplot as plt
-#from mpl_toolkits.mplot3d import Axes3D as Ax3
-#from scipy import stats as st
-#from matplotlib import cm
-#from packages.filesline.browser import getfiles as GF
-#from packages.filesline.getdirections import GetDirections as GD
-
 import os
 import re
 import hashlib
@@ -47,7 +36,6 @@ import argparse as ap
 from packages.filesline.browser import getdirections as GD
 from kernelclean import KernelClean as KC
 from weather import autoweather as autoweat
-#import pdb
 
 __version__ = '2.0.1'
 __author__ = 'edony'
