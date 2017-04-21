@@ -13,7 +13,7 @@ try:
     from commands import getstatusoutput
 except ImportError:
     from subprocess import getstatusoutput
-from multiprocessing import Process
+#from multiprocessing import Process
 from hashlib import sha256
 import binascii
 
@@ -92,11 +92,9 @@ def init_tss():
     2. Run bash command `tpm2_listpcrs > PCRLIST` to write value of \
        PCR_00 ~ PCR_10 to file named PCRLIST
     """
-    cmd_res = 'resourcemgr > /dev/null'
+    cmd_res = 'resourcemgr > /dev/null &'
     cmd_ls = 'tpm2_listpcrs > PCRLIST'
-    p_res = Process(target=os.system, args=(cmd_res,))
-    p_res.daemon = True
-    p_res.start()
+    os.system(cmd_res)
     stat_ls, output_ls = getstatusoutput(cmd_ls)
     if stat_ls != 0:
         raise Exception('`tpm2_listpcrs > PCRLIST` failed\n')
@@ -142,8 +140,9 @@ def gen_filehash(filename):
     try:
         file_buff = open(filename, 'rb')
         sha256_val.update(file_buff.read())
-    except IOError as err:
-        print(COLOR.new + '    [WARNING]:' + str(err) + ' (skip)')
+    except IOError:
+        #print(COLOR.new + '        [WARNING]:' + str(err) + ' (skip)')
+        return None
     return sha256_val.hexdigest()
 
 
@@ -247,7 +246,7 @@ def check_boot_aggregate(logged_bootaggregate_hash):
         raise Exception(COLOR.warningcolor + 'boot_aggregate hash not identical\n' +
                         'check boot aggregate. (failed)' + COLOR.endcolor)
     else:
-        print(COLOR.tipcolor + '    boot_aggregate value check (passed).' + COLOR.endcolor)
+        print(COLOR.tipcolor + '        boot_aggregate value check (passed).' + COLOR.endcolor)
     return boot_flag
 
 
@@ -256,19 +255,25 @@ def check_filedata_hash(file_hint, filedata_logged_hash):
     """Check the coherence between file data hash value and related value recorded in IMA log.
     """
     file_flag = 0
+    no_file_flag = 0
     for idx, filename in enumerate(file_hint[1:]):
         hash_value = gen_filehash(filename)
-        if hash_value != filedata_logged_hash[idx + 1]:
+        if hash_value is None:
+            no_file_flag += 1
+            print(COLOR.new +
+                  '        [WARNING]: cannot find temporary file : \'{}\''.format(filename) +
+                  ' (skip)' + COLOR.endcolor)
+        elif hash_value != filedata_logged_hash[idx + 1]:
             file_flag += 1
-            print(COLOR.new + \
-                  '    [WARNING]:file hash value is not identical: \'{}\''\
-                  .format(filename) + ' (skip)' + COLOR.endcolor)
+            print(COLOR.new +
+                  '        [WARNING]: file hash value is not identical: \'{}\''.format(filename) +
+                  ' (file changed)' + COLOR.endcolor)
         else:
             #print(color.tipcolor + '    {} (pass)'.format(filename) + color.endcolor)
             pass
-    if file_flag == 0:
-        print(COLOR.tipcolor + '    All file data hash value check. (passed)' + COLOR.endcolor)
-    return file_flag
+    if file_flag == 0 and no_file_flag == 0:
+        print(COLOR.tipcolor + '        All file data hash value check. (passed)' + COLOR.endcolor)
+    return (no_file_flag, file_flag)
 
 
 @printer('INFO')
@@ -281,13 +286,13 @@ def check_template_hash(template_logged_hash, filedata_logged_hash, file_hint):
         if hash_value != template_hash:
             temp_flag += 1
             print(COLOR.new + \
-                  '    [WARNING]:file value of tempalte hash is not identical: \'{}\''\
+                  '        [WARNING]:file value of tempalte hash is not identical: \'{}\''\
                   .format(file_hint[idx]) + ' (skip)' + COLOR.endcolor)
         else:
             #print(color.tipcolor + '    {} (pass)'.format(filename) + color.endcolor)
             pass
     if temp_flag == 0:
-        print(COLOR.tipcolor + '    All file template hash value checked. (passed)' \
+        print(COLOR.tipcolor + '        All file template hash value checked. (passed)' \
               + COLOR.endcolor)
 
     return temp_flag
@@ -301,19 +306,20 @@ def check_pcr10_value(pcr10):
 
     if pcr10 != gen_pcr10():
         pcr_flag += 1
-        raise Exception(COLOR.warningcolor + 'PCR10 not identical, and IMA log has been modified!\n' + 
+        raise Exception(COLOR.warningcolor +
+                        'PCR10 not identical, and IMA log has been modified!\n' +
                         'check pcr10 value. (failed)' + COLOR.endcolor)
     else:
-        print("\033[0;36m    PCR_10: {}".format(pcr10) + COLOR.endcolor)
+        print("\033[0;36m        Generate value of PCR_10: {}".format(pcr10) + COLOR.endcolor)
         print(COLOR.tipcolor +
-              '    PCR_10 value in TPM Register is identical with IMA measurement. (passed)' +
+              '        PCR_10 value in TPM is identical with record of IMA log. (passed)' +
               COLOR.endcolor)
 
     return pcr_flag
 
 
 @printer('INFO')
-def check_hash_alg(ima_log):
+def check_hash_algorithm(ima_log):
     """Check the IMA Measurement with sha256.
     """
     hash_alg_flag = 0
@@ -321,22 +327,26 @@ def check_hash_alg(ima_log):
     template_hash_alg = sum([1 for item in ima_log if len(item[0]) == 64])
     if filedata_hash_alg == len(ima_log) and template_hash_alg == len(ima_log):
         print(COLOR.tipcolor +
-              '    check IMA Measurement hash algorithm is sha256. (passed)' +
+              '        check IMA Measurement hash algorithm is sha256. (passed)' +
               COLOR.endcolor)
     else:
         hash_alg_flag += 1
-        raise Exception(COLOR.warningcolor + 'check IMA Measurement hash algorithm is sha256. (failed)' +
-	                COLOR.endcolor)
+        raise Exception(COLOR.warningcolor +
+                        'check IMA Measurement hash algorithm is sha256. (failed)' +
+                        COLOR.endcolor)
+    return hash_alg_flag
 
 
 @printer('INFO')
-def print_ima_integrity(flag):
+def check_ima_integrity(flag):
     """Print IMA Intergrity Measurement checking info.
     """
-    print(COLOR.tipcolor + '    IMA Integrity Measurement checked. (passed)')
-    print('    In checking process, we get ' + COLOR.warningcolor +
-          '{} '.format(flag) + COLOR.tipcolor +
-          'filedata hash warning.' + COLOR.endcolor)
+    print(COLOR.tipcolor + '        IMA Integrity Measurement checked. (passed)')
+    print('        In checking process, we get ' + COLOR.warningcolor +
+          '{} '.format(flag[0] + flag[1]) + COLOR.tipcolor +
+          'filedata hash warning, including ' + COLOR.warningcolor +
+          '{} '.format(flag[1]) + COLOR.tipcolor + 'files are changed!' +
+          COLOR.endcolor)
 
 
 @printer('ERROR')
@@ -355,7 +365,7 @@ def check_ima_measurement(ima_log, pcr10):
     file_hint = [item[2] for item in ima_log]
 
     # check hash algorithm is sha256
-    hash_alg_flag = check_hash_alg(ima_log)
+    hash_alg_flag = check_hash_algorithm(ima_log)
 
     # check file data hash
     ## boot_aggregate hash checking
@@ -373,7 +383,7 @@ def check_ima_measurement(ima_log, pcr10):
         print_check_log()
         return False
     else:
-        print_ima_integrity(filedata_flag)
+        check_ima_integrity(filedata_flag)
         return True
 
 
@@ -384,13 +394,15 @@ def main():
     pcr = get_pcrs()[PCR_LABL[10]]
     hashlog = get_hashlog()
     if check_ima_measurement(hashlog, pcr):
-        print("[INFO]: result of IMA Measurement checking")
-        print("    IMA Integrity Measurement \033[4;32mSucceeded" + COLOR.endcolor)
-	return 0
+        print('[INFO]: result of IMA Measurement checking')
+        print('        IMA Integrity Measurement \033[4;32mSucceeded' + COLOR.endcolor)
+        os.system('rm -irf PCRLIST')
+        return 0
     else:
-        print("[ERROR]: IMA Measurement Result")
-        print("    IMA Integrity Measurement \033[4;31m Failed" + COLOR.endcolor)
-	return 127
+        print('[ERROR]: IMA Measurement Result')
+        print('    IMA Integrity Measurement \033[4;31m Failed' + COLOR.endcolor)
+        os.system('rm -irf PCRLIST')
+        return 127
 
 
 if __name__ == "__main__":
