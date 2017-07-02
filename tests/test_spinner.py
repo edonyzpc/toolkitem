@@ -2,7 +2,8 @@ from __future__ import print_function
 import sys
 sys.path.append('./')
 import time
-from spinner.spinner import make_spin, BOX1
+import pytest
+from spinner.spinner import make_spin, BOX1, Spinner
 
 
 class TestClass(object):
@@ -13,3 +14,10 @@ class TestClass(object):
 
         print("Downloading a youtube video, it would cost much time.")
         demo()
+
+    def test_Spinner(self):
+        spin = Spinner(BOX1)
+        assert spin.current() == u'⠋'
+        assert spin.next() == u'⠙'
+        spin.reset()
+        assert spin.position == 0
