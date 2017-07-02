@@ -7,4 +7,5 @@ __all__ = ['gitmgr',
            'updatesys',
            'planner',
            'colorprinter',
-           'other']
+           'other',
+           'spinner']
