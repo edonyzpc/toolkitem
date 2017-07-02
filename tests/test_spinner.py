@@ -18,6 +18,7 @@ class TestClass(object):
     def test_Spinner(self):
         spin = Spinner(BOX1)
         assert spin.current() == u'⠋'
-        assert spin.next() == u'⠙'
+        spin.next()
+        assert spin.position == 1
         spin.reset()
         assert spin.position == 0
