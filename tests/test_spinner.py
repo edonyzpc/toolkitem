@@ -1,3 +1,4 @@
+# encoding: utf-8
 from __future__ import print_function
 import sys
 sys.path.append('./')
@@ -5,6 +6,10 @@ import time
 import pytest
 from spinner.spinner import make_spin, BOX1, Spinner
 
+try:
+    SPINSTR = unicode
+except:
+    SPINSTR = str
 
 class TestClass(object):
     def test_make_spin(self):
@@ -17,7 +22,7 @@ class TestClass(object):
 
     def test_Spinner(self):
         spin = Spinner(BOX1)
-        assert spin.current() == u'⠋'
+        assert SPINSTR(spin.current()) == u'⠋'
         spin.next()
         assert spin.position == 1
         spin.reset()
