@@ -4,7 +4,7 @@ import sys
 sys.path.append('./')
 import time
 import pytest
-from spinner.spinner import make_spin, BOX1, Spinner
+from spinner.spinner import spinner, BOX1, Spinner
 
 try:
     SPINSTR = unicode
@@ -12,8 +12,8 @@ except:
     SPINSTR = str
 
 class TestClass(object):
-    def test_make_spin(self):
-        @make_spin(BOX1, "Download youtube video")
+    def test_spinner(self):
+        @spinner(BOX1, "Download youtube video")
         def demo():
             time.sleep(5)
 
