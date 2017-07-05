@@ -60,7 +60,7 @@ class Spinner(object):
                     print(SPINSTR("\r{0}    {1} ").format(self.words, self.next()), end="")
                     sys.stdout.flush()
                     time.sleep(0.15)
-                print("\r{0}.....{1}".format(self.words, "[Done]"), end="\n")
+                print(SPINSTR("\r{0}.....{1}").format(self.words, "[Done]"), end="\n")
             return future.result()
         return wrapper
 
@@ -80,7 +80,7 @@ def spinner(words="", spin_style=DEFAULT, ending="\n"):
                     print(SPINSTR("\r{0}    {1} ").format(words, spinner.next()), end="")
                     sys.stdout.flush()
                     time.sleep(0.15)
-                print("\r{0}.....{1}".format(words, "[Done]"), end=ending)
+                print(SPINSTR("\r{0}.....{1}").format(words, "[Done]"), end=ending)
             return future.result()
         return wrapper
     return decorator

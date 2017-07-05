@@ -13,7 +13,7 @@ except:
 
 class TestClass(object):
     def test_spinner(self):
-        @spinner(BOX1, "Download youtube video")
+        @spinner("Download youtube video")
         def demo():
             time.sleep(5)
 
@@ -21,7 +21,7 @@ class TestClass(object):
         demo()
 
     def test_Spinner(self):
-        spin = Spinner(BOX1)
+        spin = Spinner("test_Spinner")
         assert SPINSTR(spin.current()) == u'⠋'
         spin.next()
         assert spin.position == 1
