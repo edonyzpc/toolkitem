@@ -396,12 +396,14 @@ def main():
     if check_ima_measurement(hashlog, pcr):
         print('[INFO]: result of IMA Measurement checking')
         print('        IMA Integrity Measurement \033[4;32mSucceeded' + COLOR.endcolor)
-        os.system('rm -irf PCRLIST')
+        if os.path.isfile("./PCRLIST"):
+            os.system('rm -irf PCRLIST')
         return 0
     else:
         print('[ERROR]: IMA Measurement Result')
         print('    IMA Integrity Measurement \033[4;31m Failed' + COLOR.endcolor)
-        os.system('rm -irf PCRLIST')
+        if os.path.isfile("./PCRLIST"):
+            os.system('rm -irf PCRLIST')
         return 127
 
 
