@@ -23,9 +23,10 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
     - [ ] delete syntax format(`*.md`,`*.rst` and so on) and get the plain text file.   ====>  `fileparser`
     - [ ] personal defined text handler for text process.  ====>  `texthandler`
 - Git REPOS TOOLS
-    - [ ] git repository management tools. ====> `gitmgr`
+    - [x] git repository management tools. ====> `gitmgr`
 - PYTHON FORMAT PRINT TOOLS
-    - [ ] make terminal standard output colorful. ====> `colorprinter`
+    - [x] make terminal standard output colorful. ====> `colorprinter`
+    - [x] python progress bar simulating npm. ====> `spinner`
 - SOURCE CODE MANAGEMENT TOOLS
     - [x] update system for preparation and update the git repositroies  ====>  `updatesys`
 - PYTHON SPEEDER TOOLS
