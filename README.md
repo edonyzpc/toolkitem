@@ -30,7 +30,7 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
 - SOURCE CODE MANAGEMENT TOOLS
     - [x] update system for preparation and update the git repositroies  ====>  `updatesys`
 - PYTHON SPEEDER TOOLS
-    - [ ] quick importer. ====> `qkimporter`
+    - [ ] not decided
 - MULTIPROCESS SPEEDUP TOOLS
     - [ ] multi-jobs running tools. ====> `scheduler`
 - OTHER TOOLS
