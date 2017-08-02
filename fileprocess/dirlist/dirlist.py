@@ -87,6 +87,7 @@ class PyColor(object):
         self.warningcolor = ''
         self.endcolor = ''
 
+
 class DirList(object):
     """ list the directory recursively and
         get all directories including all sub-directories
@@ -96,7 +97,7 @@ class DirList(object):
         """ initialize `DirList' with root `rootpath'
         """
         self.root = rootpath
-        self.dl = {}
+        self.dirlist = {}
         # buffer for multiprocess speedup directory walking
         self._dl_buf = []
         self._listdir()
@@ -105,21 +106,34 @@ class DirList(object):
         """ list root path recursively including sub-directories
         """
         if path is not None:
-            for root_, dir, file in os.walk(path):
+            for root_, dir_, file_ in os.walk(path):
                 dir_ctx = []
-                dir_ctx.insert(0, file)
-                dir_ctx.insert(0, dir)
+                dir_ctx.insert(0, file_)
+                dir_ctx.insert(0, dir_)
                 buf_dl = {}
                 buf_dl[root_] = dir_ctx
                 self._dl_buf.insert(0, buf_dl)
         else:
-            for root_, dir, file in os.walk(self.root):
+            for root_, dir_, file_ in os.walk(self.root):
                 dir_ctx = []
-                dir_ctx.insert(0, file)
-                dir_ctx.insert(0, dir)
-                self.dl[root_] = dir_ctx
+                dir_ctx.insert(0, file_)
+                dir_ctx.insert(0, dir_)
+                self.dirlist[root_] = dir_ctx
+
+    @staticmethod
+    def getattr(path):
+        """ fetch the `path' attribute
+        """
+        types = ['DIR', 'FILE', 'LINK', 'OTHERS']
+        if os.path.isdir(path):
+            return types[0]
+        elif os.path.isfile(path):
+            return types[1]
+        elif os.path.islink(path):
+            return types[2]
+        return types[3]
 
 
 if __name__ == "__main__":
-    dir = DirList("/Users/edony/coding/toolkitem")
-    print(dir.dl)
+    OBJ = DirList("/Users/edony/coding/toolkitem")
+    print(OBJ.dirlist)
