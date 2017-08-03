@@ -33,6 +33,10 @@
 #from matplotlib import cm
 #import numpy as np
 import os
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -133,7 +137,18 @@ class DirList(object):
             return types[2]
         return types[3]
 
+    def serial(self, storage_file):
+        """ serialize the instance
+        """
+        with open(storage_file, 'wb') as filebuf:
+            pickle.dump(self, filebuf, 0)
 
 if __name__ == "__main__":
     OBJ = DirList("/Users/edony/coding/toolkitem")
     print(OBJ.dirlist)
+    OBJ.serial("./buf.bin")
+    del OBJ
+    with open("./buf.bin", "r") as filebuf:
+        OBJ = pickle.load(filebuf)
+        print(OBJ.root)
+        print(len(OBJ.dirlist))
