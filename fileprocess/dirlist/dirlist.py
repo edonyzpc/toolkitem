@@ -33,10 +33,22 @@
 #from matplotlib import cm
 #import numpy as np
 import os
+import sys
+import base64
+from cryptography.fernet import Fernet
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
+if sys.version_info.major == 2:
+    def bstr(*kargs, **kwargs):
+        return str(*kargs, **kwargs)
+if sys.version_info.major == 3:
+    def bstr(*kargs, **kwargs):
+        return bytes(encoding='utf-8', *kargs, **kwargs)
 
 class PyColor(object):
     """ This class is for colored print in the python interpreter!
@@ -105,6 +117,9 @@ class DirList(object):
         # buffer for multiprocess speedup directory walking
         self._dl_buf = []
         self._listdir()
+        # choose highest pickle protocol type
+        self.protocol = pickle.HIGHEST_PROTOCOL
+        self.__shawodkey = b''
 
     def _listdir(self, path=None):
         """ list root path recursively including sub-directories
@@ -137,18 +152,56 @@ class DirList(object):
             return types[2]
         return types[3]
 
-    def serial(self, storage_file):
+    @staticmethod
+    def shadow_key(key):
+        """ shadow the key
+        """
+        salt = os.urandom(16)
+        kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32,
+                         salt=b'', iterations=100000,
+                         backend=default_backend())
+        return base64.urlsafe_b64encode(kdf.derive(key))
+
+    @staticmethod
+    def enc_bytes(pwd, ctx_bytes):
+        """ encrypt python bytes with pwd by using cryptography package
+        """
+        shadowkey = DirList.shadow_key(pwd)
+        f = Fernet(shadowkey)
+        return f.encrypt(ctx_bytes)
+
+    @staticmethod
+    def dec_bytes(pwd, ctx_bytes):
+        """ decrypt python bytes with pwd by using cryptography package
+        """
+        shadowkey = DirList.shadow_key(pwd)
+        f = Fernet(shadowkey)
+        return f.decrypt(ctx_bytes)
+
+    def serial(self, pwd, storage_file):
         """ serialize the instance
         """
+        # dump the object
+        bytestream = pickle.dumps(self, self.protocol)
+        # do some encryption
+        enc_bytes = self.enc_bytes(bstr(pwd), bytestream)
         with open(storage_file, 'wb') as filebuf:
-            pickle.dump(self, filebuf, 0)
+            filebuf.write(enc_bytes)
+
+    @staticmethod
+    def unserail(pwd, storage_file):
+        """ unserialize the instance
+        """
+        with open(storage_file, 'rb') as filebuf:
+            bytestream_ = filebuf.read()
+            bytestream = DirList.dec_bytes(bstr(pwd), bytestream_)
+            print(bytestream)
+            return pickle.loads(bytestream)
+
 
 if __name__ == "__main__":
     OBJ = DirList("/Users/edony/coding/toolkitem")
-    print(OBJ.dirlist)
-    OBJ.serial("./buf.bin")
+    OBJ.serial('123!QAZ', "./buf.bin")
     del OBJ
-    with open("./buf.bin", "r") as filebuf:
-        OBJ = pickle.load(filebuf)
-        print(OBJ.root)
-        print(len(OBJ.dirlist))
+    OBJ = DirList.unserail('123!QAZ', "./buf.bin")
+    print(OBJ.dirlist)
