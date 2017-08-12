@@ -24,16 +24,7 @@
  # Description: All Rights Are Reserved
  #
 """
-#import scipy as sp
-#import math as m
-#import matplotlib as mpl
-#import matplotlib.pyplot as plt
-#from mpl_toolkits.mplot3d import Axes3D as Ax3
-#from scipy import stats as st
-#from matplotlib import cm
-#import numpy as np
 import os
-import sys
 import base64
 from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
@@ -41,13 +32,15 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 try:
     import cPickle as pickle
+    def bstr(*kargs, **kwargs):
+        """ bytes convertor function of python2.x
+        """
+        return str(*kargs, **kwargs)
 except ImportError:
     import pickle
-if sys.version_info.major == 2:
     def bstr(*kargs, **kwargs):
-        return str(*kargs, **kwargs)
-if sys.version_info.major == 3:
-    def bstr(*kargs, **kwargs):
+        """ bytes convertor function of python3.x with default utf-8 encoding
+        """
         return bytes(encoding='utf-8', *kargs, **kwargs)
 
 class PyColor(object):
@@ -139,6 +132,12 @@ class DirList(object):
                 dir_ctx.insert(0, dir_)
                 self.dirlist[root_] = dir_ctx
 
+    def _slistdir(self):
+        """ speedup list root path recursively including sub-directories
+        """
+        # TODO
+        pass
+
     @staticmethod
     def getattr(path):
         """ fetch the `path' attribute
@@ -156,7 +155,6 @@ class DirList(object):
     def shadow_key(key):
         """ shadow the key
         """
-        salt = os.urandom(16)
         kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32,
                          salt=b'', iterations=100000,
                          backend=default_backend())
@@ -167,16 +165,14 @@ class DirList(object):
         """ encrypt python bytes with pwd by using cryptography package
         """
         shadowkey = DirList.shadow_key(pwd)
-        f = Fernet(shadowkey)
-        return f.encrypt(ctx_bytes)
+        return Fernet(shadowkey).encrypt(ctx_bytes)
 
     @staticmethod
     def dec_bytes(pwd, ctx_bytes):
         """ decrypt python bytes with pwd by using cryptography package
         """
         shadowkey = DirList.shadow_key(pwd)
-        f = Fernet(shadowkey)
-        return f.decrypt(ctx_bytes)
+        return Fernet(shadowkey).decrypt(ctx_bytes)
 
     def serial(self, pwd, storage_file):
         """ serialize the instance
