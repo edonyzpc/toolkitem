@@ -35,7 +35,7 @@ except ImportError:
 from gitmgr import syncrepo
 
 class TestClass:
-    def test_haslocalupstream(self):
+    def test_has_local_upstream(self):
         assert False == syncrepo.has_local_upstream()
 
     def test_sync_up2master(self):
@@ -57,3 +57,7 @@ class TestClass:
         os.chdir("/home")
         with pytest.raises(Exception):
             syncrepo.add_upstream('https://github.com/edonyM/toolkitem.git')
+
+    def test_sync_up2master(self):
+        with pytest.raises(Exception) as err:
+            syncrepo.sync_up2master()

@@ -1,5 +1,5 @@
 Project Directory List
-
+---
 ## Goal
 
 Start from the root directory that is given by the caller and crawl the directory recursivley whcih will be record into the database.
@@ -15,7 +15,7 @@ Start from the root directory that is given by the caller and crawl the director
 
 * Builtin module `multiprocess` hash the methods to create a process pool executing some operation
 
-* A proper scanning method to walk through all of the sub-directories `DFS`
+* A proper scanning method to walk through all of the sub-directories `os.walk`
 
 * ADT for engieering purpose
 
@@ -23,7 +23,7 @@ Start from the root directory that is given by the caller and crawl the director
 
 ## API
 
-* DFS algorithm scan the directory
+* `os.walk` algorithm scan the directory
 
 * Data Abstract Type of directory
 
