@@ -35,7 +35,15 @@ except ImportError:
 from gitmgr import syncrepo
 
 class TestClass:
-    def test_has_local_upstream(self):
+    def test_has_local_upstream_0(self):
+        assert False == syncrepo.has_local_upstream()
+
+    def test_has_local_upstream_1(self):
+        os.system('cd ~/')
+        assert False == syncrepo.has_local_upstream()
+
+    def test_has_local_upstream_2(self):
+        os.system('cd ~/coding/anth')
         assert False == syncrepo.has_local_upstream()
 
     def test_sync_up2master(self):
