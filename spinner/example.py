@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# example to use spinner
+"""
 from __future__ import absolute_import, print_function
 
 import time
@@ -21,3 +23,4 @@ if __name__ == '__main__':
     demo()
     demo1()
     #print("Download success!")
+"""
