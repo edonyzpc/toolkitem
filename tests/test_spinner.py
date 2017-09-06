@@ -27,3 +27,12 @@ class TestClass(object):
         assert spin.position == 1
         spin.reset()
         assert spin.position == 0
+
+    def test_Spinner_call(self):
+        spin = Spinner("test_Spinner_call")
+        def demo():
+            time.sleep(5)
+
+        demo = spin.__call__(demo)
+        print("Downloading a youtube video, it would cost much time.")
+        demo()
