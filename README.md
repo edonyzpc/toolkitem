@@ -50,3 +50,6 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
 ### P.S.
 ------
 [Develop Path](./DEVELOP.md)
+
+### Status
+![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg)
