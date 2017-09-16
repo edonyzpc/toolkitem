@@ -24,8 +24,12 @@ r"""
  # Description: All Rights Are Reserved
  #
 """
-from dirlist.dirlist import DirList
+import sys
+import os
+from dirlist import DirList
 
 if __name__ == "__main__":
     tmp = DirList('/Users/edony/coding/toolkitem')
     print(tmp.dirlist)
+    print(sys.path)
+    print(os.path.split(os.path.realpath(__file__)))

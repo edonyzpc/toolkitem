@@ -1,1 +1,3 @@
-__all__ = ['dirlist']
+__all__ = ['dirlist', 'DirList']
+
+from dirlist.dirlist import DirList
