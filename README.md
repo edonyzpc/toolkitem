@@ -33,7 +33,7 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
     - [x] make terminal standard output colorful. ====> `colorprinter`
     - [x] python progress bar simulating npm. ====> `spinner`
 - SOURCE CODE MANAGEMENT TOOLS
-    - [x] update system for preparation and update the git repositroies  ====>  `updatesys` s
+    - [x] update system for preparation and update the git repositroies  ====>  `updatesys`
 - MULTIPROCESS SPEEDUP TOOLS
     - [ ] multi-jobs running tools. ====> `scheduler`
 - OTHER TOOLS
@@ -48,6 +48,8 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
     - [ ] blog writing template generater tools and hexo management tools. ====> `blogger`
     - [ ] tools for cross developing with c and python. ====> `swiger`
     - [ ] auto reminder tools for checking new emails. ====> `mail`
+- DEPLOY TOOLKITEM TO PYPI
+    - [ ] deploy `spinner` to PyPi
 
 ### P.S.
 ------
