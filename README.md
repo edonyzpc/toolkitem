@@ -23,7 +23,7 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
 
 - FILE PROCESS TOOLS
     - [x] get all the directories and files in the root path and its sub-directories ====> `filesprocess/dirlist`
-    - [ ] count number of lines in direction files  ====>  `filesprocess/filesline`
+    - [x] count number of lines in direction files  ====>  `filesprocess/filesline`
     - [ ] mark up the files different lines(if they have) and write them into buffer  ====>  `mergefile`
     - [ ] delete syntax format(`*.md`,`*.rst` and so on) and get the plain text file.   ====>  `fileparser`
     - [ ] personal defined text handler for text process.  ====>  `texthandler`
@@ -33,9 +33,7 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
     - [x] make terminal standard output colorful. ====> `colorprinter`
     - [x] python progress bar simulating npm. ====> `spinner`
 - SOURCE CODE MANAGEMENT TOOLS
-    - [x] update system for preparation and update the git repositroies  ====>  `updatesys`
-- PYTHON SPEEDER TOOLS
-    - [ ] not decided
+    - [x] update system for preparation and update the git repositroies  ====>  `updatesys` s
 - MULTIPROCESS SPEEDUP TOOLS
     - [ ] multi-jobs running tools. ====> `scheduler`
 - OTHER TOOLS
