@@ -22,7 +22,8 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
 ----
 
 - FILE PROCESS TOOLS
-    - [ ] count number of lines in direction files  ====>  `filesline`
+    - [x] get all the directories and files in the root path and its sub-directories ====> `filesprocess/dirlist`
+    - [ ] count number of lines in direction files  ====>  `filesprocess/filesline`
     - [ ] mark up the files different lines(if they have) and write them into buffer  ====>  `mergefile`
     - [ ] delete syntax format(`*.md`,`*.rst` and so on) and get the plain text file.   ====>  `fileparser`
     - [ ] personal defined text handler for text process.  ====>  `texthandler`
