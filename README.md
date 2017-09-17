@@ -4,6 +4,10 @@
 |**[develop]**|[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=develop)](https://travis-ci.org/edonyM/toolkitem)|[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)|
 |**[publish]**|[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=publish)](https://travis-ci.org/edonyM/toolkitem)|[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/publish/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)|
 
+![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg)
+
+![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg)
+
 ## toolkitem
 
 ----
@@ -46,11 +50,6 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
     - [ ] tools for cross developing with c and python. ====> `swiger`
     - [ ] auto reminder tools for checking new emails. ====> `mail`
 
-
-### Status
-![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg)![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg)
-
 ### P.S.
 ------
 [Develop Path](./DEVELOP.md)
-
