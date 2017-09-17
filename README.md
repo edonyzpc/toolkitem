@@ -47,6 +47,10 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
     - [ ] auto reminder tools for checking new emails. ====> `mail`
 
 
+### Status
+![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg)![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg)
+
 ### P.S.
 ------
 [Develop Path](./DEVELOP.md)
+
