@@ -36,12 +36,25 @@ class FilesLine(DirList):
         self.filesline = 0
 
     def sum_lines(self):
-        pass
+        # TODO(edony): optimize algorithm of sum_lines method
+        filesname = []
+        for item_dir in self.dirlist.keys():
+            for item_file in self.dirlist[item_dir][1]:
+                filesname.append(item_dir + '/' + item_file)
+        for filename in filesname:
+            with open(filename, 'rb') as filebuf:
+                self.filesline += len(filebuf.readlines())
+
+        return self.filesline
 
 if __name__ == "__main__":
+    import time
     tmp = DirList('/Users/edony/coding/toolkitem')
     #print(tmp.dirlist)
     #print(sys.path)
     #print(os.path.split(os.path.realpath(__file__)))
     tmp1 = FilesLine('/Users/edony/coding/toolkitem')
     print(tmp1.dirlist)
+    print(time.time())
+    tmp1.sum_lines()
+    print(time.time())
