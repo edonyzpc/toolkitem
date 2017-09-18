@@ -143,10 +143,11 @@ class DirList(object):
             print(bytestream)
             return pickle.loads(bytestream)
 
-
+""" comment this line to test with __main__
 if __name__ == "__main__":
     OBJ = DirList("/Users/edony/coding/toolkitem")
     OBJ.serial('123!QAZ', "./buf.bin")
     del OBJ
     OBJ = DirList.unserail('123!QAZ', "./buf.bin")
     print(OBJ.dirlist)
+comment this line to test with __main__ """

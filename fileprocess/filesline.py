@@ -47,6 +47,7 @@ class FilesLine(DirList):
 
         return self.filesline
 
+""" comment this line to test with __main__
 if __name__ == "__main__":
     import time
     tmp = DirList('/Users/edony/coding/toolkitem')
@@ -58,3 +59,4 @@ if __name__ == "__main__":
     print(time.time())
     tmp1.sum_lines()
     print(time.time())
+comment this line to test with __main__ """
