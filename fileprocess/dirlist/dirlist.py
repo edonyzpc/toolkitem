@@ -63,14 +63,17 @@ class DirList(object):
     def _listdir(self, path=None):
         """ list root path recursively including sub-directories
         """
-        if path is not None:
-            for root_, dir_, file_ in os.walk(path):
-                dir_ctx = []
-                dir_ctx.insert(0, file_)
-                dir_ctx.insert(0, dir_)
-                buf_dl = {}
-                buf_dl[root_] = dir_ctx
-                self._dl_buf.insert(0, buf_dl)
+        if self.root is None:
+            if path is not None:
+                for root_, dir_, file_ in os.walk(path):
+                    dir_ctx = []
+                    dir_ctx.insert(0, file_)
+                    dir_ctx.insert(0, dir_)
+                    buf_dl = {}
+                    buf_dl[root_] = dir_ctx
+                    self._dl_buf.insert(0, buf_dl)
+            else:
+                raise Exception("Error DirList class initialize")
         else:
             for root_, dir_, file_ in os.walk(self.root):
                 dir_ctx = []
