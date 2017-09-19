@@ -1,4 +1,4 @@
-<table>
+<!--<table>
 <thead>
 <tr>
 <th align="center">Branchs</th>
@@ -26,6 +26,36 @@
 </tr>
 <tr>
 <td colspan="4" align="center">![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg)<br><b><i>COVERAGE SUNBURST</i></b></br></td></tr></tbody></table>
+-->
+
+<table>
+<thead>
+<tr>
+<th align="center">Branchs</th>
+<th align="center">CI</th>
+<th align="center">Code Qulity</th>
+<th align="center">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><strong><i>[master]</i></strong></td>
+<td align="center"><a href="https://travis-ci.org/edonyM/toolkitem"><img src="https://travis-ci.org/edonyM/toolkitem.svg?branch=master" alt="Build Status"></a></td>
+<td align="center"><a href="https://codecov.io/gh/edonyM/toolkitem"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/master/graph/badge.svg" alt="codecov"></a></td>
+<td rowspan="3"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg" alt="develop branch"></td>
+</tr>
+<tr>
+<td align="left"><strong><i>[develop]</i></strong></td>
+<td align="center"><a href="https://travis-ci.org/edonyM/toolkitem"><img src="https://travis-ci.org/edonyM/toolkitem.svg?branch=develop" alt="Build Status"></a></td>
+<td align="center"><a href="https://codecov.io/gh/edonyM/toolkitem"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graph/badge.svg" alt="codecov"></a></td>
+</tr>
+<tr>
+<td align="left"><strong><i>[publish]</i></strong></td>
+<td align="center"><a href="https://travis-ci.org/edonyM/toolkitem"><img src="https://travis-ci.org/edonyM/toolkitem.svg?branch=publish" alt="Build Status"></a></td>
+<td align="center"><a href="https://codecov.io/gh/edonyM/toolkitem"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/publish/graph/badge.svg" alt="codecov"></a></td>
+</tr>
+<tr>
+<td colspan="4" align="center"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg" alt="develop branch"><br><b><i>COVERAGE SUNBURST</i></b><br></td></tr></tbody></table>
 
 
 ## toolkitem
