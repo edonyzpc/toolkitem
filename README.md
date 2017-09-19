@@ -9,23 +9,24 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><strong>[master]</strong></td>
-<td align="center"><a href="https://travis-ci.org/edonyM/toolkitem"><img src="https://camo.githubusercontent.com/b87a6f1695a15aef21fd6103523a0e01ccf58e48/68747470733a2f2f7472617669732d63692e6f72672f65646f6e794d2f746f6f6c6b6974656d2e7376673f6272616e63683d6d6173746572" alt="Build Status" data-canonical-src="https://travis-ci.org/edonyM/toolkitem.svg?branch=master" style="max-width:100%;"></a></td>
-<td align="center"><a href="https://codecov.io/gh/edonyM/toolkitem"><img src="https://camo.githubusercontent.com/d72d796d9ad6dcee49acffe877713e00d13331f0/68747470733a2f2f636f6465636f762e696f2f67682f65646f6e794d2f746f6f6c6b6974656d2f6272616e63682f6d61737465722f67726170682f62616467652e737667" alt="codecov" data-canonical-src="https://codecov.io/gh/edonyM/toolkitem/branch/master/graph/badge.svg" style="max-width:100%;"></a></td>
-<td rowspan="3"><a href="https://camo.githubusercontent.com/03f43907114382c0a6c68511949c084a4c77d0c7/68747470733a2f2f636f6465636f762e696f2f67682f65646f6e794d2f746f6f6c6b6974656d2f6272616e63682f646576656c6f702f6772617068732f73756e62757273742e737667" ><img src="https://camo.githubusercontent.com/03f43907114382c0a6c68511949c084a4c77d0c7/68747470733a2f2f636f6465636f762e696f2f67682f65646f6e794d2f746f6f6c6b6974656d2f6272616e63682f646576656c6f702f6772617068732f73756e62757273742e737667" alt="develop branch" data-canonical-src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg" style="max-width:100%;"></a></td>
+<td align="left"><strong><i>[master]</strong></i></td>
+<td align="center">[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=master)](https://travis-ci.org/edonyM/toolkitem)</td>
+<td align="center">[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/master/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)</td>
+<td rowspan="3">![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg)</td>
 </tr>
 <tr>
-<td align="left"><strong>[develop]</strong></td>
-<td align="center"><a href="https://travis-ci.org/edonyM/toolkitem"><img src="https://camo.githubusercontent.com/a8ab84037a20a976b9668ee34c0dbc8b2abe4968/68747470733a2f2f7472617669732d63692e6f72672f65646f6e794d2f746f6f6c6b6974656d2e7376673f6272616e63683d646576656c6f70" alt="Build Status" data-canonical-src="https://travis-ci.org/edonyM/toolkitem.svg?branch=develop" style="max-width:100%;"></a></td>
-<td align="center"><a href="https://codecov.io/gh/edonyM/toolkitem"><img src="https://camo.githubusercontent.com/7c59992059714bf2feedd6daf0d95f6d516aeb4c/68747470733a2f2f636f6465636f762e696f2f67682f65646f6e794d2f746f6f6c6b6974656d2f6272616e63682f646576656c6f702f67726170682f62616467652e737667" alt="codecov" data-canonical-src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graph/badge.svg" style="max-width:100%;"></a></td>
+<td align="left"><strong><i>[develop]</i></strong></td>
+<td align="center">[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=develop)](https://travis-ci.org/edonyM/toolkitem)</td>
+<td align="center">[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)</td>
 </tr>
 <tr>
-<td align="left"><strong>[publish]</strong></td>
-<td align="center"><a href="https://travis-ci.org/edonyM/toolkitem"><img src="https://camo.githubusercontent.com/703a04bc3393ba9a5ae925f7a3c153dd8686d29d/68747470733a2f2f7472617669732d63692e6f72672f65646f6e794d2f746f6f6c6b6974656d2e7376673f6272616e63683d7075626c697368" alt="Build Status" data-canonical-src="https://travis-ci.org/edonyM/toolkitem.svg?branch=publish" style="max-width:100%;"></a></td>
-<td align="center"><a href="https://codecov.io/gh/edonyM/toolkitem"><img src="https://camo.githubusercontent.com/61e658e6369fe8237490751900d3361f49b3afd7/68747470733a2f2f636f6465636f762e696f2f67682f65646f6e794d2f746f6f6c6b6974656d2f6272616e63682f7075626c6973682f67726170682f62616467652e737667" alt="codecov" data-canonical-src="https://codecov.io/gh/edonyM/toolkitem/branch/publish/graph/badge.svg" style="max-width:100%;"></a></td>
-</tr><tr><td colspan="4"><a href="https://camo.githubusercontent.com/1a839472839655b75aaa3b428af6000b2797c790/68747470733a2f2f636f6465636f762e696f2f67682f65646f6e794d2f746f6f6c6b6974656d2f6272616e63682f646576656c6f702f6772617068732f636f6d6d6974732e737667"><img src="https://camo.githubusercontent.com/1a839472839655b75aaa3b428af6000b2797c790/68747470733a2f2f636f6465636f762e696f2f67682f65646f6e794d2f746f6f6c6b6974656d2f6272616e63682f646576656c6f702f6772617068732f636f6d6d6974732e737667" alt="develop branch" data-canonical-src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg" style="max-width:100%;"></a></td></tr></tbody></table>
+<td align="left"><strong><i>[publish]</i></strong></td>
+<td align="center">[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=publish)](https://travis-ci.org/edonyM/toolkitem)</td>
+<td align="center">[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/publish/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)</td>
+</tr>
+<tr>
+<td colspan="4" align="center">![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg)<br><b><i>COVERAGE SUNBURST</i></b></br></td></tr></tbody></table>
 
-<center><b><i>COVERAGE SUNBURST </i></b></center>
 
 ## toolkitem
 
