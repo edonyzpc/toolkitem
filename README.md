@@ -1,4 +1,5 @@
-<!--<table>
+<!--
+<table>
 <thead>
 <tr>
 <th align="center">Branchs</th>
@@ -12,7 +13,7 @@
 <td align="left"><strong><i>[master]</strong></i></td>
 <td align="center">[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=master)](https://travis-ci.org/edonyM/toolkitem)</td>
 <td align="center">[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/master/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)</td>
-<td rowspan="3">![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg)</td>
+<td rowspan="3" align="center">![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg)<br><b><i>COVERAGE SUNBURST</i></b></br></td>
 </tr>
 <tr>
 <td align="left"><strong><i>[develop]</i></strong></td>
@@ -25,9 +26,9 @@
 <td align="center">[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/publish/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)</td>
 </tr>
 <tr>
-<td colspan="4" align="center">![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg)<br><b><i>COVERAGE SUNBURST</i></b></br></td></tr></tbody></table>
+<td align="center"><strong><i>commits</i></strong></td>
+<td colspan="3" align="center">![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg)</td></tr></tbody></table>
 -->
-
 <table>
 <thead>
 <tr>
@@ -42,7 +43,7 @@
 <td align="left"><strong><i>[master]</i></strong></td>
 <td align="center"><a href="https://travis-ci.org/edonyM/toolkitem"><img src="https://travis-ci.org/edonyM/toolkitem.svg?branch=master" alt="Build Status"></a></td>
 <td align="center"><a href="https://codecov.io/gh/edonyM/toolkitem"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/master/graph/badge.svg" alt="codecov"></a></td>
-<td rowspan="3"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg" alt="develop branch"></td>
+<td rowspan="3" align="center"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg" alt="develop branch"><br><b><i>COVERAGE SUNBURST</i></b><br></td>
 </tr>
 <tr>
 <td align="left"><strong><i>[develop]</i></strong></td>
@@ -55,7 +56,8 @@
 <td align="center"><a href="https://codecov.io/gh/edonyM/toolkitem"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/publish/graph/badge.svg" alt="codecov"></a></td>
 </tr>
 <tr>
-<td colspan="4" align="center"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg" alt="develop branch"><br><b><i>COVERAGE SUNBURST</i></b><br></td></tr></tbody></table>
+<td align="center"><strong><i>commits</i></strong></td>
+<td colspan="3" align="center"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg" alt="develop branch"></td></tr></tbody></table>
 
 
 ## toolkitem
