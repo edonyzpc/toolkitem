@@ -30,6 +30,10 @@ from functools import reduce
 from multiprocessing.pool import Pool
 from dirlist import DirList
 
+def _filecounter(file):
+    with open(file, 'rb') as filebuf:
+        return len(filebuf.readlines())
+
 class FilesLine(DirList):
     """generate the line number of files located in directory
     """
@@ -52,8 +56,22 @@ class FilesLine(DirList):
                 filesname.append(item_dir + '/' + item_file)
 
         if SPEEDUP:
-            with Pool(self.MAX_RES) as res_pool:
-                return reduce(self._adder, res_pool.map(self._count_filelines, filesname))
+            # when python version is less then 3.3, multiprocessing.pool.Pool
+            # don't support the context management protocol
+            if sys.version_info.major is 3 and sys.version_info.minor >= 3:
+                with Pool(self.MAX_RES) as res_pool:
+                    return reduce(self._adder, res_pool.map(self._count_filelines, filesname))
+            else:
+                # in python2.x(maybe python3.[0-2]),
+                # multiprocessing must pickle things to sling them among processes,
+                # and bound methods are not picklable.
+                # the workaround (whether you consider it "easy" or not;-) is to
+                # add the infrastructure to your program to allow such methods to be pickled,
+                # registering it with the copy_reg standard library method.
+                # the following is a elusion to make it work in python2.x
+                res_pool = Pool(processes=self.MAX_RES)
+                retval = res_pool.map(_filecounter, filesname)
+                return reduce(self._adder, retval)
         else:
             for filename in filesname:
                 with open(filename, 'rb') as filebuf:
