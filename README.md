@@ -66,10 +66,9 @@
 
 ### ***personal toolkits for daily code***
 
-This is a toolkit project for speedup my daily life. It will be restructed into a GUI application if this project begins to take shape.
-According to daily requirements, it is splitted into different modules according to its functionality.
+This is a toolkit project for speedup my daily life. It will be reconstituted into a GUI application if this project begins to take shape. According to daily requirements, it is split into different modules according to its functionality.
 
-At the last but not least, my big project [anth](https://github.com/edonyM/anth) (now an pre-research project). In particuar, it is a qualified web cralwer with high customizable walking purpose.
+At the last but not least, these tools will be embedded into my big project [anth](https://github.com/edonyM/anth) (now an pre-research project), particularly, it is a qualified web crawler with high customizable walking purpose.
 
 ----
 
