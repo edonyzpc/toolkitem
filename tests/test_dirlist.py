@@ -29,3 +29,5 @@ class TestClass(object):
 
     def test_shadow_key(self):
         assert DirList.shadow_key('123') == b'fKHdCVgwViFR1Cj7ANzZtlrO1zzGZLwK9eKQmM3eXes='
+        assert DirList.shadow_key(b'123') == b'fKHdCVgwViFR1Cj7ANzZtlrO1zzGZLwK9eKQmM3eXes='
+        assert DirList.shadow_key(u'中') == None
