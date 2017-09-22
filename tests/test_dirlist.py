@@ -30,4 +30,8 @@ class TestClass(object):
     def test_shadow_key(self):
         assert DirList.shadow_key('123') == b'fKHdCVgwViFR1Cj7ANzZtlrO1zzGZLwK9eKQmM3eXes='
         assert DirList.shadow_key(b'123') == b'fKHdCVgwViFR1Cj7ANzZtlrO1zzGZLwK9eKQmM3eXes='
-        assert DirList.shadow_key(u'中') == None
+        assert DirList.shadow_key(123) == None
+
+    def test_enc_bytes(self):
+        pwd_bytes = DirList.enc_bytes('123', b'123')
+        assert DirList.dec_bytes('123', pwd_bytes) == b'123'

@@ -105,12 +105,12 @@ class DirList(object):
         """ shadow the key
         """
         if type(key) is str:
-            key = bytes(key, encoding='utf8')
+            key = key.encode(encoding='utf8')
         elif type(key) is bytes:
             pass
         else:
             return None
-        
+
         kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32,
                          salt=b'', iterations=100000,
                          backend=default_backend())
