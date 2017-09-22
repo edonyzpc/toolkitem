@@ -26,3 +26,6 @@ class TestClass(object):
         assert DirList.getattr(__file__) == 'FILE'
         assert DirList.getattr(os.path.split(os.path.realpath(__file__))[0]) == 'DIR'
         assert DirList.getattr('/dev/ttyxxxx')
+
+    def test_shadow_key(self):
+        assert DirList.shadow_key('123') == b'fKHdCVgwViFR1Cj7ANzZtlrO1zzGZLwK9eKQmM3eXes='
