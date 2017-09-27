@@ -1,8 +1,64 @@
-|Branchs|CI|Code Qulity|
-|:-----|:-:|:--------:|
-|**[master]**|[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=master)](https://travis-ci.org/edonyM/toolkitem)|[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/master/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)|
-|**[develop]**|[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=develop)](https://travis-ci.org/edonyM/toolkitem)|[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)|
-|**[publish]**|[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=publish)](https://travis-ci.org/edonyM/toolkitem)|[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/publish/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)|
+<!--
+<table>
+<thead>
+<tr>
+<th align="center">Branchs</th>
+<th align="center">CI</th>
+<th align="center">Code Qulity</th>
+<th align="center">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><strong><i>[master]</strong></i></td>
+<td align="center">[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=master)](https://travis-ci.org/edonyM/toolkitem)</td>
+<td align="center">[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/master/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)</td>
+<td rowspan="3" align="center">![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg)<br><b><i>COVERAGE SUNBURST</i></b></br></td>
+</tr>
+<tr>
+<td align="left"><strong><i>[develop]</i></strong></td>
+<td align="center">[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=develop)](https://travis-ci.org/edonyM/toolkitem)</td>
+<td align="center">[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)</td>
+</tr>
+<tr>
+<td align="left"><strong><i>[publish]</i></strong></td>
+<td align="center">[![Build Status](https://travis-ci.org/edonyM/toolkitem.svg?branch=publish)](https://travis-ci.org/edonyM/toolkitem)</td>
+<td align="center">[![codecov](https://codecov.io/gh/edonyM/toolkitem/branch/publish/graph/badge.svg)](https://codecov.io/gh/edonyM/toolkitem)</td>
+</tr>
+<tr>
+<td align="center"><strong><i>commits</i></strong></td>
+<td colspan="3" align="center">![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg)</td></tr></tbody></table>
+-->
+<table>
+<thead>
+<tr>
+<th align="center">Branchs</th>
+<th align="center">CI</th>
+<th align="center">Code Qulity</th>
+<th align="center">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><strong><i>[master]</i></strong></td>
+<td align="center"><a href="https://travis-ci.org/edonyM/toolkitem"><img src="https://travis-ci.org/edonyM/toolkitem.svg?branch=master" alt="Build Status"></a></td>
+<td align="center"><a href="https://codecov.io/gh/edonyM/toolkitem"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/master/graph/badge.svg" alt="codecov"></a></td>
+<td rowspan="3" align="center"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg" alt="develop branch"><br><b><i>COVERAGE SUNBURST</i></b><br></td>
+</tr>
+<tr>
+<td align="left"><strong><i>[develop]</i></strong></td>
+<td align="center"><a href="https://travis-ci.org/edonyM/toolkitem"><img src="https://travis-ci.org/edonyM/toolkitem.svg?branch=develop" alt="Build Status"></a></td>
+<td align="center"><a href="https://codecov.io/gh/edonyM/toolkitem"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graph/badge.svg" alt="codecov"></a></td>
+</tr>
+<tr>
+<td align="left"><strong><i>[publish]</i></strong></td>
+<td align="center"><a href="https://travis-ci.org/edonyM/toolkitem"><img src="https://travis-ci.org/edonyM/toolkitem.svg?branch=publish" alt="Build Status"></a></td>
+<td align="center"><a href="https://codecov.io/gh/edonyM/toolkitem"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/publish/graph/badge.svg" alt="codecov"></a></td>
+</tr>
+<tr>
+<td align="center"><strong><i>commits</i></strong></td>
+<td colspan="3" align="center"><img src="https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg" alt="develop branch"></td></tr></tbody></table>
+
 
 ## toolkitem
 
@@ -10,15 +66,15 @@
 
 ### ***personal toolkits for daily code***
 
-This is a toolkit project for speedup my daily life. It will be restructed into a GUI application if this project begins to take shape.
-According to daily requirements, it is splitted into different modules according to its functionality.
+This is a toolkit project for speedup my daily life. It will be reconstituted into a GUI application if this project begins to take shape. According to daily requirements, it is split into different modules according to its functionality.
 
-At the last but not least, my big project [anth](https://github.com/edonyM/anth) (now an pre-research project). In particuar, it is a qualified web cralwer with high customizable walking purpose.
+At the last but not least, these tools will be embedded into my big project [anth](https://github.com/edonyM/anth) (now an pre-research project), particularly, it is a qualified web crawler with high customizable walking purpose.
 
 ----
 
 - FILE PROCESS TOOLS
-    - [ ] count number of lines in direction files  ====>  `filesline`
+    - [x] get all the directories and files in the root path and its sub-directories ====> `filesprocess/dirlist`
+    - [x] count number of lines in direction files  ====>  `filesprocess/filesline`
     - [ ] mark up the files different lines(if they have) and write them into buffer  ====>  `mergefile`
     - [ ] delete syntax format(`*.md`,`*.rst` and so on) and get the plain text file.   ====>  `fileparser`
     - [ ] personal defined text handler for text process.  ====>  `texthandler`
@@ -29,8 +85,6 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
     - [x] python progress bar simulating npm. ====> `spinner`
 - SOURCE CODE MANAGEMENT TOOLS
     - [x] update system for preparation and update the git repositroies  ====>  `updatesys`
-- PYTHON SPEEDER TOOLS
-    - [ ] not decided
 - MULTIPROCESS SPEEDUP TOOLS
     - [ ] multi-jobs running tools. ====> `scheduler`
 - OTHER TOOLS
@@ -45,12 +99,9 @@ At the last but not least, my big project [anth](https://github.com/edonyM/anth)
     - [ ] blog writing template generater tools and hexo management tools. ====> `blogger`
     - [ ] tools for cross developing with c and python. ====> `swiger`
     - [ ] auto reminder tools for checking new emails. ====> `mail`
-
-
-### Status
-![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/sunburst.svg)![develop branch](https://codecov.io/gh/edonyM/toolkitem/branch/develop/graphs/commits.svg)
+- DEPLOY TOOLKITEM TO PYPI
+    - [ ] deploy `spinner` to PyPi
 
 ### P.S.
 ------
 [Develop Path](./DEVELOP.md)
-

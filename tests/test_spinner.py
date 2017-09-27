@@ -15,7 +15,7 @@ class TestClass(object):
     def test_spinner(self):
         @spinner("Download youtube video")
         def demo():
-            time.sleep(5)
+            time.sleep(1)
 
         print("Downloading a youtube video, it would cost much time.")
         demo()
@@ -31,7 +31,7 @@ class TestClass(object):
     def test_Spinner_call(self):
         spin = Spinner("test_Spinner_call")
         def demo():
-            time.sleep(5)
+            time.sleep(1)
 
         demo = spin.__call__(demo)
         print("Downloading a youtube video, it would cost much time.")

@@ -6,5 +6,5 @@ develop branch work:
 * ~~make terminal standard output colorful~~
 * ~~progress bar~~
 * ~~quick importer(make nonsense, python got its import management)~~
-* walking the directory and get its file list and directory list
+* ~~walking the directory and get its file list and directory list~~
 * blog writing template generater tools and hexo management tools
