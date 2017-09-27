@@ -6,4 +6,6 @@ __all__ = ['gitmgr',
            'rosmonitor',
            'updatesys',
            'planner',
-           'other']
+           'colorprinter',
+           'other',
+           'spinner']

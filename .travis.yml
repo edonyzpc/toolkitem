@@ -12,6 +12,8 @@ before_install:
 install:
   - pip install Pillow
   - pip install pytest-cov
+  - pip install futures
+  - pip install cryptography
 
 # command to run tests
 script:
