@@ -48,40 +48,35 @@ class DirList(object):
         get all directories including all sub-directories
     """
 
-    def __init__(self, rootpath):
+    def __init__(self, rootpath, excludedir=None):
         """ initialize `DirList' with root `rootpath'
         """
         self.root = rootpath
         self.dirlist = {}
         # buffer for multiprocess speedup directory walking
         self._dl_buf = []
-        self._listdir()
+        self._listdir(excludedir=excludedir)
         # choose highest pickle protocol type
         self.protocol = pickle.HIGHEST_PROTOCOL
         self.__shawodkey = b''
 
-    def _listdir(self, path=None):
+    def _listdir(self, excludedir=None):
         """ list root path recursively including sub-directories
         """
-        if self.root is None:
-            if path is not None:
-                for root_, dir_, file_ in os.walk(path):
-                    dir_ctx = []
-                    dir_ctx.insert(0, file_)
-                    dir_ctx.insert(0, dir_)
-                    buf_dl = {}
-                    buf_dl[root_] = dir_ctx
-                    self._dl_buf.insert(0, buf_dl)
-            else:
-                raise Exception("Error DirList class initialize")
-        else:
+        if os.path.isdir(self.root):
             for root_, dir_, file_ in os.walk(self.root):
+                if excludedir is not None:
+                    if root_ == excludedir or root_.startswith(excludedir):
+                        continue
                 dir_ctx = []
                 dir_ctx.insert(0, file_)
                 dir_ctx.insert(0, dir_)
                 self.dirlist[root_] = dir_ctx
+        else:
+            raise Exception("Error DirList class initialize")
 
-    def _slistdir(self):
+
+    def slistdir(self):
         """ speedup list root path recursively including sub-directories
         """
         # TODO
@@ -152,9 +147,9 @@ class DirList(object):
 
 """ comment this line to test with __main__
 if __name__ == "__main__":
-    OBJ = DirList("/Users/edony/coding/toolkitem")
-    OBJ.serial('123!QAZ', "./buf.bin")
-    del OBJ
-    OBJ = DirList.unserail('123!QAZ', "./buf.bin")
-    print(OBJ.dirlist)
-comment this line to test with __main__ """
+    OBJ = DirList("/Users/edony/coding/toolkitem/tests", "/Users/edony/coding/toolkitem/tests")
+    #OBJ.serial('123!QAZ', "./buf.bin")
+    #del OBJ
+    #OBJ = DirList.unserail('123!QAZ', "./buf.bin")
+    #print(OBJ.dirlist)
+#comment this line to test with __main__ """

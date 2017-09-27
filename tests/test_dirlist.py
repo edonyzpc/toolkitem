@@ -16,11 +16,10 @@ class TestClass(object):
         with pytest.raises(Exception):
             tmp = DirList(None)
 
-    def test__listdir_none_root(self):
+    def test__listdir_exclude_dir(self):
         curdir = os.path.split(os.path.realpath(__file__))[0]
-        tmp = DirList(curdir)
-        tmp.root = None
-        tmp._listdir(curdir)
+        tmp = DirList(curdir, excludedir=curdir)
+        assert tmp.dirlist == {}
 
     def test_getattr(self):
         assert DirList.getattr(__file__) == 'FILE'
