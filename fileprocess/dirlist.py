@@ -89,10 +89,10 @@ class DirList(object):
         types = ['DIR', 'FILE', 'LINK', 'OTHERS']
         if os.path.isdir(path):
             return types[0]
-        elif os.path.isfile(path):
-            return types[1]
         elif os.path.islink(path):
             return types[2]
+        elif os.path.isfile(path):
+            return types[1]
         return types[3]
 
     @staticmethod
