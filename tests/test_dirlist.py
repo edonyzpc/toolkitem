@@ -41,3 +41,23 @@ class TestClass(object):
     def test_enc_bytes(self):
         pwd_bytes = DirList.enc_bytes('123', b'123')
         assert DirList.dec_bytes('123', pwd_bytes) == b'123'
+
+    def test_serial(self):
+        pwd = '123'
+        filename = 'test.test'
+        curdir = os.path.split(os.path.realpath(__file__))[0]
+        filename = curdir + '/' + filename
+        tmp = DirList(curdir)
+        tmp.serial(pwd, filename)
+        assert os.path.isfile(filename)
+        os.system('rm -rf ' + filename)
+
+    def test_unserail(self):
+        pwd = '123'
+        filename = 'test.test'
+        curdir = os.path.split(os.path.realpath(__file__))[0]
+        filename = curdir + '/' + filename
+        tmp = DirList(curdir)
+        tmp.serial(pwd, filename)
+        tmp1 = DirList.unserial(pwd, filename)
+        os.system('rm -rf ' + filename)

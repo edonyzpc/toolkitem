@@ -136,7 +136,7 @@ class DirList(object):
             filebuf.write(enc_bytes)
 
     @staticmethod
-    def unserail(pwd, storage_file):
+    def unserial(pwd, storage_file):
         """ unserialize the instance
         """
         with open(storage_file, 'rb') as filebuf:
