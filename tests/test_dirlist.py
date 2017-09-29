@@ -60,4 +60,5 @@ class TestClass(object):
         tmp = DirList(curdir)
         tmp.serial(pwd, filename)
         tmp1 = DirList.unserial(pwd, filename)
+        assert type(tmp1) is DirList
         os.system('rm -rf ' + filename)
