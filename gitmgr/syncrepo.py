@@ -98,6 +98,15 @@ class PyColor(object):
 color = PyColor()
 color.new = '\033[0;36m'
 
+def is_git_repo(path):
+    """check if path is a git repository"""
+    gitstatus = 'git status'
+    status, _ = getstatusoutput(gitstatus)
+    if status == 0:
+        return True
+    else:
+        return False
+
 def print_cmd_result(cmd, status, output):
     if status != 0:
         raise Exception(color.warningcolor + cmd + \
