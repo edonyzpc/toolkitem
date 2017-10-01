@@ -139,6 +139,12 @@ class SyncUpstreamRepo(objec):
         gitcheckout = 'git checkout ' + branch
         gitmerge = 'git merge upsream/' + branch
         gitpush = 'git push origin ' + branch
+        exec_cmds = [gitfetch, gitcheckout, gitmerge, gitpush]
+        for cmd in exec_cmds:
+            status, _ = getstatusoutput(gitremoteadd)
+            if status != 0:
+                print("ERROR: " + cmd)
+                break
 
 def print_cmd_result(cmd, status, output):
     if status != 0:
