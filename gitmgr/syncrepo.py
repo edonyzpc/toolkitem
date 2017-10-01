@@ -98,14 +98,47 @@ class PyColor(object):
 color = PyColor()
 color.new = '\033[0;36m'
 
-def is_git_repo(path):
-    """check if path is a git repository"""
-    gitstatus = 'git status'
-    status, _ = getstatusoutput(gitstatus)
-    if status == 0:
-        return True
-    else:
-        return False
+class SyncUpstreamRepo(objec):
+    def __init__(self, path, upstream):
+        self.repo_path = path
+        self.upstream_url = upstream_url
+        self.remotelist = None
+
+    def is_git_repo(self):
+        """check if path is a git repository"""
+        gitstatus = 'git status'
+        status, _ = getstatusoutput(gitstatus)
+        if status == 0:
+            self.isgit = True
+        else:
+            self.isgit = False
+
+    def _remote_list(self):
+        if self.is_git_repo(self):
+            return
+        gitremote = 'git remote -v'
+        status, remotelist = getstatusoutput(gitremote)
+        if status == 0:
+            self.remotelist = remotelist.split('\n')
+
+    def has_upstream(self):
+        if self.remotelist is not None:
+            for item in self.remotelist:
+                if self.upsream_url in item:
+                    return True
+        else:
+            return False
+
+    def add_upstrem(self):
+        if not has_upsream:
+            gitremoteadd = 'git remote add upstream ' + self.upstream_url
+            status, _ = getstatusoutput(gitremoteadd)
+
+    def sync_upstream(self, branch='master'):
+        gitfetch = 'git fetch upstream'
+        gitcheckout = 'git checkout ' + branch
+        gitmerge = 'git merge upsream/' + branch
+        gitpush = 'git push origin ' + branch
 
 def print_cmd_result(cmd, status, output):
     if status != 0:
