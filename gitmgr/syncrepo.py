@@ -101,11 +101,19 @@ color.new = '\033[0;36m'
 class SyncUpstreamRepo(objec):
     def __init__(self, path, upstream):
         self.repo_path = path
+        os.path.curdir = path
         self.upstream_url = upstream_url
         self.remotelist = None
 
+    def _is_crt_dir(self):
+        if os.path.curdir == self.repo_path:
+            return True
+        return False
+
     def is_git_repo(self):
         """check if path is a git repository"""
+        if not self._is_crt_dir():
+            return False
         gitstatus = 'git status'
         status, _ = getstatusoutput(gitstatus)
         if status == 0:
@@ -114,6 +122,8 @@ class SyncUpstreamRepo(objec):
             self.isgit = False
 
     def _remote_list(self):
+        if not self._is_crt_dir():
+            return
         if self.is_git_repo(self):
             return
         gitremote = 'git remote -v'
@@ -122,6 +132,9 @@ class SyncUpstreamRepo(objec):
             self.remotelist = remotelist.split('\n')
 
     def has_upstream(self):
+        if not self._is_crt_dir():
+            return False
+
         if self.remotelist is not None:
             for item in self.remotelist:
                 if self.upsream_url in item:
@@ -130,11 +143,17 @@ class SyncUpstreamRepo(objec):
             return False
 
     def add_upstrem(self):
+        if not self._is_crt_dir():
+            return False
+
         if not has_upsream:
             gitremoteadd = 'git remote add upstream ' + self.upstream_url
             status, _ = getstatusoutput(gitremoteadd)
 
     def sync_upstream(self, branch='master'):
+        if not self._is_crt_dir():
+            return
+        
         gitfetch = 'git fetch upstream'
         gitcheckout = 'git checkout ' + branch
         gitmerge = 'git merge upsream/' + branch
