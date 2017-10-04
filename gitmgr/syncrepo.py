@@ -99,6 +99,9 @@ color = PyColor()
 color.new = '\033[0;36m'
 
 class SyncUpstreamRepo(objec):
+    """Sync source code from upstream in forked repository
+       e.g. Github Project
+    """
     def __init__(self, path, upstream):
         self.repo_path = path
         os.path.curdir = path
@@ -153,7 +156,7 @@ class SyncUpstreamRepo(objec):
     def sync_upstream(self, branch='master'):
         if not self._is_crt_dir():
             return
-        
+
         gitfetch = 'git fetch upstream'
         gitcheckout = 'git checkout ' + branch
         gitmerge = 'git merge upsream/' + branch
