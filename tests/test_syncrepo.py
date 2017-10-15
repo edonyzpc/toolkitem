@@ -33,39 +33,10 @@ try:
 except ImportError:
     from subprocess import getstatusoutput
 from gitmgr import syncrepo
+from gitmgr import SyncUpstreamRepo
 
 class TestClass:
-    def test_has_local_upstream_0(self):
-        assert False == syncrepo.has_local_upstream()
-
-    def test_has_local_upstream_1(self):
-        os.system('cd ~/')
-        assert False == syncrepo.has_local_upstream()
-
-    def test_has_local_upstream_2(self):
-        os.system('cd ~/coding/anth')
-        assert False == syncrepo.has_local_upstream()
-
-    def test_sync_up2master(self):
-        with pytest.raises(Exception):
-            syncrepo.sync_up2master()
-
-    def test_exec_cmd(self):
-        stat, output = syncrepo.exec_cmd('echo hello')
-        assert stat == 0 and output == 'hello'
-
-    def test_print_cmd_result(self):
-        stat, output = getstatusoutput('echo "test print_cmd_result"')
-        syncrepo.print_cmd_result('echo "test print_cmd_result"', stat, output)
-        with pytest.raises(Exception):
-            stat, output = getstatusoutput('python xxxxx')
-            syncrepo.print_cmd_result('python xxxxx', stat, output)
-
-    def test_add_upstream(self):
-        os.chdir("/home")
-        with pytest.raises(Exception):
-            syncrepo.add_upstream('https://github.com/edonyM/toolkitem.git')
-
-    def test_sync_up2master(self):
-        with pytest.raises(Exception) as err:
-            syncrepo.sync_up2master()
+    def test_syncrepo(self):
+        os.system('git clone https://edonyM:123456789@github.com/edonyM/TPM2.0-TSS.git')
+        syncrepo('./TPM2.0-TSS', 'https://github.com/01org/tpm2-tss.git')
+        os.system('rm -rf ../TPM2.0-TSS')
