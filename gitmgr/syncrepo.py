@@ -68,7 +68,7 @@ class SyncUpstreamRepo(object):
         gitstatus = 'git status'
         status, logs = getstatusoutput(gitstatus)
         self.logger.info(logs)
-        self.logger.info("git status return code: {}".format(status))
+        self.logger.info("git status return code: %d", status)
         if status == 0:
             return True
         else:
@@ -76,7 +76,7 @@ class SyncUpstreamRepo(object):
 
     def _remote_list(self):
         if not self._is_crt_dir():
-            self.logger.warning("current dir: {}, repo dir: {}".format(os.getcwd(), self.repo_path))
+            self.logger.warning("current dir: %s, repo dir: %s", os.getcwd(), self.repo_path)
             return
         if not self.is_git_repo():
             self.logger.warning("not a correct repository")
@@ -90,7 +90,7 @@ class SyncUpstreamRepo(object):
 
     def has_upstream(self):
         if not self._is_crt_dir():
-            self.logger.warning("current dir: {}, repo dir: {}".format(os.getcwd(), self.repo_path))
+            self.logger.warning("current dir: %s, repo dir: %s", os.getcwd(), self.repo_path)
             return False
 
         self._remote_list()
@@ -108,21 +108,21 @@ class SyncUpstreamRepo(object):
 
         if not self.has_upstream():
             gitremoteadd = 'git remote add upstream ' + self.upstream_url
-            status, logs = getstatusoutput(gitremoteadd)
+            _, logs = getstatusoutput(gitremoteadd)
             self.logger.info(logs)
 
     def sync_upstream(self, branch='master'):
         if not self._is_crt_dir():
-            self.logger.warning("changing the current directory into {}".format(self.repo_path))
+            self.logger.warning("changing the current directory into %s", self.repo_path)
             os.chdir(self.repo_path)
 
         if not self.is_git_repo():
-            self.logger.warning("current directory is {}".format(os.getcwd()))
+            self.logger.warning("current directory is %s", os.getcwd())
             self.logger.warning("Not a git repository")
             return
 
         if not self.has_upstream():
-            self.logger.warning("add upstream {} into repository".format(self.upstream_url))
+            self.logger.warning("add upstream %s into repository", self.upstream_url)
             self.add_upstrem()
 
         gitfetch = 'git fetch upstream'
