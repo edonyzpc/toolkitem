@@ -36,67 +36,12 @@ r"""
 #import numpy as np
 import os
 import sys
+import logging
+from logging.config import fileConfig
 try:
     from subprocess import getstatusoutput
 except ImportError:
     from commands import getstatusoutput
-
-class PyColor(object):
-    """ This class is for colored print in the python interpreter!
-    "F3" call Addpy() function to add this class which is defined
-    in the .vimrc for vim Editor."""
-    def __init__(self):
-        self.self_doc = """
-        STYLE: \033['display model';'foreground';'background'm
-        DETAILS:
-        FOREGROUND        BACKGOUND       COLOR
-        ---------------------------------------
-        30                40              black
-        31                41              red
-        32                42              green
-        33                43              yellow
-        34                44              blue
-        35                45              purple
-        36                46              cyan
-        37                47              white
-        DISPLAY MODEL    DETAILS
-        -------------------------
-        0                default
-        1                highlight
-        4                underline
-        5                flicker
-        7                reverse
-        8                non-visiable
-        e.g:
-        \033[1;31;40m   <!--1-highlight;31-foreground red;40-background black-->
-        \033[0m         <!--set all into default-->
-        """
-        self.warningcolor = '\033[0;31m'
-        self.tipcolor = '\033[0;32m'
-        self.endcolor = '\033[0m'
-        self._newcolor = ''
-    @property
-    def new(self):
-        """
-        Customized Python Print Color.
-        """
-        return self._newcolor
-    @new.setter
-    def new(self, color_str):
-        """
-        New Color.
-        """
-        self._newcolor = color_str
-    def disable(self):
-        """
-        Disable Color Print.
-        """
-        self.warningcolor = ''
-        self.endcolor = ''
-
-
-color = PyColor()
-color.new = '\033[0;36m'
 
 class SyncUpstreamRepo(object):
     """Sync source code from upstream in forked repository
@@ -106,7 +51,9 @@ class SyncUpstreamRepo(object):
         self.repo_path = os.path.realpath(path)
         self.upstream_url = upstream_url
         self.remotelist = None
-        self.isgit = None
+        self.log_config = 'log_config.ini'
+        fileConfig(self.log_config)
+        self.logger = logging.getLogger()
 
     def _is_crt_dir(self):
         if os.path.realpath(os.path.curdir) == self.repo_path:
@@ -116,12 +63,12 @@ class SyncUpstreamRepo(object):
     def is_git_repo(self):
         """check if path is a git repository"""
         if not self._is_crt_dir():
-            print("Not a correct repository path")
+            self.logger.warning("Not a correct repository path")
             return False
         gitstatus = 'git status'
         status, logs = getstatusoutput(gitstatus)
-        print(status)
-        print(logs)
+        self.logger.info(logs)
+        self.logger.info("git status return code: {}".format(status))
         if status == 0:
             return True
         else:
@@ -129,18 +76,25 @@ class SyncUpstreamRepo(object):
 
     def _remote_list(self):
         if not self._is_crt_dir():
+            self.logger.warning("current dir: {}, repo dir: {}".format(os.getcwd(), self.repo_path))
             return
-        if self.is_git_repo():
+        if not self.is_git_repo():
+            self.logger.warning("not a correct repository")
             return
+
         gitremote = 'git remote -v'
         status, remotelist = getstatusoutput(gitremote)
+        self.logger.info(remotelist)
         if status == 0:
             self.remotelist = remotelist.split('\n')
 
     def has_upstream(self):
         if not self._is_crt_dir():
+            self.logger.warning("current dir: {}, repo dir: {}".format(os.getcwd(), self.repo_path))
             return False
 
+        self._remote_list()
+        self.logger.info(self.remotelist)
         if self.remotelist is not None:
             for item in self.remotelist:
                 if self.upstream_url in item:
@@ -154,20 +108,21 @@ class SyncUpstreamRepo(object):
 
         if not self.has_upstream():
             gitremoteadd = 'git remote add upstream ' + self.upstream_url
-            status, _ = getstatusoutput(gitremoteadd)
+            status, logs = getstatusoutput(gitremoteadd)
+            self.logger.info(logs)
 
     def sync_upstream(self, branch='master'):
         if not self._is_crt_dir():
-            print("changing the current directory into {}".format(self.repo_path))
+            self.logger.warning("changing the current directory into {}".format(self.repo_path))
             os.chdir(self.repo_path)
 
         if not self.is_git_repo():
-            print(os.getcwd())
-            print("ERROR: Not a git repository")
+            self.logger.warning("current directory is {}".format(os.getcwd()))
+            self.logger.warning("Not a git repository")
             return
 
         if not self.has_upstream():
-            print("add upstream {} into repository".format(self.upstream_url))
+            self.logger.warning("add upstream {} into repository".format(self.upstream_url))
             self.add_upstrem()
 
         gitfetch = 'git fetch upstream'
@@ -177,10 +132,8 @@ class SyncUpstreamRepo(object):
         exec_cmds = [gitfetch, gitcheckout, gitmerge, gitpush]
         for cmd in exec_cmds:
             status, logs = getstatusoutput(cmd)
-            print("[" + cmd + "]" + logs)
+            self.logger.info(logs)
             if status != 0:
-                print("ERROR: " + cmd)
-                print(logs)
                 break
 
 def syncrepo(path, upstream, branch='master'):
@@ -191,5 +144,4 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Please specific the path and upstream URL")
     else:
-        print(sys.argv)
         syncrepo(sys.argv[1], sys.argv[2])
