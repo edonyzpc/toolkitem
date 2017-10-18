@@ -71,8 +71,7 @@ class SyncUpstreamRepo(object):
         self.logger.info("git status return code: %d", status)
         if status == 0:
             return True
-        else:
-            return False
+        return False
 
     def _remote_list(self):
         if not self._is_crt_dir():
@@ -89,6 +88,7 @@ class SyncUpstreamRepo(object):
             self.remotelist = remotelist.split('\n')
 
     def has_upstream(self):
+        """judge current git repository has a upstream"""
         if not self._is_crt_dir():
             self.logger.warning("current dir: %s, repo dir: %s", os.getcwd(), self.repo_path)
             return False
@@ -102,7 +102,8 @@ class SyncUpstreamRepo(object):
         else:
             return False
 
-    def add_upstrem(self):
+    def add_upstream(self):
+        """add upstream into current git repository"""
         if not self._is_crt_dir():
             return False
 
@@ -112,6 +113,7 @@ class SyncUpstreamRepo(object):
             self.logger.info(logs)
 
     def sync_upstream(self, branch='master'):
+        """sync current repository from upstream"""
         if not self._is_crt_dir():
             self.logger.warning("changing the current directory into %s", self.repo_path)
             os.chdir(self.repo_path)
@@ -123,7 +125,7 @@ class SyncUpstreamRepo(object):
 
         if not self.has_upstream():
             self.logger.warning("add upstream %s into repository", self.upstream_url)
-            self.add_upstrem()
+            self.add_upstream()
 
         gitfetch = 'git fetch upstream'
         gitcheckout = 'git checkout ' + branch
@@ -137,6 +139,7 @@ class SyncUpstreamRepo(object):
                 break
 
 def syncrepo(path, upstream, branch='master'):
+    """main fucntion to sync repository"""
     syncer = SyncUpstreamRepo(path, upstream)
     syncer.sync_upstream(branch)
 
