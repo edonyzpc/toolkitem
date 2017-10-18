@@ -33,39 +33,79 @@ try:
 except ImportError:
     from subprocess import getstatusoutput
 from gitmgr import syncrepo
+from gitmgr import SyncUpstreamRepo
 
 class TestClass:
-    def test_has_local_upstream_0(self):
-        assert False == syncrepo.has_local_upstream()
+    def test_syncrepo(self):
+        os.system('git clone https://edonyM:123456789@github.com/edonyM/TPM2.0-TSS.git')
+        os.system('cp gitmgr/log_config.ini ./')
+        syncrepo('./TPM2.0-TSS', 'https://github.com/01org/tpm2-tss.git')
+        os.chdir("../")
 
-    def test_has_local_upstream_1(self):
-        os.system('cd ~/')
-        assert False == syncrepo.has_local_upstream()
+    def test_SyncUpstreamRepo(self):
+        #os.system('git clone https://edonyM:123456789@github.com/edonyM/TPM2.0-TSS.git')
+        #os.system('cp gitmgr/log_config.ini ./')
+        syncer = SyncUpstreamRepo('./TPM2.0-TSS', 'https://github.com/01org/tpm2-tss.git')
+        syncer.sync_upstream()
+        os.chdir("../")
 
-    def test_has_local_upstream_2(self):
-        os.system('cd ~/coding/anth')
-        assert False == syncrepo.has_local_upstream()
+    def test_is_git_repo(self):
+        #os.system('git clone https://edonyM:123456789@github.com/edonyM/TPM2.0-TSS.git')
+        #os.system('cp gitmgr/log_config.ini ./')
+        syncer = SyncUpstreamRepo('./TPM2.0-TSS', 'https://github.com/01org/tpm2-tss.git')
+        os.chdir('./TPM2.0-TSS')
+        assert syncer.is_git_repo()
+        os.chdir('../')
+        #os.system('rm -rf ../TPM2.0-TSS ../log_config.ini')
 
-    def test_sync_up2master(self):
-        with pytest.raises(Exception):
-            syncrepo.sync_up2master()
+    def test_is_git_repo_fail_dir(self):
+        #os.system('git clone https://edonyM:123456789@github.com/edonyM/TPM2.0-TSS.git')
+        #os.system('cp gitmgr/log_config.ini ./')
+        syncer = SyncUpstreamRepo('./TPM2.0-TSS', 'https://github.com/01org/tpm2-tss.git')
+        os.chdir('.')
+        assert not syncer.is_git_repo()
+        os.system('rm -rf ./TPM2.0-TSS ./log_config.ini')
 
-    def test_exec_cmd(self):
-        stat, output = syncrepo.exec_cmd('echo hello')
-        assert stat == 0 and output == 'hello'
+    def test_is_git_repo_fail_not_git_repo(self):
+        curdir = os.path.realpath(os.path.curdir)
+        os.system('cp gitmgr/log_config.ini ./')
+        os.chdir('/tmp/')
+        os.system('git clone https://edonyM:123456789@github.com/edonyM/TPM2.0-TSS.git')
+        os.chdir(curdir)
+        syncer = SyncUpstreamRepo('/tmp/TPM2.0-TSS', 'https://github.com/01org/tpm2-tss.git')
+        os.chdir('/tmp/TPM2.0-TSS')
+        os.system('mv .git git.bak')
+        assert not syncer.is_git_repo()
+        os.system('mv git.bak .git')
+        os.chdir(curdir)
 
-    def test_print_cmd_result(self):
-        stat, output = getstatusoutput('echo "test print_cmd_result"')
-        syncrepo.print_cmd_result('echo "test print_cmd_result"', stat, output)
-        with pytest.raises(Exception):
-            stat, output = getstatusoutput('python xxxxx')
-            syncrepo.print_cmd_result('python xxxxx', stat, output)
+    def test_has_upstream(self):
+        curdir = os.path.realpath(os.path.curdir)
+        #os.system('git clone https://edonyM:123456789@github.com/edonyM/TPM2.0-TSS.git')
+        os.system('cp gitmgr/log_config.ini ./')
+        syncer = SyncUpstreamRepo('/tmp/TPM2.0-TSS', 'https://github.com/01org/tpm2-tss.git')
+        os.chdir('/tmp/TPM2.0-TSS')
+        os.system('git remote remove upstream')
+        assert not syncer.has_upstream()
+        os.chdir(curdir)
+        #os.system('rm -rf ../TPM2.0-TSS ../log_config.ini')
+
+    def test_has_no_upstream(self):
+        curdir = os.path.realpath(os.path.curdir)
+        print("##########1" + curdir)
+        #os.system('git clone https://edonyM:123456789@github.com/edonyM/TPM2.0-TSS.git')
+        os.system('cp gitmgr/log_config.ini ./')
+        syncer = SyncUpstreamRepo('/tmp/TPM2.0-TSS', 'https://github.com/01org/tpm2-tss.git')
+        os.chdir('/tmp/TPM2.0-TSS')
+        syncer.add_upstream()
+        assert syncer.has_upstream()
+        os.chdir(curdir)
 
     def test_add_upstream(self):
-        os.chdir("/home")
-        with pytest.raises(Exception):
-            syncrepo.add_upstream('https://github.com/edonyM/toolkitem.git')
-
-    def test_sync_up2master(self):
-        with pytest.raises(Exception) as err:
-            syncrepo.sync_up2master()
+        curdir = os.path.realpath(os.path.curdir)
+        print("##########2" + curdir)
+        os.system('cp gitmgr/log_config.ini ./')
+        syncer = SyncUpstreamRepo('/tmp/TPM2.0-TSS', 'https://github.com/01org/tpm2-tss.git')
+        os.chdir(curdir)
+        assert not syncer.add_upstream()
+        os.system('rm -rf /tmp/TPM2.0-TSS ./log_config.ini')

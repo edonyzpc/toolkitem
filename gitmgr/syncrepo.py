@@ -36,116 +36,115 @@ r"""
 #import numpy as np
 import os
 import sys
+import logging
+from logging.config import fileConfig
 try:
     from subprocess import getstatusoutput
 except ImportError:
     from commands import getstatusoutput
 
-class PyColor(object):
-    """ This class is for colored print in the python interpreter!
-    "F3" call Addpy() function to add this class which is defined
-    in the .vimrc for vim Editor."""
-    def __init__(self):
-        self.self_doc = """
-        STYLE: \033['display model';'foreground';'background'm
-        DETAILS:
-        FOREGROUND        BACKGOUND       COLOR
-        ---------------------------------------
-        30                40              black
-        31                41              red
-        32                42              green
-        33                43              yellow
-        34                44              blue
-        35                45              purple
-        36                46              cyan
-        37                47              white
-        DISPLAY MODEL    DETAILS
-        -------------------------
-        0                default
-        1                highlight
-        4                underline
-        5                flicker
-        7                reverse
-        8                non-visiable
-        e.g:
-        \033[1;31;40m   <!--1-highlight;31-foreground red;40-background black-->
-        \033[0m         <!--set all into default-->
-        """
-        self.warningcolor = '\033[0;31m'
-        self.tipcolor = '\033[0;32m'
-        self.endcolor = '\033[0m'
-        self._newcolor = ''
-    @property
-    def new(self):
-        """
-        Customized Python Print Color.
-        """
-        return self._newcolor
-    @new.setter
-    def new(self, color_str):
-        """
-        New Color.
-        """
-        self._newcolor = color_str
-    def disable(self):
-        """
-        Disable Color Print.
-        """
-        self.warningcolor = ''
-        self.endcolor = ''
+class SyncUpstreamRepo(object):
+    """Sync source code from upstream in forked repository
+       e.g. Github Project
+    """
+    def __init__(self, path, upstream_url):
+        self.repo_path = os.path.realpath(path)
+        self.upstream_url = upstream_url
+        self.remotelist = None
+        self.log_config = 'log_config.ini'
+        fileConfig(self.log_config)
+        self.logger = logging.getLogger()
 
-
-color = PyColor()
-color.new = '\033[0;36m'
-
-def print_cmd_result(cmd, status, output):
-    if status != 0:
-        raise Exception(color.warningcolor + cmd + \
-                        ' executed in {} failed\n'.format(os.getcwd()))
-    print(color.tipcolor + output + color.endcolor)
-
-
-def exec_cmd(cmd):
-    (status, output) = getstatusoutput(cmd)
-    print_cmd_result(cmd, status, output)
-    return (status, output)
-
-
-def has_local_upstream():
-    cmd = 'git remote -v'
-    status, output = getstatusoutput(cmd)
-    if status != 0:
-        return False
-    else:
-        if 'upstream' not in output.split():
-            return False
-        else:
+    def _is_crt_dir(self):
+        if os.path.realpath(os.path.curdir) == self.repo_path:
             return True
+        return False
 
+    def is_git_repo(self):
+        """check if path is a git repository"""
+        if not self._is_crt_dir():
+            self.logger.warning("Not a correct repository path")
+            return False
+        gitstatus = 'git status'
+        status, logs = getstatusoutput(gitstatus)
+        self.logger.info(logs)
+        self.logger.info("git status return code: %d", status)
+        if status == 0:
+            return True
+        return False
 
-def add_upstream(upstream_url):
-    cmd = 'git remote add upstream ' + upstream_url
-    exec_cmd(cmd)
+    def _remote_list(self):
+        if not self._is_crt_dir():
+            self.logger.warning("current dir: %s, repo dir: %s", os.getcwd(), self.repo_path)
+            return
+        if not self.is_git_repo():
+            self.logger.warning("not a correct repository")
+            return
 
+        gitremote = 'git remote -v'
+        status, remotelist = getstatusoutput(gitremote)
+        self.logger.info(remotelist)
+        if status == 0:
+            self.remotelist = remotelist.split('\n')
 
-def sync_up2master():
-    cmd_fetch = 'git fetch upstream'
-    cmd_merge = 'git checkout master\ngit merge upstream/master --no-ff'
-    cmd_push = 'git push origin master'
-    fetch_stat, fetch_output = getstatusoutput(cmd_fetch)
-    if len(fetch_output) <= 0:
-        print(color.new + 'Repo already update!' + color.endcolor)
-        return
-    merge_stat, merge_output = exec_cmd(cmd_merge)
-    push_stat, push_output = exec_cmd(cmd_push)
-    return [(fetch_stat, fetch_output), (merge_stat, merge_output), (push_stat, push_output)]
+    def has_upstream(self):
+        """judge current git repository has a upstream"""
+        if not self._is_crt_dir():
+            self.logger.warning("current dir: %s, repo dir: %s", os.getcwd(), self.repo_path)
+            return False
 
+        self._remote_list()
+        self.logger.info(self.remotelist)
+        if self.remotelist is not None:
+            for item in self.remotelist:
+                if self.upstream_url in item:
+                    return True
+        else:
+            return False
+
+    def add_upstream(self):
+        """add upstream into current git repository"""
+        if not self._is_crt_dir():
+            return False
+
+        if not self.has_upstream():
+            gitremoteadd = 'git remote add upstream ' + self.upstream_url
+            _, logs = getstatusoutput(gitremoteadd)
+            self.logger.info(logs)
+
+    def sync_upstream(self, branch='master'):
+        """sync current repository from upstream"""
+        if not self._is_crt_dir():
+            self.logger.warning("changing the current directory into %s", self.repo_path)
+            os.chdir(self.repo_path)
+
+        if not self.is_git_repo():
+            self.logger.warning("current directory is %s", os.getcwd())
+            self.logger.warning("Not a git repository")
+            return
+
+        if not self.has_upstream():
+            self.logger.warning("add upstream %s into repository", self.upstream_url)
+            self.add_upstream()
+
+        gitfetch = 'git fetch upstream'
+        gitcheckout = 'git checkout ' + branch
+        gitmerge = 'git merge upstream/' + branch
+        gitpush = 'git push origin ' + branch
+        exec_cmds = [gitfetch, gitcheckout, gitmerge, gitpush]
+        for cmd in exec_cmds:
+            status, logs = getstatusoutput(cmd)
+            self.logger.info(logs)
+            if status != 0:
+                break
+
+def syncrepo(path, upstream, branch='master'):
+    """main fucntion to sync repository"""
+    syncer = SyncUpstreamRepo(path, upstream)
+    syncer.sync_upstream(branch)
 
 if __name__ == "__main__":
-    if not has_local_upstream():
-        if len(sys.argv) > 1:
-            add_upstream(sys.argv[1])
-        else:
-            raise Exception(color.warningcolor +\
-                            'upstream url needed' + color.endcolor)
-    sync_up2master()
+    if len(sys.argv) < 3:
+        print("Please specific the path and upstream URL")
+    else:
+        syncrepo(sys.argv[1], sys.argv[2])
