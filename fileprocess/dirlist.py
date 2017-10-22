@@ -64,6 +64,9 @@ class DirList(object):
         """ list root path recursively including sub-directories
         """
         if os.path.isdir(self.root):
+            # try to see issue https://github.com/edonyM/toolkitem/issues/23
+            # os.walk has been optimized in python3.5+ by calling os.scandir
+            # other than calling os.listdir and os.stat
             for root_, dir_, file_ in os.walk(self.root):
                 if excludedir is not None:
                     if root_ == excludedir or root_.startswith(excludedir):
