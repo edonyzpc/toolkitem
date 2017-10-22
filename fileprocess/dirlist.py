@@ -102,9 +102,9 @@ class DirList(object):
     def shadow_key(key):
         """ shadow the key
         """
-        if type(key) is str:
+        if isinstance(key, str):
             key = key.encode(encoding='utf8')
-        elif type(key) is bytes:
+        elif isinstance(key, bytes):
             pass
         else:
             return None
